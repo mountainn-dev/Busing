@@ -1,3 +1,8 @@
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+import org.apache.tools.ant.property.LocalProperties
+import org.bouncycastle.util.Properties
+import org.jetbrains.kotlin.gradle.utils.loadPropertyFromResources
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -15,6 +20,12 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "API_KEY", getApiKey("api.key"))
+        buildConfigField("String", "STATION_URL", getApiKey("station.api.url"))
+        buildConfigField("String", "LOCATION_URL", getApiKey("location.api.url"))
+        buildConfigField("String", "ARRIVAL_URL", getApiKey("arrival.api.url"))
+        buildConfigField("String", "ROUTES_URL", getApiKey("routes.api.url"))
     }
 
     buildTypes {
@@ -26,6 +37,11 @@ android {
             )
         }
     }
+
+    buildFeatures {
+        buildConfig = true
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
@@ -33,6 +49,10 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+}
+
+fun getApiKey(key: String): String {
+    return gradleLocalProperties(rootDir).getProperty(key)
 }
 
 dependencies {
