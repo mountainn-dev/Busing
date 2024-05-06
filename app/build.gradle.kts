@@ -1,7 +1,4 @@
 import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
-import org.apache.tools.ant.property.LocalProperties
-import org.bouncycastle.util.Properties
-import org.jetbrains.kotlin.gradle.utils.loadPropertyFromResources
 
 plugins {
     id("com.android.application")
