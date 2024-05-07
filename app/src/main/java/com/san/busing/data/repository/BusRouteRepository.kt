@@ -1,4 +1,7 @@
 package com.san.busing.data.repository
 
-interface BusRoutesRepository {
+import com.san.busing.domain.model.BusRouteModel
+
+interface BusRouteRepository {
+    suspend fun getBusRoutes(): Result<List<BusRouteModel>>
 }
