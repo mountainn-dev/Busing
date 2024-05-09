@@ -1,20 +1,23 @@
 package com.san.busing.data.entity
 
 import com.san.busing.domain.model.BusRouteModel
+import com.tickaroo.tikxml.annotation.*
 
+@Xml
 data class BusRoute(
-    private val routeId: Id,
-    private val routeName: String,
-    private val routeTypeCd: CodeNumber,
-    private val routeTypeName: String,
-    private val regionName: String,
-    private val districtCd: CodeNumber
+    @PropertyElement val routeId: Int,
+    @PropertyElement val routeName: String,
+    @PropertyElement val routeTypeCd: Int,
+    @PropertyElement val routeTypeName: String,
+    @PropertyElement val regionName: String,
+    @PropertyElement val districtCd: Int
 ) {
     fun toBusRouteModel() = BusRouteModel(
-        routeId,
+        Id(routeId),
         routeName,
-        routeTypeCd,
+        CodeNumber(routeTypeCd),
         routeTypeName,
         regionName
     )
 }
+

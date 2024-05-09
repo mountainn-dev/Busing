@@ -3,32 +3,34 @@ package com.san.busing.view.screen
 import android.os.Bundle
 import android.util.Log
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.gson.GsonBuilder
 import com.san.busing.BuildConfig
-import com.san.busing.data.BusServiceInterceptor
 import com.san.busing.data.repositoryimpl.BusRouteRepositoryImpl
 import com.san.busing.databinding.ActivityHomeBinding
 import com.san.busing.domain.viewmodelfactory.SearchBusRouteViewModelFactory
 import com.san.busing.domain.viewmodelimpl.SearchBusRouteViewModelImpl
 import com.san.busing.view.adapter.BusRouteViewAdapter
+import com.tickaroo.tikxml.TikXml
+import com.tickaroo.tikxml.retrofit.TikXmlConverterFactory
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 class HomeActivity : AppCompatActivity() {
-    private val client = OkHttpClient.Builder()
-        .addInterceptor(BusServiceInterceptor)
+    val interceptor = HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
+    val client = OkHttpClient.Builder()
+        .addInterceptor(interceptor)
         .build()
+    private val parse = TikXml.Builder().exceptionOnUnreadXml(false).build()
     private val retrofit: Retrofit
         get() = Retrofit.Builder()
             .baseUrl(BuildConfig.ROUTES_URL)
-            .addConverterFactory(GsonConverterFactory.create(GsonBuilder().setLenient().create()))
+            .addConverterFactory(TikXmlConverterFactory.create(parse))
+            .client(client)
             .build()
     private val repository = BusRouteRepositoryImpl(retrofit)
     private lateinit var binding: ActivityHomeBinding

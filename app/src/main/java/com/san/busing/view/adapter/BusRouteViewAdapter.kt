@@ -9,9 +9,9 @@ import com.san.busing.domain.model.BusRouteModel
 class BusRouteViewAdapter(private val routes: List<BusRouteModel>) : RecyclerView.Adapter<BusRouteViewAdapter.BusRouteViewHolder>() {
     inner class BusRouteViewHolder(private val binding: ItemBusRouteBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(position: Int) {
-            binding.txtId.text = routes[position].id.toString()
+            binding.txtId.text = routes[position].id.get().toString()
             binding.txtName.text = routes[position].name
-            binding.txtTypeCd.text = routes[position].typeCd.toString()
+            binding.txtTypeCd.text = routes[position].typeCd.get().toString()
             binding.txtTypeName.text = routes[position].typeName
             binding.txtRegion.text = routes[position].region
         }

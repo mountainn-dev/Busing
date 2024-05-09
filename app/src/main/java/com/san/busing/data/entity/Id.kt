@@ -3,12 +3,11 @@ package com.san.busing.data.entity
 import androidx.core.text.isDigitsOnly
 
 data class Id(
-    private val value: String
+    private val value: Int
 ) {
     init {
-        require(value.isDigitsOnly())
-        require(value.toInt() > 0)
+        require(value > 0)
     }
 
-    fun get() = value.toInt()
+    fun get() = value
 }

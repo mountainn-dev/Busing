@@ -12,8 +12,7 @@ class BusRouteRepositoryImpl(retrofit: Retrofit) : BusRouteRepository {
     override suspend fun getBusRoutes(keyword: String): Result<List<BusRouteModel>> {
         try {
             val response = service.getBusRouteList(BuildConfig.API_KEY, keyword)
-            return Result.success(response.body()!!.map { it.toBusRouteModel()
-            }.toList())
+            return Result.success(response.body()!!.get())
         } catch (e: Exception) {
             return Result.error(e)
         }
