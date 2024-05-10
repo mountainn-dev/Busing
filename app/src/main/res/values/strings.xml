@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Busing</string>
+
+    <!-- Bus Route -->
+    <string name="route_input_hint">노선 번호</string>
+    <string name="route_no_result">검색 결과가 없습니다.</string>
+
+    <!-- Common -->
+    <string name="search">검색</string>
 </resources>
