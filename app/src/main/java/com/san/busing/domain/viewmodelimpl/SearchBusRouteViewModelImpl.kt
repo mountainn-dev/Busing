@@ -1,5 +1,6 @@
 package com.san.busing.domain.viewmodelimpl
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -14,7 +15,7 @@ import kotlinx.coroutines.launch
 class SearchBusRouteViewModelImpl(private val repository: BusRouteRepositoryImpl) : SearchViewModel, ViewModel() {
     private val contentReady = MutableLiveData<Boolean>()
     var content = listOf<BusRouteModel>()
-    var error = ""
+    private var error = ""
 
     override val searchCompleted: LiveData<Boolean>
         get() = contentReady
@@ -28,6 +29,7 @@ class SearchBusRouteViewModelImpl(private val repository: BusRouteRepositoryImpl
             } else {
                 error = (result as Error).message()
                 contentReady.postValue(false)
+                Log.e("BusRoute Exception", error)
             }
         }
     }
