@@ -2,9 +2,12 @@
     <string name="app_name">Busing</string>
 
     <!-- Bus Route -->
+    <string name="route">노선</string>
     <string name="route_input_hint">노선 번호</string>
     <string name="route_no_result">검색 결과가 없습니다.</string>
 
     <!-- Common -->
     <string name="search">검색</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

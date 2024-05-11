@@ -1,25 +1,10 @@
 package com.san.busing.view.screen
 
 import android.os.Bundle
-import android.util.Log
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.san.busing.BuildConfig
-import com.san.busing.data.repositoryimpl.BusRouteRepositoryImpl
+import androidx.fragment.app.Fragment
+import com.san.busing.R
 import com.san.busing.databinding.ActivityHomeBinding
-import com.san.busing.domain.utils.Utils
-import com.san.busing.domain.viewmodelfactory.SearchBusRouteViewModelFactory
-import com.san.busing.domain.viewmodelimpl.SearchBusRouteViewModelImpl
-import com.san.busing.view.adapter.BusRouteViewAdapter
-import com.tickaroo.tikxml.TikXml
-import com.tickaroo.tikxml.retrofit.TikXmlConverterFactory
-import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Retrofit
 
 class HomeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityHomeBinding
@@ -29,28 +14,31 @@ class HomeActivity : AppCompatActivity() {
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val repository = BusRouteRepositoryImpl(Utils.getRetrofit(BuildConfig.ROUTES_URL))
-        val viewModel = ViewModelProvider(this, SearchBusRouteViewModelFactory(repository)).get(
-            SearchBusRouteViewModelImpl::class.java
-        )
+        initBottomNav()
+    }
 
-        initObserver(viewModel)
-        binding.btnSearch.setOnClickListener {
-            viewModel.search(binding.edRoute.text.toString())
+    private fun initBottomNav() {
+        add(SearchRouteFragment())   // 첫 화면 지정
+
+        binding.btmNav.setOnItemSelectedListener {
+            when (it.itemId) {
+                R.id.navRoute -> replaceTo(SearchRouteFragment())
+                R.id.navTest -> replaceTo(TestFragment())
+            }
+
+            return@setOnItemSelectedListener true
         }
     }
 
-    private fun initObserver(viewModel: SearchBusRouteViewModelImpl) {
-        viewModel.searchCompleted.observe(this, searchResultObserver(viewModel))
+    private fun add(fragment: Fragment) {
+        val transaction = supportFragmentManager.beginTransaction()
+        transaction.add(binding.flHome.id, fragment)
+        transaction.commit()
     }
 
-    private fun searchResultObserver(viewModel: SearchBusRouteViewModelImpl) = Observer<Boolean> {
-        if (it) {   // 검색 결과 리사이클러뷰 활성화
-            binding.rvBusRoute.adapter = BusRouteViewAdapter(viewModel.content)
-            binding.rvBusRoute.layoutManager = LinearLayoutManager(this)
-            binding.rvBusRoute.visibility = RecyclerView.VISIBLE
-        } else {   // 검색 결과 리사이클러뷰 비활성화
-            binding.rvBusRoute.visibility = RecyclerView.INVISIBLE
-        }
+    private fun replaceTo(fragment: Fragment) {
+        val transaction = supportFragmentManager.beginTransaction()
+        transaction.replace(binding.flHome.id, fragment)
+        transaction.commit()
     }
 }
