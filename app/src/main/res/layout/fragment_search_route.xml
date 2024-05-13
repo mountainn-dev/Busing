@@ -17,7 +17,7 @@
             android:layout_height="50dp"
             android:layout_weight="1"
             android:hint="@string/route_input_hint"
-            android:inputType="text" />
+            android:inputType="number" />
 
         <Button
             android:id="@+id/btnSearch"
