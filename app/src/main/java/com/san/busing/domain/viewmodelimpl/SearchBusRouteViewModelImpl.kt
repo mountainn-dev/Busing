@@ -15,12 +15,14 @@ import kotlinx.coroutines.launch
 class SearchBusRouteViewModelImpl(private val repository: BusRouteRepositoryImpl) : SearchViewModel, ViewModel() {
     private val contentReady = MutableLiveData<Boolean>()
     var content = listOf<BusRouteModel>()
+    var keyword = ""
     private var error = ""
 
     override val searchCompleted: LiveData<Boolean>
         get() = contentReady
 
     override fun search(keyword: String) {
+        this.keyword = keyword
         viewModelScope.launch {
             val result = repository.getBusRoutes(keyword)
             if (result is Success) {

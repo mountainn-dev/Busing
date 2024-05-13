@@ -1,16 +1,15 @@
 package com.san.busing.view.screen
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.san.busing.BuildConfig
-import com.san.busing.R
 import com.san.busing.data.repositoryimpl.BusRouteRepositoryImpl
 import com.san.busing.databinding.FragmentSearchRouteBinding
 import com.san.busing.domain.utils.Utils
@@ -28,14 +27,13 @@ class SearchRouteFragment : Fragment() {
         binding = FragmentSearchRouteBinding.inflate(layoutInflater)
 
         val repository = BusRouteRepositoryImpl(Utils.getRetrofit(BuildConfig.ROUTES_URL))
-        val viewModel = ViewModelProvider(this, SearchBusRouteViewModelFactory(repository)).get(
+        val viewModel = ViewModelProvider(requireActivity(), SearchBusRouteViewModelFactory(repository)).get(
             SearchBusRouteViewModelImpl::class.java
         )
 
         initObserver(viewModel)
-        binding.btnSearch.setOnClickListener {
-            viewModel.search(binding.edRoute.text.toString())
-        }
+        initListener(viewModel)
+        restoreContent(viewModel)
 
         return binding.root
     }
@@ -51,6 +49,21 @@ class SearchRouteFragment : Fragment() {
             binding.rvBusRoute.visibility = RecyclerView.VISIBLE
         } else {   // 검색 결과 리사이클러뷰 비활성화
             binding.rvBusRoute.visibility = RecyclerView.INVISIBLE
+        }
+    }
+
+    private fun initListener(viewModel: SearchBusRouteViewModelImpl) {
+        binding.btnSearch.setOnClickListener {
+            viewModel.search(binding.edRoute.text.toString())
+        }
+    }
+
+    private fun restoreContent(viewModel: SearchBusRouteViewModelImpl) {
+        binding.edRoute.setText(viewModel.keyword)   // 검색 키워드 복원
+        if (!viewModel.content.isEmpty()) {   // 검색 결과 복원
+            binding.rvBusRoute.adapter = BusRouteViewAdapter(viewModel.content)
+            binding.rvBusRoute.layoutManager = LinearLayoutManager(activity)
+            binding.rvBusRoute.visibility = RecyclerView.VISIBLE
         }
     }
 }
