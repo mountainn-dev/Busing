@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="radius_background_edit_text">10dp</dimen>
+
+    <!-- Common -->
+    <dimen name="padding_default">10dp</dimen>
+    <dimen name="line_default">5dp</dimen>
+    <dimen name="zero_width">0dp</dimen>
+    <dimen name="zero_height">0dp</dimen>
+
+    <!-- Layout -->
+    <dimen name="height_top_layout">110dp</dimen>
+</resources>
