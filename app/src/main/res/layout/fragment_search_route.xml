@@ -3,7 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
+    android:weightSum="1"
     tools:context=".view.screen.SearchRouteFragment">
 
     <LinearLayout
@@ -17,14 +19,16 @@
             android:layout_height="50dp"
             android:layout_weight="1"
             android:hint="@string/route_input_hint"
-            android:inputType="number" />
+            android:inputType="number"
+            android:imeOptions="actionSearch"/>
 
-        <Button
-            android:id="@+id/btnSearch"
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:text="@string/search" />
     </LinearLayout>
+
+    <com.google.android.material.divider.MaterialDivider
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        app:dividerColor="@color/black"/>
 
     <FrameLayout
         android:layout_width="match_parent"
