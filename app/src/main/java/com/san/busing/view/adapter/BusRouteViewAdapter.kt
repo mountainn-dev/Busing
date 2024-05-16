@@ -4,16 +4,16 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.san.busing.databinding.ItemBusRouteBinding
-import com.san.busing.domain.model.BusRouteModel
+import com.san.busing.domain.model.BusRouteItemModel
 
-class BusRouteViewAdapter(private val routes: List<BusRouteModel>) : RecyclerView.Adapter<BusRouteViewAdapter.BusRouteViewHolder>() {
+class BusRouteViewAdapter(private val items: List<BusRouteItemModel>) : RecyclerView.Adapter<BusRouteViewAdapter.BusRouteViewHolder>() {
     inner class BusRouteViewHolder(private val binding: ItemBusRouteBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(position: Int) {
-            binding.txtId.text = routes[position].id.get().toString()
-            binding.txtName.text = routes[position].name
-            binding.txtTypeCd.text = routes[position].typeCd.get().toString()
-            binding.txtTypeName.text = routes[position].typeName
-            binding.txtRegion.text = routes[position].region
+            binding.txtId.text = items[position].route.id.get().toString()
+            binding.txtName.text = items[position].route.name
+            binding.txtTypeCd.text = items[position].route.typeCd.get().toString()
+            binding.txtTypeName.text = items[position].route.typeName
+            binding.txtRegion.text = items[position].route.region
         }
     }
 
@@ -22,7 +22,7 @@ class BusRouteViewAdapter(private val routes: List<BusRouteModel>) : RecyclerVie
         return BusRouteViewHolder(binding)
     }
 
-    override fun getItemCount() = routes.size
+    override fun getItemCount() = items.size
 
     override fun onBindViewHolder(holder: BusRouteViewHolder, position: Int) {
         holder.bind(position)

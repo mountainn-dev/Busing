@@ -1,5 +1,7 @@
 package com.san.busing.data.entity
 
+import com.san.busing.data.type.CodeNumber
+import com.san.busing.data.type.Id
 import com.san.busing.domain.model.BusRouteModel
 import com.tickaroo.tikxml.annotation.*
 

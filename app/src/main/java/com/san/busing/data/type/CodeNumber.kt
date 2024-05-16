@@ -1,6 +1,4 @@
-package com.san.busing.data.entity
-
-import androidx.core.text.isDigitsOnly
+package com.san.busing.data.type
 
 data class CodeNumber(
     private val value: Int
