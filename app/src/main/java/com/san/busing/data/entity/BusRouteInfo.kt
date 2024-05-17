@@ -19,11 +19,11 @@ data class BusRouteInfo(
     @PropertyElement val startStationName: String,
     @PropertyElement val endStationId: Int,
     @PropertyElement val endStationName: String,
-    @PropertyElement(name = "upFirstTime") val startFirstTime: String,
-    @PropertyElement(name = "upLastTime") val startLastTime: String,
-    @PropertyElement(name = "downFirstTime") val finishFirstTime: String,
-    @PropertyElement(name = "downLastTime") val finishLastTime: String,
-    @PropertyElement(name = "nPeekAlloc") val maxPeekAlloc: Int
+//    @PropertyElement(name = "upFirstTime") val startFirstTime: String,
+//    @PropertyElement(name = "upLastTime") val startLastTime: String,
+//    @PropertyElement(name = "downFirstTime") val finishFirstTime: String,
+//    @PropertyElement(name = "downLastTime") val finishLastTime: String,
+//    @PropertyElement(name = "nPeekAlloc") val maxPeekAlloc: Int
 ) {
     fun toBusRouteInfoModel() = BusRouteInfoModel(
         Id(routeId),
@@ -32,11 +32,11 @@ data class BusRouteInfo(
         startStationName,
         Id(endStationId),
         endStationName,
-        Time(startFirstTime),
-        Time(startLastTime),
-        Time(finishFirstTime),
-        Time(finishLastTime),
-        Time.minute(maxPeekAlloc)
+//        Time(startFirstTime),
+//        Time(startLastTime),
+//        Time(finishFirstTime),
+//        Time(finishLastTime),
+//        Time.minute(maxPeekAlloc)
     )
 }
 

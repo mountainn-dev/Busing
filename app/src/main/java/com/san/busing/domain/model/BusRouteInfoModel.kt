@@ -10,9 +10,9 @@ data class BusRouteInfoModel(
     val startStationName: String,
     val endStationId: Id,
     val endStationName: String,
-    val startFirstTime: Time,
-    val startLastTime: Time,
-    val finishFirstTime: Time,
-    val finishLastTime: Time,
-    val maxPeekAlloc: Time
+//    val startFirstTime: Time,
+//    val startLastTime: Time,
+//    val finishFirstTime: Time,
+//    val finishLastTime: Time,
+//    val maxPeekAlloc: Time
 )
