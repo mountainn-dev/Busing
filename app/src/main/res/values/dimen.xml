@@ -10,6 +10,6 @@
 
     <!-- Bus Route -->
     <dimen name="radius_background_edit_text">10dp</dimen>
-    <dimen name="height_item_bus_route">100dp</dimen>
+    <dimen name="height_item_bus_route">70dp</dimen>
 
 </resources>
