@@ -3,10 +3,11 @@
     <!-- Common -->
     <dimen name="padding_default">10dp</dimen>
     <dimen name="margin_default">10dp</dimen>
-    <dimen name="line_default">5dp</dimen>
+    <dimen name="line_default">1dp</dimen>
     <dimen name="zero_width">0dp</dimen>
     <dimen name="zero_height">0dp</dimen>
     <dimen name="height_top_layout">130dp</dimen>
+    <dimen name="line_divider">5dp</dimen>
 
     <!-- Bus Route -->
     <dimen name="radius_background_edit_text">10dp</dimen>

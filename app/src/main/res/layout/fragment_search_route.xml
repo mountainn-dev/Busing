@@ -23,7 +23,7 @@
             android:padding="@dimen/padding_default"
 
             android:hint="@string/route_input_hint"
-            android:background="@drawable/background_edit_text"
+            android:background="@drawable/background_search_view"
             android:inputType="text"
             android:imeOptions="actionSearch"/>
 
