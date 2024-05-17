@@ -45,7 +45,7 @@ class SearchRouteFragment : Fragment() {
 
     private fun searchResultObserver(viewModel: SearchBusRouteViewModelImpl) = Observer<Boolean> {
         if (it) {   // 검색 결과 리사이클러뷰 활성화
-            binding.rvBusRoute.adapter = BusRouteViewAdapter(viewModel.itemContent)
+            binding.rvBusRoute.adapter = BusRouteViewAdapter(viewModel.content)
             binding.rvBusRoute.layoutManager = LinearLayoutManager(activity)
             binding.rvBusRoute.visibility = RecyclerView.VISIBLE
         } else {   // 검색 결과 리사이클러뷰 비활성화
@@ -70,8 +70,8 @@ class SearchRouteFragment : Fragment() {
 
     private fun loadContent(viewModel: SearchBusRouteViewModelImpl) {
         binding.edRoute.setText(viewModel.keyword)   // 검색 키워드 복원
-        if (!viewModel.itemContent.isEmpty()) {   // 검색 결과 복원
-            binding.rvBusRoute.adapter = BusRouteViewAdapter(viewModel.itemContent)
+        if (!viewModel.content.isEmpty()) {   // 검색 결과 복원
+            binding.rvBusRoute.adapter = BusRouteViewAdapter(viewModel.content)
             binding.rvBusRoute.layoutManager = LinearLayoutManager(activity)
             binding.rvBusRoute.visibility = RecyclerView.VISIBLE
         }

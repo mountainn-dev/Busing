@@ -4,16 +4,16 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.san.busing.databinding.ItemBusRouteBinding
-import com.san.busing.domain.model.BusRouteItemModel
+import com.san.busing.domain.model.BusRouteModel
 
-class BusRouteViewAdapter(private val items: List<BusRouteItemModel>) : RecyclerView.Adapter<BusRouteViewAdapter.BusRouteViewHolder>() {
+class BusRouteViewAdapter(private val items: List<BusRouteModel>) : RecyclerView.Adapter<BusRouteViewAdapter.BusRouteViewHolder>() {
     inner class BusRouteViewHolder(private val binding: ItemBusRouteBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(position: Int) {
-            binding.txtId.text = items[position].route.id.get().toString()
-            binding.txtName.text = items[position].route.name
-            binding.txtTypeCd.text = items[position].route.typeCd.get().toString()
-            binding.txtTypeName.text = items[position].route.typeName
-            binding.txtRegion.text = items[position].route.region
+            binding.txtId.text = items[position].id.get().toString()
+            binding.txtName.text = items[position].name
+            binding.txtTypeCd.text = items[position].typeCd.get().toString()
+            binding.txtTypeName.text = items[position].typeName
+            binding.txtRegion.text = items[position].region
         }
     }
 
