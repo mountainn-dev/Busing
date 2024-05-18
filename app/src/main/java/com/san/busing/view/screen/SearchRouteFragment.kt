@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -33,7 +34,7 @@ class SearchRouteFragment : Fragment() {
 
         initObserver(viewModel)
         initListener(viewModel)
-        restoreContent(viewModel)
+        loadContent(viewModel)
 
         return binding.root
     }
@@ -53,12 +54,21 @@ class SearchRouteFragment : Fragment() {
     }
 
     private fun initListener(viewModel: SearchBusRouteViewModelImpl) {
-        binding.btnSearch.setOnClickListener {
-            viewModel.search(binding.edRoute.text.toString())
+        setEdRouteActionListener(viewModel)
+    }
+
+    private fun setEdRouteActionListener(viewModel: SearchBusRouteViewModelImpl) {
+        binding.edRoute.setOnEditorActionListener { textView, i, keyEvent ->
+            if (i == EditorInfo.IME_ACTION_SEARCH) {
+                viewModel.search(binding.edRoute.text.toString())
+                return@setOnEditorActionListener true
+            }
+
+            return@setOnEditorActionListener false
         }
     }
 
-    private fun restoreContent(viewModel: SearchBusRouteViewModelImpl) {
+    private fun loadContent(viewModel: SearchBusRouteViewModelImpl) {
         binding.edRoute.setText(viewModel.keyword)   // 검색 키워드 복원
         if (!viewModel.content.isEmpty()) {   // 검색 결과 복원
             binding.rvBusRoute.adapter = BusRouteViewAdapter(viewModel.content)

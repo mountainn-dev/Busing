@@ -4,32 +4,54 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:weightSum="1"
     tools:context=".view.screen.SearchRouteFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="@dimen/height_top_layout"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="@dimen/padding_default"
+        android:weightSum="1">
 
         <EditText
             android:id="@+id/edRoute"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:layout_weight="1"
-            android:hint="@string/route_input_hint"
-            android:inputType="text" />
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/zero_height"
+            android:layout_weight="0.5"
+            android:padding="@dimen/padding_default"
 
-        <Button
-            android:id="@+id/btnSearch"
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:text="@string/search" />
+            android:hint="@string/route_input_hint"
+            android:background="@drawable/background_search_view"
+            android:inputType="text"
+            android:imeOptions="actionSearch"/>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/zero_height"
+            android:layout_weight="0.5"
+            android:layout_marginTop="@dimen/margin_default">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="visible"
+                android:gravity="center"
+                android:text="@string/route_no_recent_search"
+                android:textColor="@color/grey"/>
+
+        </FrameLayout>
+
     </LinearLayout>
+
+    <include layout="@layout/divider"/>
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_height="@dimen/zero_height"
+        android:layout_weight="1"
+        android:padding="@dimen/padding_default">
 
         <TextView
             android:id="@+id/txtNoResult"
@@ -37,7 +59,8 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:visibility="visible"
-            android:text="@string/route_no_result"/>
+            android:text="@string/route_no_result"
+            android:textColor="@color/grey"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvBusRoute"

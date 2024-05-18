@@ -13,9 +13,9 @@ import com.san.busing.domain.viewmodel.SearchViewModel
 import kotlinx.coroutines.launch
 
 class SearchBusRouteViewModelImpl(private val repository: BusRouteRepositoryImpl) : SearchViewModel, ViewModel() {
-    private val contentReady = MutableLiveData<Boolean>()
-    var content = listOf<BusRouteModel>()
     var keyword = ""
+    var content = listOf<BusRouteModel>()
+    private val contentReady = MutableLiveData<Boolean>()
     private var error = ""
 
     override val searchCompleted: LiveData<Boolean>
@@ -23,16 +23,21 @@ class SearchBusRouteViewModelImpl(private val repository: BusRouteRepositoryImpl
 
     override fun search(keyword: String) {
         this.keyword = keyword
+
         viewModelScope.launch {
-            val result = repository.getBusRoutes(keyword)
-            if (result is Success) {
-                content = (result).data()
-                contentReady.postValue(true)
-            } else {
-                error = (result as Error).message()
-                contentReady.postValue(false)
-                Log.e("BusRoute Exception", error)
-            }
+            searchBusRoutes(keyword)
+        }
+    }
+
+    private suspend fun searchBusRoutes(keyword: String) {
+        val result = repository.getBusRoutes(keyword)
+        if (result is Success) {
+            content = result.data()
+            contentReady.postValue(true)
+        } else {
+            error = (result as Error).message()
+            Log.e("BusRoute Exception", error)
+            contentReady.postValue(false)
         }
     }
 }
