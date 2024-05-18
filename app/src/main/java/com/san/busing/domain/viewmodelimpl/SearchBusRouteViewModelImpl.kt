@@ -32,7 +32,7 @@ class SearchBusRouteViewModelImpl(private val repository: BusRouteRepositoryImpl
     private suspend fun searchBusRoutes(keyword: String) {
         val result = repository.getBusRoutes(keyword)
         if (result is Success) {
-            content = result.data()
+            content = result.data().sortedBy { it.name }   // 노선 번호순 정렬
             contentReady.postValue(true)
         } else {
             error = (result as Error).message()
