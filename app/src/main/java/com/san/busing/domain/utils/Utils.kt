@@ -1,7 +1,7 @@
 package com.san.busing.domain.utils
 
 import android.content.Context
-import com.san.busing.BuildConfig
+import com.san.busing.view.listener.RecyclerViewScrollListener
 import com.tickaroo.tikxml.TikXml
 import com.tickaroo.tikxml.retrofit.TikXmlConverterFactory
 import okhttp3.OkHttpClient
@@ -21,6 +21,4 @@ object Utils {
         OkHttpClient.Builder().addInterceptor(interceptor).build()
 
     private fun getXmlParse() = TikXml.Builder().exceptionOnUnreadXml(false).build()
-
-    fun getRecyclerViewScrollListener(context: Context) = RecyclerViewScrollListener(context)
 }
