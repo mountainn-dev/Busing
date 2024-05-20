@@ -1,5 +1,6 @@
 package com.san.busing.view.screen
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.san.busing.BuildConfig
 import com.san.busing.data.repositoryimpl.BusRouteRepositoryImpl
 import com.san.busing.databinding.FragmentSearchRouteBinding
+import com.san.busing.domain.utils.RecyclerViewScrollListener
 import com.san.busing.domain.utils.Utils
 import com.san.busing.domain.viewmodelfactory.SearchBusRouteViewModelFactory
 import com.san.busing.domain.viewmodelimpl.SearchBusRouteViewModelImpl
@@ -55,6 +57,7 @@ class SearchRouteFragment : Fragment() {
 
     private fun initListener(viewModel: SearchBusRouteViewModelImpl) {
         setEdRouteActionListener(viewModel)
+        setRvBusRouteScrollListener(requireActivity())
     }
 
     private fun setEdRouteActionListener(viewModel: SearchBusRouteViewModelImpl) {
@@ -66,6 +69,10 @@ class SearchRouteFragment : Fragment() {
 
             return@setOnEditorActionListener false
         }
+    }
+
+    private fun setRvBusRouteScrollListener(context: Context) {
+        binding.rvBusRoute.addOnScrollListener(Utils.getRecyclerViewScrollListener(context))
     }
 
     private fun loadContent(viewModel: SearchBusRouteViewModelImpl) {
