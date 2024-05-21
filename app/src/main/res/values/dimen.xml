@@ -3,14 +3,17 @@
     <!-- Common -->
     <dimen name="padding_default">10dp</dimen>
     <dimen name="margin_default">10dp</dimen>
+    <dimen name="margin_floating_action_button">25dp</dimen>
     <dimen name="line_default">1dp</dimen>
     <dimen name="zero_width">0dp</dimen>
     <dimen name="zero_height">0dp</dimen>
-    <dimen name="height_top_layout">130dp</dimen>
     <dimen name="line_divider">5dp</dimen>
 
     <!-- Bus Route -->
+    <dimen name="height_search_layout">130dp</dimen>
     <dimen name="radius_background_edit_text">10dp</dimen>
     <dimen name="height_item_bus_route">70dp</dimen>
 
+    <!-- Bus Route Info -->
+    <dimen name="height_info_layout">200dp</dimen>
 </resources>

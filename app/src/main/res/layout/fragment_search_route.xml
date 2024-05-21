@@ -4,12 +4,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:weightSum="1"
     tools:context=".view.screen.SearchRouteFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/height_top_layout"
+        android:layout_height="@dimen/height_search_layout"
         android:orientation="vertical"
         android:gravity="center"
         android:padding="@dimen/padding_default"

@@ -27,6 +27,7 @@ class BusRouteDetailActivity : AppCompatActivity() {
         )
 
         initObserver(viewModel)
+        initListener(viewModel)
     }
 
     private fun initObserver(viewModel: BusRouteDetailViewModelImpl) {
@@ -43,6 +44,14 @@ class BusRouteDetailActivity : AppCompatActivity() {
             binding.txtRouteStartStation.text = EMPTY
             binding.txtRouteEndStation.text = EMPTY
         }
+    }
+
+    private fun initListener(viewModel: BusRouteDetailViewModelImpl) {
+        setFabRefreshListener(viewModel)
+    }
+
+    private fun setFabRefreshListener(viewModel: BusRouteDetailViewModelImpl) {
+        binding.fabRefresh.setOnClickListener { viewModel.load() }
     }
 
     companion object {

@@ -18,25 +18,36 @@ class BusRouteDetailViewModelImpl(
     private val routeId: Id
 ) : BusRouteDetailViewModel, ViewModel() {
     lateinit var routeInfo: BusRouteInfoModel
-    private var routeInfoLoadCompleted = MutableLiveData<Boolean>()
+    private val routeInfoLoaded = MutableLiveData<Boolean>()
+    private var isLoading = false
     private var error = ""
 
     override val routeInfoReady: LiveData<Boolean>
-        get() = routeInfoLoadCompleted
+        get() = routeInfoLoaded
 
-    init {
-        viewModelScope.launch { loadRouteInfo() }
+    init { load() }
+
+    fun load() {
+        if (!isLoading) {
+            isLoading = true
+
+            viewModelScope.launch {
+                loadRouteInfo()
+                isLoading = false
+            }
+        }
     }
 
     private suspend fun loadRouteInfo() {
         val result = repository.getBusRouteInfo(routeId)
+
         if (result is Success) {
             routeInfo = result.data()
-            routeInfoLoadCompleted.postValue(true)
+            routeInfoLoaded.postValue(true)
         } else {
             error = (result as Error).message()
             Log.e("BusRouteInfo Exception", error)
-            routeInfoLoadCompleted.postValue(false)
+            routeInfoLoaded.postValue(false)
         }
     }
 }
