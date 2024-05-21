@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.san.busing.data.Error
 import com.san.busing.data.Success
+import com.san.busing.data.repository.BusRouteRepository
 import com.san.busing.data.repositoryimpl.BusRouteRepositoryImpl
 import com.san.busing.data.type.Id
 import com.san.busing.domain.model.BusRouteInfoModel
@@ -14,7 +15,7 @@ import com.san.busing.domain.viewmodel.BusRouteDetailViewModel
 import kotlinx.coroutines.launch
 
 class BusRouteDetailViewModelImpl(
-    private val repository: BusRouteRepositoryImpl,
+    private val repository: BusRouteRepository,
     private val routeId: Id
 ) : BusRouteDetailViewModel, ViewModel() {
     lateinit var routeInfo: BusRouteInfoModel
