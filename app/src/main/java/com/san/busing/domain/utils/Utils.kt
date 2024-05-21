@@ -1,6 +1,7 @@
 package com.san.busing.domain.utils
 
-import com.san.busing.BuildConfig
+import android.content.Context
+import com.san.busing.view.listener.RecyclerViewScrollListener
 import com.tickaroo.tikxml.TikXml
 import com.tickaroo.tikxml.retrofit.TikXmlConverterFactory
 import okhttp3.OkHttpClient
@@ -8,7 +9,6 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 
 object Utils {
-
     fun getRetrofit(baseUrl: String) = Retrofit.Builder()
         .baseUrl(baseUrl)
         .addConverterFactory(TikXmlConverterFactory.create(getXmlParse()))
