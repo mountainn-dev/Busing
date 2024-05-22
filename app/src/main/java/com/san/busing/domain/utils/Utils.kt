@@ -1,6 +1,8 @@
 package com.san.busing.domain.utils
 
+import android.app.Activity
 import android.content.Context
+import com.san.busing.BuildConfig
 import com.san.busing.view.listener.RecyclerViewScrollListener
 import com.tickaroo.tikxml.TikXml
 import com.tickaroo.tikxml.retrofit.TikXmlConverterFactory

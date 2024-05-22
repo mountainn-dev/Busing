@@ -1,19 +1,21 @@
 package com.san.busing.view.adapter
 
 import android.app.Activity
-import android.app.ActivityOptions
 import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.san.busing.view.screen.BusRouteDetailActivity
-import com.san.busing.databinding.ItemBusRouteBinding
+import com.san.busing.databinding.ItemSearchResultBusRouteBinding
 import com.san.busing.domain.model.BusRouteModel
 
-class BusRouteViewAdapter(private val items: List<BusRouteModel>, private val context: Context) :
-    RecyclerView.Adapter<BusRouteViewAdapter.BusRouteViewHolder>() {
-    inner class BusRouteViewHolder(private val binding: ItemBusRouteBinding) : RecyclerView.ViewHolder(binding.root) {
+class BusRouteSearchResultAdapter(
+    private val items: List<BusRouteModel>, private val context: Context
+) : RecyclerView.Adapter<BusRouteSearchResultAdapter.BusRouteSearchResultViewHolder>() {
+    inner class BusRouteSearchResultViewHolder(
+        private val binding: ItemSearchResultBusRouteBinding
+    ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(position: Int) {
             bindContent(position)
             setOnItemClickListener(position)
@@ -34,14 +36,18 @@ class BusRouteViewAdapter(private val items: List<BusRouteModel>, private val co
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BusRouteViewHolder {
-        val binding = ItemBusRouteBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return BusRouteViewHolder(binding)
+    override fun onCreateViewHolder(
+        parent: ViewGroup, viewType: Int
+    ): BusRouteSearchResultViewHolder {
+        val binding = ItemSearchResultBusRouteBinding.inflate(
+            LayoutInflater.from(parent.context), parent, false
+        )
+        return BusRouteSearchResultViewHolder(binding)
     }
 
     override fun getItemCount() = items.size
 
-    override fun onBindViewHolder(holder: BusRouteViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: BusRouteSearchResultViewHolder, position: Int) {
         holder.bind(position)
     }
 }

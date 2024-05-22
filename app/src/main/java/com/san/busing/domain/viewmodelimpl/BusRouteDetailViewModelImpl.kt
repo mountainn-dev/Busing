@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.san.busing.data.Error
 import com.san.busing.data.Success
+import com.san.busing.data.entity.Test
 import com.san.busing.data.repository.BusRouteRepository
 import com.san.busing.data.repositoryimpl.BusRouteRepositoryImpl
 import com.san.busing.data.type.Id
@@ -16,9 +17,8 @@ import kotlinx.coroutines.launch
 
 class BusRouteDetailViewModelImpl(
     private val repository: BusRouteRepository,
-    private val routeId: Id
+    private val routeId: Id,
 ) : BusRouteDetailViewModel, ViewModel() {
-    lateinit var routeInfo: BusRouteInfoModel
     private val routeInfoLoaded = MutableLiveData<Boolean>()
     private var isLoading = false
     private var error = ""
@@ -26,14 +26,17 @@ class BusRouteDetailViewModelImpl(
     override val routeInfoReady: LiveData<Boolean>
         get() = routeInfoLoaded
 
+    override lateinit var routeInfo: BusRouteInfoModel
+
     init { load() }
 
-    fun load() {
+    override fun load() {
         if (!isLoading) {
             isLoading = true
 
             viewModelScope.launch {
                 loadRouteInfo()
+                updateRecentSearch()
                 isLoading = false
             }
         }
@@ -49,6 +52,16 @@ class BusRouteDetailViewModelImpl(
             error = (result as Error).message()
             Log.e("BusRouteInfo Exception", error)
             routeInfoLoaded.postValue(false)
+        }
+    }
+
+    private fun updateRecentSearch() {
+        val result = repository.insertRecentSearch(Test(routeInfo.name))
+
+        if (result is Success) {
+
+        } else {
+
         }
     }
 }

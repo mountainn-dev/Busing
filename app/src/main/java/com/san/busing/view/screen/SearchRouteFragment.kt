@@ -15,9 +15,11 @@ import com.san.busing.BuildConfig
 import com.san.busing.data.repositoryimpl.BusRouteRepositoryImpl
 import com.san.busing.databinding.FragmentSearchRouteBinding
 import com.san.busing.domain.utils.Utils
+import com.san.busing.domain.viewmodel.SearchViewModel
 import com.san.busing.domain.viewmodelfactory.SearchBusRouteViewModelFactory
 import com.san.busing.domain.viewmodelimpl.SearchBusRouteViewModelImpl
-import com.san.busing.view.adapter.BusRouteViewAdapter
+import com.san.busing.view.adapter.BusRouteRecentSearchAdapter
+import com.san.busing.view.adapter.BusRouteSearchResultAdapter
 import com.san.busing.view.listener.RecyclerViewScrollListener
 
 class SearchRouteFragment : Fragment() {
@@ -29,7 +31,7 @@ class SearchRouteFragment : Fragment() {
     ): View {
         binding = FragmentSearchRouteBinding.inflate(layoutInflater)
 
-        val repository = BusRouteRepositoryImpl(Utils.getRetrofit(BuildConfig.ROUTES_URL))
+        val repository = BusRouteRepositoryImpl(Utils.getRetrofit(BuildConfig.ROUTES_URL), requireActivity().applicationContext)
         val viewModel = ViewModelProvider(requireActivity(), SearchBusRouteViewModelFactory(repository)).get(
             SearchBusRouteViewModelImpl::class.java
         )
@@ -41,26 +43,26 @@ class SearchRouteFragment : Fragment() {
         return binding.root
     }
 
-    private fun initObserver(viewModel: SearchBusRouteViewModelImpl) {
-        viewModel.contentReady.observe(viewLifecycleOwner, contentReadyObserver(viewModel))
+    private fun initObserver(viewModel: SearchViewModel) {
+        viewModel.searchResultContentReady.observe(viewLifecycleOwner, contentReadyObserver(viewModel))
     }
 
-    private fun contentReadyObserver(viewModel: SearchBusRouteViewModelImpl) = Observer<Boolean> {
-        if (it) {   // 검색 결과 리사이클러뷰 활성화
-            binding.rvBusRoute.adapter = BusRouteViewAdapter(viewModel.content, requireActivity())
-            binding.rvBusRoute.layoutManager = LinearLayoutManager(activity)
-            binding.rvBusRoute.visibility = RecyclerView.VISIBLE
-        } else {   // 검색 결과 리사이클러뷰 비활성화
-            binding.rvBusRoute.visibility = RecyclerView.INVISIBLE
+    private fun contentReadyObserver(viewModel: SearchViewModel) = Observer<Boolean> {
+        if (it) {   // 검색 결과 목록 활성화
+            binding.rvSearchResult.adapter = BusRouteSearchResultAdapter(viewModel.searchResultContent, requireActivity())
+            binding.rvSearchResult.layoutManager = LinearLayoutManager(activity)
+            binding.rvSearchResult.visibility = RecyclerView.VISIBLE
+        } else {   // 검색 결과 목록 비활성화
+            binding.rvSearchResult.visibility = RecyclerView.INVISIBLE
         }
     }
 
-    private fun initListener(viewModel: SearchBusRouteViewModelImpl) {
+    private fun initListener(viewModel: SearchViewModel) {
         setEdRouteActionListener(viewModel)
         setRvBusRouteScrollListener(requireActivity())
     }
 
-    private fun setEdRouteActionListener(viewModel: SearchBusRouteViewModelImpl) {
+    private fun setEdRouteActionListener(viewModel: SearchViewModel) {
         binding.edRoute.setOnEditorActionListener { textView, i, keyEvent ->
             if (i == EditorInfo.IME_ACTION_SEARCH) {
                 viewModel.search(binding.edRoute.text.toString())
@@ -72,15 +74,30 @@ class SearchRouteFragment : Fragment() {
     }
 
     private fun setRvBusRouteScrollListener(context: Context) {
-        binding.rvBusRoute.addOnScrollListener(RecyclerViewScrollListener(context))
+        binding.rvSearchResult.addOnScrollListener(RecyclerViewScrollListener(context))
     }
 
-    private fun loadContent(viewModel: SearchBusRouteViewModelImpl) {
+    private fun loadContent(viewModel: SearchViewModel) {
+        loadSearchResultContent(viewModel)
+        loadRecentSearchContent(viewModel)
+    }
+
+    private fun loadSearchResultContent(viewModel: SearchViewModel) {
         binding.edRoute.setText(viewModel.keyword)   // 검색 키워드 복원
-        if (!viewModel.content.isEmpty()) {   // 검색 결과 복원
-            binding.rvBusRoute.adapter = BusRouteViewAdapter(viewModel.content, requireActivity())
-            binding.rvBusRoute.layoutManager = LinearLayoutManager(activity)
-            binding.rvBusRoute.visibility = RecyclerView.VISIBLE
+        if (viewModel.searchResultContentReady.isInitialized && viewModel.searchResultContentReady.value!!) {   // 검색 결과 복원
+            binding.rvSearchResult.adapter = BusRouteSearchResultAdapter(viewModel.searchResultContent, requireActivity())
+            binding.rvSearchResult.layoutManager = LinearLayoutManager(activity)
+            binding.rvSearchResult.visibility = RecyclerView.VISIBLE
+        }
+    }
+
+    private fun loadRecentSearchContent(viewModel: SearchViewModel) {
+        if (viewModel.recentSearchContentReady.isInitialized && viewModel.recentSearchContentReady.value!!) {
+            binding.rvRecentSearch.adapter = BusRouteRecentSearchAdapter(viewModel.recentSearchContent, requireActivity())
+            binding.rvRecentSearch.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
+            binding.rvRecentSearch.visibility = RecyclerView.VISIBLE
+        } else {
+            binding.rvRecentSearch.visibility = RecyclerView.INVISIBLE
         }
     }
 }
