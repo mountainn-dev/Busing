@@ -8,6 +8,7 @@ import com.san.busing.BuildConfig
 import com.san.busing.data.repositoryimpl.BusRouteRepositoryImpl
 import com.san.busing.data.type.Id
 import com.san.busing.databinding.ActivityBusRouteDetailBinding
+import com.san.busing.domain.model.BusRouteRecentSearchModel
 import com.san.busing.domain.utils.Const
 import com.san.busing.domain.utils.Utils
 import com.san.busing.domain.viewmodel.BusRouteDetailViewModel
@@ -23,8 +24,8 @@ class BusRouteDetailActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         val repository = BusRouteRepositoryImpl(Utils.getRetrofit(BuildConfig.ROUTES_URL), this.applicationContext)
-        val routeId = intent.getSerializableExtra(Const.TAG_ROUTE_ID) as Id
-        val viewModel = ViewModelProvider(this, BusRouteDetailViewModelFactory(repository, routeId)).get(
+        val recentSearchModel = intent.getSerializableExtra(Const.TAG_ROUTE_ID) as BusRouteRecentSearchModel
+        val viewModel = ViewModelProvider(this, BusRouteDetailViewModelFactory(repository, recentSearchModel)).get(
             BusRouteDetailViewModelImpl::class.java
         )
 

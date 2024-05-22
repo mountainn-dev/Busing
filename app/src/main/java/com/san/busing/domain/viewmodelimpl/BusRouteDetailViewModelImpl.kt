@@ -7,11 +7,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.san.busing.data.Error
 import com.san.busing.data.Success
-import com.san.busing.data.entity.Test
+import com.san.busing.data.entity.BusRouteRecentSearch
 import com.san.busing.data.repository.BusRouteRepository
-import com.san.busing.data.repositoryimpl.BusRouteRepositoryImpl
 import com.san.busing.data.type.Id
 import com.san.busing.domain.model.BusRouteInfoModel
+import com.san.busing.domain.model.BusRouteRecentSearchModel
 import com.san.busing.domain.utils.Const
 import com.san.busing.domain.viewmodel.BusRouteDetailViewModel
 import kotlinx.coroutines.Dispatchers
@@ -20,7 +20,7 @@ import kotlinx.coroutines.withContext
 
 class BusRouteDetailViewModelImpl(
     private val repository: BusRouteRepository,
-    private val routeId: Id,
+    private val recentSearchModel: BusRouteRecentSearchModel,
 ) : BusRouteDetailViewModel, ViewModel() {
     private val routeInfoLoaded = MutableLiveData<Boolean>()
     private var isLoading = false
@@ -46,7 +46,7 @@ class BusRouteDetailViewModelImpl(
     }
 
     private suspend fun loadRouteInfo() {
-        val result = repository.getBusRouteInfo(routeId)
+        val result = repository.getBusRouteInfo(recentSearchModel.id)
 
         if (result is Success) {
             routeInfo = result.data()
@@ -59,7 +59,7 @@ class BusRouteDetailViewModelImpl(
     }
 
     private fun updateRecentSearch() {
-        val result = repository.insertRecentSearch(Test(routeInfo.name))
+        val result = repository.insertRecentSearch(recentSearchModel)
 
         if (result is Error) {
             error = result.message()

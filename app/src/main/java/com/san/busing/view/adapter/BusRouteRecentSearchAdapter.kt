@@ -5,15 +5,15 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.san.busing.data.entity.Test
+import com.san.busing.data.entity.BusRouteRecentSearch
 import com.san.busing.databinding.ItemRecentSearchBusRouteBinding
-import com.san.busing.domain.model.BusRouteModel
+import com.san.busing.domain.model.BusRouteRecentSearchModel
 import com.san.busing.domain.utils.Const
 import com.san.busing.view.screen.BusRouteDetailActivity
 
 class BusRouteRecentSearchAdapter(
     // TODO: test 엔티티 전환
-    private val items: List<Test>, private val context: Context
+    private val items: List<BusRouteRecentSearchModel>, private val context: Context
 ) : RecyclerView.Adapter<BusRouteRecentSearchAdapter.BusRouteRecentSearchViewHolder>() {
     inner class BusRouteRecentSearchViewHolder(
         private val binding: ItemRecentSearchBusRouteBinding
@@ -30,7 +30,9 @@ class BusRouteRecentSearchAdapter(
         private fun setOnItemClickListener(position: Int) {
             binding.clRecentSearchBusRoute.setOnClickListener {
                 val intent = Intent(context, BusRouteDetailActivity::class.java)
-                intent.putExtra(Const.TAG_ROUTE_ID, items[position].name)
+                intent.putExtra(
+                    Const.TAG_ROUTE_ID,
+                    BusRouteRecentSearchModel(items[position].id, items[position].name))
 
                 context.startActivity(intent)
             }

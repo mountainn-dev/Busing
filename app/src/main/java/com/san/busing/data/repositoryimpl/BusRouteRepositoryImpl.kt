@@ -6,11 +6,12 @@ import com.san.busing.BuildConfig
 import com.san.busing.data.repository.BusRouteRepository
 import com.san.busing.data.source.remote.retrofit.BusRouteService
 import com.san.busing.data.Result
-import com.san.busing.data.entity.Test
-import com.san.busing.data.source.local.database.TestDatabase
+import com.san.busing.data.entity.BusRouteRecentSearch
+import com.san.busing.data.source.local.database.RecentSearchDatabase
 import com.san.busing.data.type.Id
 import com.san.busing.domain.model.BusRouteInfoModel
 import com.san.busing.domain.model.BusRouteModel
+import com.san.busing.domain.model.BusRouteRecentSearchModel
 import retrofit2.Retrofit
 
 class BusRouteRepositoryImpl(
@@ -19,7 +20,7 @@ class BusRouteRepositoryImpl(
 ) : BusRouteRepository {
     private val service = retrofit.create(BusRouteService::class.java)
     private val db = Room.databaseBuilder(
-        context, TestDatabase::class.java, "recentSearch").build()
+        context, RecentSearchDatabase::class.java, "recentSearch").build()
 
     override suspend fun getBusRoutes(keyword: String): Result<List<BusRouteModel>> {
         try {
@@ -39,17 +40,17 @@ class BusRouteRepositoryImpl(
         }
     }
 
-    override fun getTest(): Result<List<Test>> {
+    override fun getRecentSearch(): Result<List<BusRouteRecentSearchModel>> {
         try {
-            return Result.success(db.testDao().getAll())
+            return Result.success(db.recentSearchDao().getAll().map { it.toBusRouteRecentSearchModel() })
         } catch (e: Exception) {
             return Result.error(e)
         }
     }
 
-    override fun insertRecentSearch(test: Test): Result<Boolean> {
+    override fun insertRecentSearch(recentSearchModel: BusRouteRecentSearchModel): Result<Boolean> {
         try {
-            db.testDao().insert(test)
+            db.recentSearchDao().insert(recentSearchModel.toBusRouteRecentSearchEntity())
             return Result.success(true)
         } catch (e: Exception) {
             return Result.error(e)

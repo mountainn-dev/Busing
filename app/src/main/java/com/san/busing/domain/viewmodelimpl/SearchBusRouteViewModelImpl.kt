@@ -7,9 +7,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.san.busing.data.Error
 import com.san.busing.data.Success
-import com.san.busing.data.entity.Test
+import com.san.busing.data.entity.BusRouteRecentSearch
 import com.san.busing.data.repository.BusRouteRepository
 import com.san.busing.domain.model.BusRouteModel
+import com.san.busing.domain.model.BusRouteRecentSearchModel
 import com.san.busing.domain.utils.Const
 import com.san.busing.domain.viewmodel.SearchViewModel
 import kotlinx.coroutines.Dispatchers
@@ -31,7 +32,7 @@ class SearchBusRouteViewModelImpl(
 
     override var searchResultContent = listOf<BusRouteModel>()
 
-    override var recentSearchContent = listOf<Test>()
+    override var recentSearchContent = listOf<BusRouteRecentSearchModel>()
 
     override var keyword = Const.EMPTY_TEXT
 
@@ -82,7 +83,7 @@ class SearchBusRouteViewModelImpl(
         searchResultContentLoaded.isInitialized && searchResultContentLoaded.value!!
 
     private fun loadRecentSearchContent() {
-        val result = repository.getTest()
+        val result = repository.getRecentSearch()
 
         if (result is Success) {
             recentSearchContent = result.data()
