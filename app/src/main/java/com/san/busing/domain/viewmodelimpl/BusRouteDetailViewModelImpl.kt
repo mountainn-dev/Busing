@@ -13,7 +13,9 @@ import com.san.busing.data.repositoryimpl.BusRouteRepositoryImpl
 import com.san.busing.data.type.Id
 import com.san.busing.domain.model.BusRouteInfoModel
 import com.san.busing.domain.viewmodel.BusRouteDetailViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class BusRouteDetailViewModelImpl(
     private val repository: BusRouteRepository,
@@ -36,7 +38,7 @@ class BusRouteDetailViewModelImpl(
 
             viewModelScope.launch {
                 loadRouteInfo()
-                updateRecentSearch()
+                withContext(Dispatchers.IO) { updateRecentSearch() }
                 isLoading = false
             }
         }

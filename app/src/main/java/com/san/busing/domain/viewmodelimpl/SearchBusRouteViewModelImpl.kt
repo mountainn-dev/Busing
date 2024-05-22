@@ -11,7 +11,9 @@ import com.san.busing.data.entity.Test
 import com.san.busing.data.repository.BusRouteRepository
 import com.san.busing.domain.model.BusRouteModel
 import com.san.busing.domain.viewmodel.SearchViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class SearchBusRouteViewModelImpl(
     private val repository: BusRouteRepository
@@ -59,7 +61,10 @@ class SearchBusRouteViewModelImpl(
     }
 
     override fun load() {
-        loadRecentSearchContent()
+        Log.d("load", "start")
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) { loadRecentSearchContent() }
+        }
     }
 
     private fun loadRecentSearchContent() {
