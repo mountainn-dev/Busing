@@ -10,6 +10,7 @@ import com.san.busing.data.Success
 import com.san.busing.data.entity.Test
 import com.san.busing.data.repository.BusRouteRepository
 import com.san.busing.domain.model.BusRouteModel
+import com.san.busing.domain.utils.Const
 import com.san.busing.domain.viewmodel.SearchViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -21,7 +22,7 @@ class SearchBusRouteViewModelImpl(
     private val searchResultContentLoaded = MutableLiveData<Boolean>()
     private val recentSearchContentLoaded = MutableLiveData<Boolean>()
     private var isSearching = false
-    private var error = ""
+    private var error = Const.EMPTY_TEXT
 
     override val searchResultContentReady: LiveData<Boolean>
         get() = searchResultContentLoaded
@@ -32,7 +33,7 @@ class SearchBusRouteViewModelImpl(
 
     override var recentSearchContent = listOf<Test>()
 
-    override var keyword = ""
+    override var keyword = Const.EMPTY_TEXT
 
     override fun search(keyword: String) {
         if (!isSearching) {
@@ -55,17 +56,30 @@ class SearchBusRouteViewModelImpl(
             searchResultContentLoaded.postValue(true)
         } else {
             error = (result as Error).message()
-            Log.e("BusRoute Exception", error)
+            Log.e(Const.BUS_ROUTE_EXCEPTION, error)
             searchResultContentLoaded.postValue(false)
         }
     }
 
+    /**
+     * fun load(): void
+     *
+     * HomeActivity 프레그먼트 탭 전환 혹은 BusRouteInfo 확인 이후 프레그먼트가 재개될 때 실행
+     */
     override fun load() {
-        Log.d("load", "start")
+        loadSearchResultContent()
         viewModelScope.launch {
             withContext(Dispatchers.IO) { loadRecentSearchContent() }
         }
     }
+
+    private fun loadSearchResultContent() {
+        if (isSearchResultUsable()) searchResultContentLoaded.postValue(true)
+        else searchResultContentLoaded.postValue(false)
+    }
+
+    private fun isSearchResultUsable() =
+        searchResultContentLoaded.isInitialized && searchResultContentLoaded.value!!
 
     private fun loadRecentSearchContent() {
         val result = repository.getTest()
@@ -75,7 +89,7 @@ class SearchBusRouteViewModelImpl(
             recentSearchContentLoaded.postValue(true)
         } else {
             error = (result as Error).message()
-            Log.e("Recent Search Exception", error)
+            Log.e(Const.RECENT_SEARCH_EXCEPTION, error)
             recentSearchContentLoaded.postValue(false)
         }
     }

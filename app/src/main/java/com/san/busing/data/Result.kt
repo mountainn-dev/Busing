@@ -1,5 +1,7 @@
 package com.san.busing.data
 
+import kotlin.Exception
+
 abstract class Result<T> {
     companion object {
         /**
@@ -10,7 +12,8 @@ abstract class Result<T> {
          * 비어있는 값을 반환한 경우에는 Error 타입으로 전환되도록 작성
          */
         fun <T> success(data: T): Result<T> {
-            if (data is List<*> && data.isEmpty()) return Error(NoSuchElementException())
+            if (data is List<*> && data.isEmpty())
+                return Error(Exception(ExceptionMessage.NO_DATA_COLLECTION_EXCEPTION))
 
             return Success(data)
         }

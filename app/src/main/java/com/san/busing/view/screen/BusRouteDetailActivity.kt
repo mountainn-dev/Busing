@@ -8,6 +8,7 @@ import com.san.busing.BuildConfig
 import com.san.busing.data.repositoryimpl.BusRouteRepositoryImpl
 import com.san.busing.data.type.Id
 import com.san.busing.databinding.ActivityBusRouteDetailBinding
+import com.san.busing.domain.utils.Const
 import com.san.busing.domain.utils.Utils
 import com.san.busing.domain.viewmodel.BusRouteDetailViewModel
 import com.san.busing.domain.viewmodelfactory.BusRouteDetailViewModelFactory
@@ -22,7 +23,7 @@ class BusRouteDetailActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         val repository = BusRouteRepositoryImpl(Utils.getRetrofit(BuildConfig.ROUTES_URL), this.applicationContext)
-        val routeId = intent.getSerializableExtra("routeId") as Id
+        val routeId = intent.getSerializableExtra(Const.TAG_ROUTE_ID) as Id
         val viewModel = ViewModelProvider(this, BusRouteDetailViewModelFactory(repository, routeId)).get(
             BusRouteDetailViewModelImpl::class.java
         )
@@ -31,7 +32,7 @@ class BusRouteDetailActivity : AppCompatActivity() {
         initListener(viewModel)
     }
 
-    private fun initObserver(viewModel: BusRouteDetailViewModelImpl) {
+    private fun initObserver(viewModel: BusRouteDetailViewModel) {
         viewModel.routeInfoReady.observe(this, routeInfoReadyObserver(viewModel))
     }
 
@@ -41,9 +42,9 @@ class BusRouteDetailActivity : AppCompatActivity() {
             binding.txtRouteStartStation.text = viewModel.routeInfo.startStationName
             binding.txtRouteEndStation.text = viewModel.routeInfo.endStationName
         } else {
-            binding.txtRouteName.text = EMPTY
-            binding.txtRouteStartStation.text = EMPTY
-            binding.txtRouteEndStation.text = EMPTY
+            binding.txtRouteName.text = Const.EMPTY_TEXT
+            binding.txtRouteStartStation.text = Const.EMPTY_TEXT
+            binding.txtRouteEndStation.text = Const.EMPTY_TEXT
         }
     }
 
@@ -53,9 +54,5 @@ class BusRouteDetailActivity : AppCompatActivity() {
 
     private fun setFabRefreshListener(viewModel: BusRouteDetailViewModel) {
         binding.fabRefresh.setOnClickListener { viewModel.load() }
-    }
-
-    companion object {
-        private const val EMPTY = ""
     }
 }

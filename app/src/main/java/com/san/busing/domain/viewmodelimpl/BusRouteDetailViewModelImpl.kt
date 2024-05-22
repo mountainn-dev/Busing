@@ -12,6 +12,7 @@ import com.san.busing.data.repository.BusRouteRepository
 import com.san.busing.data.repositoryimpl.BusRouteRepositoryImpl
 import com.san.busing.data.type.Id
 import com.san.busing.domain.model.BusRouteInfoModel
+import com.san.busing.domain.utils.Const
 import com.san.busing.domain.viewmodel.BusRouteDetailViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -23,7 +24,7 @@ class BusRouteDetailViewModelImpl(
 ) : BusRouteDetailViewModel, ViewModel() {
     private val routeInfoLoaded = MutableLiveData<Boolean>()
     private var isLoading = false
-    private var error = ""
+    private var error = Const.EMPTY_TEXT
 
     override val routeInfoReady: LiveData<Boolean>
         get() = routeInfoLoaded
@@ -52,7 +53,7 @@ class BusRouteDetailViewModelImpl(
             routeInfoLoaded.postValue(true)
         } else {
             error = (result as Error).message()
-            Log.e("BusRouteInfo Exception", error)
+            Log.e(Const.BUS_ROUTE_INFO_EXCEPTION, error)
             routeInfoLoaded.postValue(false)
         }
     }
@@ -60,10 +61,9 @@ class BusRouteDetailViewModelImpl(
     private fun updateRecentSearch() {
         val result = repository.insertRecentSearch(Test(routeInfo.name))
 
-        if (result is Success) {
-
-        } else {
-
+        if (result is Error) {
+            error = result.message()
+            Log.e(Const.RECENT_SEARCH_EXCEPTION, error)
         }
     }
 }

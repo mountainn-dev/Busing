@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.san.busing.view.screen.BusRouteDetailActivity
 import com.san.busing.databinding.ItemSearchResultBusRouteBinding
 import com.san.busing.domain.model.BusRouteModel
+import com.san.busing.domain.utils.Const
 
 class BusRouteSearchResultAdapter(
     private val items: List<BusRouteModel>, private val context: Context
@@ -29,7 +30,7 @@ class BusRouteSearchResultAdapter(
         private fun setOnItemClickListener(position: Int) {
             binding.clRouteItem.setOnClickListener {
                 val intent = Intent(context, BusRouteDetailActivity::class.java)
-                intent.putExtra("routeId", items[position].id)
+                intent.putExtra(Const.TAG_ROUTE_ID, items[position].id)
 
                 context.startActivity(intent)
             }

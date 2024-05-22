@@ -94,20 +94,7 @@ class SearchRouteFragment : Fragment() {
     }
 
     private fun loadContent(viewModel: SearchViewModel) {
-        loadSearchResultContent(viewModel)
-        loadRecentSearchContent(viewModel)
-    }
-
-    private fun loadSearchResultContent(viewModel: SearchViewModel) {
         binding.edRoute.setText(viewModel.keyword)   // 검색 키워드 복원
-        if (viewModel.searchResultContentReady.isInitialized && viewModel.searchResultContentReady.value!!) {   // 검색 결과 복원
-            binding.rvSearchResult.adapter = BusRouteSearchResultAdapter(viewModel.searchResultContent, requireActivity())
-            binding.rvSearchResult.layoutManager = LinearLayoutManager(activity)
-            binding.rvSearchResult.visibility = RecyclerView.VISIBLE
-        }
-    }
-
-    private fun loadRecentSearchContent(viewModel: SearchViewModel) {
         viewModel.load()
     }
 }

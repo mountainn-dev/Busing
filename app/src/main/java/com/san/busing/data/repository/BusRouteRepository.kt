@@ -9,7 +9,7 @@ import com.san.busing.domain.model.BusRouteModel
 interface BusRouteRepository {
     suspend fun getBusRoutes(keyword: String): Result<List<BusRouteModel>>
     suspend fun getBusRouteInfo(id: Id): Result<BusRouteInfoModel>
+    // TODO: test 엔티티 전환
     fun getTest(): Result<List<Test>>
-
     fun insertRecentSearch(test: Test): Result<Boolean>
 }
