@@ -12,7 +12,10 @@
     <!-- Bus Route -->
     <dimen name="height_search_layout">132dp</dimen>
     <dimen name="radius_background_edit_text">12dp</dimen>
-    <dimen name="height_item_bus_route">72dp</dimen>
+    <dimen name="height_item_search_result">72dp</dimen>
+    <dimen name="width_item_recent_search">64dp</dimen>
+    <dimen name="size_icon_delete">8dp</dimen>
+    <dimen name="margin_icon_delete">8dp</dimen>
 
     <!-- Bus Route Info -->
     <dimen name="height_info_layout">200dp</dimen>

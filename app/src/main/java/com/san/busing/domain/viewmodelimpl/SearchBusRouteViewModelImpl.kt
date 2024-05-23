@@ -7,29 +7,42 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.san.busing.data.Error
 import com.san.busing.data.Success
-import com.san.busing.data.repositoryimpl.BusRouteRepositoryImpl
+import com.san.busing.data.repository.BusRouteRepository
 import com.san.busing.domain.model.BusRouteModel
+import com.san.busing.domain.model.BusRouteRecentSearchModel
+import com.san.busing.domain.utils.Const
 import com.san.busing.domain.viewmodel.SearchViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
-class SearchBusRouteViewModelImpl(private val repository: BusRouteRepositoryImpl) : SearchViewModel, ViewModel() {
-    var keyword = ""
-    var content = listOf<BusRouteModel>()
-    private val contentLoaded = MutableLiveData<Boolean>()
-    private var isLoading = false
-    private var error = ""
+class SearchBusRouteViewModelImpl(
+    private val repository: BusRouteRepository
+) : SearchViewModel, ViewModel() {
+    private val searchResultContentLoaded = MutableLiveData<Boolean>()
+    private val recentSearchContentLoaded = MutableLiveData<Boolean>()
+    private var isSearching = false
+    private var error = Const.EMPTY_TEXT
 
-    override val contentReady: LiveData<Boolean>
-        get() = contentLoaded
+    override val searchResultContentReady: LiveData<Boolean>
+        get() = searchResultContentLoaded
+    override val recentSearchContentReady: LiveData<Boolean>
+        get() = recentSearchContentLoaded
+
+    override var searchResultContent = listOf<BusRouteModel>()
+
+    override var recentSearchContent = listOf<BusRouteRecentSearchModel>()
+
+    override var keyword = Const.EMPTY_TEXT
 
     override fun search(keyword: String) {
-        if (!isLoading) {
-            isLoading = true
+        if (!isSearching) {
+            isSearching = true
             this.keyword = keyword
 
             viewModelScope.launch {
                 searchBusRoutes(keyword)
-                isLoading = false
+                isSearching = false
             }
         }
     }
@@ -39,12 +52,63 @@ class SearchBusRouteViewModelImpl(private val repository: BusRouteRepositoryImpl
 
         if (result is Success) {
             // 검색 결과 출력 시 노선 번호, 운행 지역 순으로 출력
-            content = result.data().sortedWith(compareBy({it.name}, {it.region}))
-            contentLoaded.postValue(true)
+            searchResultContent = result.data().sortedWith(compareBy({it.name}, {it.region}))
+            searchResultContentLoaded.postValue(true)
         } else {
             error = (result as Error).message()
-            Log.e("BusRoute Exception", error)
-            contentLoaded.postValue(false)
+            Log.e(Const.BUS_ROUTE_EXCEPTION, error)
+            searchResultContentLoaded.postValue(false)
+        }
+    }
+
+    /**
+     * fun load(): void
+     *
+     * HomeActivity 프레그먼트 탭 전환 혹은 BusRouteInfo 확인 이후 프레그먼트가 재개될 때 실행
+     */
+    override fun load() {
+        loadSearchResultContent()
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) { loadRecentSearchContent() }
+        }
+    }
+
+    private fun loadSearchResultContent() {
+        if (isSearchResultUsable()) searchResultContentLoaded.postValue(true)
+        else searchResultContentLoaded.postValue(false)
+    }
+
+    private fun isSearchResultUsable() =
+        searchResultContentLoaded.isInitialized && searchResultContentLoaded.value!!
+
+    private fun loadRecentSearchContent() {
+        val result = repository.getRecentSearch()
+
+        if (result is Success) {
+            recentSearchContent = result.data()
+            recentSearchContentLoaded.postValue(true)
+        } else {
+            error = (result as Error).message()
+            Log.e(Const.RECENT_SEARCH_EXCEPTION, error)
+            recentSearchContentLoaded.postValue(false)
+        }
+    }
+
+    override fun delete(recentSearchModel: BusRouteRecentSearchModel) {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                deleteRecentSearch(recentSearchModel)
+                loadRecentSearchContent()
+            }
+        }
+    }
+
+    private fun deleteRecentSearch(recentSearchModel: BusRouteRecentSearchModel) {
+        val result = repository.deleteRecentSearch(recentSearchModel)
+
+        if (result is Error) {
+            error = result.message()
+            Log.e(Const.RECENT_SEARCH_EXCEPTION, error)
         }
     }
 }

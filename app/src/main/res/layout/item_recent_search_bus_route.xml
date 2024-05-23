@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/clBusRouteRecentSearch"
+    android:layout_width="@dimen/width_item_recent_search"
+    android:layout_height="match_parent"
+    android:layout_marginHorizontal="@dimen/margin_default"
+    android:gravity="center"
+    android:background="@color/light_grey">
+
+    <ImageButton
+        android:id="@+id/btnDelete"
+        android:layout_width="@dimen/size_icon_delete"
+        android:layout_height="@dimen/size_icon_delete"
+        android:layout_margin="@dimen/margin_icon_delete"
+        android:src="@drawable/ic_delete"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/txtBusRouteRecentSearchName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
