@@ -3,11 +3,10 @@ package com.san.busing.data.repositoryimpl
 import android.content.Context
 import androidx.room.Room
 import com.san.busing.BuildConfig
-import com.san.busing.data.repository.BusRouteRepository
-import com.san.busing.data.source.remote.retrofit.BusRouteService
 import com.san.busing.data.Result
-import com.san.busing.data.entity.BusRouteRecentSearch
+import com.san.busing.data.repository.BusRouteRepository
 import com.san.busing.data.source.local.database.RecentSearchDatabase
+import com.san.busing.data.source.remote.retrofit.BusRouteService
 import com.san.busing.data.type.Id
 import com.san.busing.domain.model.BusRouteInfoModel
 import com.san.busing.domain.model.BusRouteModel
@@ -51,6 +50,15 @@ class BusRouteRepositoryImpl(
     override fun insertRecentSearch(recentSearchModel: BusRouteRecentSearchModel): Result<Boolean> {
         try {
             db.recentSearchDao().insert(recentSearchModel.toBusRouteRecentSearchEntity())
+            return Result.success(true)
+        } catch (e: Exception) {
+            return Result.error(e)
+        }
+    }
+
+    override fun deleteRecentSearch(recentSearchModel: BusRouteRecentSearchModel): Result<Boolean> {
+        try {
+            db.recentSearchDao().delete(recentSearchModel.toBusRouteRecentSearchEntity())
             return Result.success(true)
         } catch (e: Exception) {
             return Result.error(e)

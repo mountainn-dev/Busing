@@ -1,6 +1,7 @@
 package com.san.busing.data.source.local.dao
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -13,4 +14,7 @@ interface RecentSearchDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insert(busRouteRecentSearch: BusRouteRecentSearch)
+
+    @Delete
+    fun delete(busRouteRecentSearch: BusRouteRecentSearch)
 }

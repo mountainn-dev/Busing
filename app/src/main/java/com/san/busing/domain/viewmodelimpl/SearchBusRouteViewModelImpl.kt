@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.san.busing.data.Error
 import com.san.busing.data.Success
-import com.san.busing.data.entity.BusRouteRecentSearch
 import com.san.busing.data.repository.BusRouteRepository
 import com.san.busing.domain.model.BusRouteModel
 import com.san.busing.domain.model.BusRouteRecentSearchModel
@@ -92,6 +91,24 @@ class SearchBusRouteViewModelImpl(
             error = (result as Error).message()
             Log.e(Const.RECENT_SEARCH_EXCEPTION, error)
             recentSearchContentLoaded.postValue(false)
+        }
+    }
+
+    override fun delete(recentSearchModel: BusRouteRecentSearchModel) {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                deleteRecentSearch(recentSearchModel)
+                loadRecentSearchContent()
+            }
+        }
+    }
+
+    private fun deleteRecentSearch(recentSearchModel: BusRouteRecentSearchModel) {
+        val result = repository.deleteRecentSearch(recentSearchModel)
+
+        if (result is Error) {
+            error = result.message()
+            Log.e(Const.RECENT_SEARCH_EXCEPTION, error)
         }
     }
 }

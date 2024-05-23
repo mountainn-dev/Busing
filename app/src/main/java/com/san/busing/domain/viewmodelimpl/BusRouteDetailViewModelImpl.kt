@@ -7,9 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.san.busing.data.Error
 import com.san.busing.data.Success
-import com.san.busing.data.entity.BusRouteRecentSearch
 import com.san.busing.data.repository.BusRouteRepository
-import com.san.busing.data.type.Id
 import com.san.busing.domain.model.BusRouteInfoModel
 import com.san.busing.domain.model.BusRouteRecentSearchModel
 import com.san.busing.domain.utils.Const

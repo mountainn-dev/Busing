@@ -13,4 +13,5 @@ interface SearchViewModel {
     var keyword: String
     fun search(keyword: String)
     fun load()
+    fun delete(recentSearchModel: BusRouteRecentSearchModel)
 }

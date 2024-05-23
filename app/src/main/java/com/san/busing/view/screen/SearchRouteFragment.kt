@@ -1,6 +1,7 @@
 package com.san.busing.view.screen
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,12 +15,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.san.busing.BuildConfig
 import com.san.busing.data.repositoryimpl.BusRouteRepositoryImpl
 import com.san.busing.databinding.FragmentSearchRouteBinding
+import com.san.busing.domain.model.BusRouteRecentSearchModel
+import com.san.busing.domain.utils.Const
 import com.san.busing.domain.utils.Utils
 import com.san.busing.domain.viewmodel.SearchViewModel
 import com.san.busing.domain.viewmodelfactory.SearchBusRouteViewModelFactory
 import com.san.busing.domain.viewmodelimpl.SearchBusRouteViewModelImpl
 import com.san.busing.view.adapter.BusRouteRecentSearchAdapter
 import com.san.busing.view.adapter.BusRouteSearchResultAdapter
+import com.san.busing.view.listener.ItemClickEventListener
 import com.san.busing.view.listener.RecyclerViewScrollListener
 
 class SearchRouteFragment : Fragment() {
@@ -60,11 +64,28 @@ class SearchRouteFragment : Fragment() {
 
     private fun recentSearchContentReadyObserver(viewModel: SearchViewModel) = Observer<Boolean> {
         if (it) {
-            binding.rvRecentSearch.adapter = BusRouteRecentSearchAdapter(viewModel.recentSearchContent, requireActivity())
+            binding.rvRecentSearch.adapter = BusRouteRecentSearchAdapter(
+                viewModel.recentSearchContent,
+                recentSearchItemClickEventListener(viewModel.recentSearchContent))
             binding.rvRecentSearch.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
             binding.rvRecentSearch.visibility = RecyclerView.VISIBLE
         } else {
             binding.rvRecentSearch.visibility = RecyclerView.INVISIBLE
+        }
+    }
+
+    private fun recentSearchItemClickEventListener(items: List<BusRouteRecentSearchModel>) = object: ItemClickEventListener {
+        override fun onItemClickListener(position: Int) {
+            val intent = Intent(requireActivity(), BusRouteDetailActivity::class.java)
+            intent.putExtra(
+                Const.TAG_ROUTE_ID,
+                BusRouteRecentSearchModel(items[position].id, items[position].name)
+            )
+            requireActivity().startActivity(intent)
+        }
+
+        override fun onDeleteButtonClickListener(position: Int) {
+            viewModel.delete(items[position])
         }
     }
 
