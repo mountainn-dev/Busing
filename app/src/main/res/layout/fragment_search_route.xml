@@ -18,7 +18,7 @@
             android:id="@+id/edRoute"
             android:layout_width="match_parent"
             android:layout_height="@dimen/zero_height"
-            android:layout_weight="0.5"
+            android:layout_weight="0.45"
             android:padding="@dimen/padding_default"
 
             android:hint="@string/route_input_hint"
@@ -29,7 +29,7 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/zero_height"
-            android:layout_weight="0.5"
+            android:layout_weight="0.55"
             android:layout_marginTop="@dimen/margin_default">
 
             <TextView

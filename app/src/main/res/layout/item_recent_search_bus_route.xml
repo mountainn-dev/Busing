@@ -14,6 +14,7 @@
         android:layout_width="@dimen/size_icon_delete"
         android:layout_height="@dimen/size_icon_delete"
         android:layout_margin="@dimen/margin_icon_delete"
+        android:padding="@dimen/padding_icon_delete"
         android:src="@drawable/ic_delete"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -22,6 +23,8 @@
         android:id="@+id/txtBusRouteRecentSearchName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:maxLines="1"
+        android:ellipsize="end"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
