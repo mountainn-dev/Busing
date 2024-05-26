@@ -1,7 +1,8 @@
 package com.san.busing.data.entity
 
-import com.san.busing.data.type.CodeNumber
-import com.san.busing.data.type.Id
+import com.san.busing.data.vo.Code
+import com.san.busing.data.vo.Id
+import com.san.busing.data.vo.RouteTypeCode
 import com.san.busing.domain.model.BusRouteModel
 import com.tickaroo.tikxml.annotation.*
 
@@ -17,7 +18,7 @@ data class BusRoute(
     fun toBusRouteModel() = BusRouteModel(
         Id(routeId),
         routeName,
-        CodeNumber(routeTypeCd),
+        RouteTypeCode(routeTypeCd),
         routeTypeName,
         regionName
     )

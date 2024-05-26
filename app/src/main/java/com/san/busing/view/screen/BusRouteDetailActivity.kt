@@ -6,7 +6,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.san.busing.BuildConfig
 import com.san.busing.data.repositoryimpl.BusRouteRepositoryImpl
-import com.san.busing.data.type.Id
 import com.san.busing.databinding.ActivityBusRouteDetailBinding
 import com.san.busing.domain.model.BusRouteRecentSearchModel
 import com.san.busing.domain.utils.Const

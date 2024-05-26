@@ -1,7 +1,7 @@
 package com.san.busing.domain.model
 
 import com.san.busing.data.entity.BusRouteRecentSearch
-import com.san.busing.data.type.Id
+import com.san.busing.data.vo.Id
 import java.io.Serializable
 
 data class BusRouteRecentSearchModel(

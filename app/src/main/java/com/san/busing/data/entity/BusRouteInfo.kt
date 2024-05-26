@@ -1,7 +1,6 @@
 package com.san.busing.data.entity
 
-import com.san.busing.data.type.Id
-import com.san.busing.data.type.Time
+import com.san.busing.data.vo.Id
 import com.san.busing.domain.model.BusRouteInfoModel
 import com.tickaroo.tikxml.annotation.Element
 import com.tickaroo.tikxml.annotation.Path

@@ -7,7 +7,7 @@ import com.san.busing.data.Result
 import com.san.busing.data.repository.BusRouteRepository
 import com.san.busing.data.source.local.database.RecentSearchDatabase
 import com.san.busing.data.source.remote.retrofit.BusRouteService
-import com.san.busing.data.type.Id
+import com.san.busing.data.vo.Id
 import com.san.busing.domain.model.BusRouteInfoModel
 import com.san.busing.domain.model.BusRouteModel
 import com.san.busing.domain.model.BusRouteRecentSearchModel

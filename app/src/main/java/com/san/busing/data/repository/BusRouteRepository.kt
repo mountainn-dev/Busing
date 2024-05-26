@@ -1,7 +1,7 @@
 package com.san.busing.data.repository
 
 import com.san.busing.data.Result
-import com.san.busing.data.type.Id
+import com.san.busing.data.vo.Id
 import com.san.busing.domain.model.BusRouteInfoModel
 import com.san.busing.domain.model.BusRouteModel
 import com.san.busing.domain.model.BusRouteRecentSearchModel
