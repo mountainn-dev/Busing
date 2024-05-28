@@ -9,9 +9,11 @@ import androidx.lifecycle.viewModelScope
 import com.san.busing.data.Error
 import com.san.busing.data.ExceptionMessage
 import com.san.busing.data.Success
-import com.san.busing.data.repository.BusRouteRepository
-import com.san.busing.domain.model.BusRouteSearchResultModel
-import com.san.busing.domain.model.BusRouteRecentSearchModel
+import com.san.busing.data.repository.BusRepository
+import com.san.busing.domain.model.RecentSearchModel
+import com.san.busing.domain.model.SearchResultModel
+import com.san.busing.domain.modelimpl.BusRouteRecentSearchModelImpl
+import com.san.busing.domain.modelimpl.BusRouteSearchResultModelImpl
 import com.san.busing.domain.utils.Const
 import com.san.busing.domain.viewmodel.SearchViewModel
 import kotlinx.coroutines.Dispatchers
@@ -19,7 +21,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class SearchBusRouteViewModelImpl(
-    private val repository: BusRouteRepository
+    private val repository: BusRepository
 ) : SearchViewModel, ViewModel() {
     private val searchResultContentLoaded = MutableLiveData<Boolean>()
     private val recentSearchContentLoaded = MutableLiveData<Boolean>()
@@ -31,9 +33,9 @@ class SearchBusRouteViewModelImpl(
     override val recentSearchContentReady: LiveData<Boolean>
         get() = recentSearchContentLoaded
 
-    override var searchResultContent = listOf<BusRouteSearchResultModel>()
+    override var searchResultContent: List<SearchResultModel> = listOf<BusRouteSearchResultModelImpl>()
 
-    override var recentSearchContent = listOf<BusRouteRecentSearchModel>()
+    override var recentSearchContent: List<RecentSearchModel> = listOf<BusRouteRecentSearchModelImpl>()
 
     override var keyword = Const.EMPTY_TEXT
 
@@ -96,6 +98,21 @@ class SearchBusRouteViewModelImpl(
         }
     }
 
+    override fun updateRecentSearch(recentSearchModel: RecentSearchModel) {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) { update(recentSearchModel) }
+        }
+    }
+
+    private fun update(recentSearchModel: RecentSearchModel) {
+        val result = repository.insertRecentSearch(recentSearchModel)
+
+        if (result is Error) {
+            error = result.message()
+            Log.e(ExceptionMessage.RECENT_SEARCH_EXCEPTION, error)
+        }
+    }
+
     override fun recentSearchIndex(context: Activity): Long {
         val newIndex = getRecentSearchIndex(context)
         updateRecentSearchIndex(context, newIndex)
@@ -118,7 +135,7 @@ class SearchBusRouteViewModelImpl(
         }
     }
 
-    override fun delete(recentSearchModel: BusRouteRecentSearchModel) {
+    override fun delete(recentSearchModel: RecentSearchModel) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 deleteRecentSearch(recentSearchModel)
@@ -127,7 +144,7 @@ class SearchBusRouteViewModelImpl(
         }
     }
 
-    private fun deleteRecentSearch(recentSearchModel: BusRouteRecentSearchModel) {
+    private fun deleteRecentSearch(recentSearchModel: RecentSearchModel) {
         val result = repository.deleteRecentSearch(recentSearchModel)
 
         if (result is Error) {

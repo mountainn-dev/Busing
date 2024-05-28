@@ -4,11 +4,11 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.san.busing.databinding.ItemRecentSearchBusRouteBinding
-import com.san.busing.domain.model.BusRouteRecentSearchModel
+import com.san.busing.domain.modelimpl.BusRouteRecentSearchModelImpl
 import com.san.busing.view.listener.ItemClickEventListener
 
 class BusRouteRecentSearchAdapter(
-    private val items: List<BusRouteRecentSearchModel>,
+    private val items: List<BusRouteRecentSearchModelImpl>,
     private val itemClickEventListener: ItemClickEventListener
 ) : RecyclerView.Adapter<BusRouteRecentSearchAdapter.BusRouteRecentSearchViewHolder>() {
 

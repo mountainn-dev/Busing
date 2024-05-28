@@ -1,11 +1,9 @@
 package com.san.busing.data.entity
 
-import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.san.busing.data.vo.Id
-import com.san.busing.domain.model.BusRouteRecentSearchModel
-import com.san.busing.domain.utils.Const
+import com.san.busing.domain.modelimpl.BusRouteRecentSearchModelImpl
 
 @Entity
 data class BusRouteRecentSearch(
@@ -13,7 +11,7 @@ data class BusRouteRecentSearch(
     val name: String,
     val index: Long
 ) {
-    fun toBusRouteRecentSearchModel() = BusRouteRecentSearchModel(
+    fun toBusRouteRecentSearchModel() = BusRouteRecentSearchModelImpl(
         Id(id),
         name,
         index
