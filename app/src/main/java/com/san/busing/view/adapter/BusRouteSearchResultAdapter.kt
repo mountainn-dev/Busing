@@ -1,42 +1,33 @@
 package com.san.busing.view.adapter
 
-import android.app.Activity
-import android.content.Context
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.san.busing.view.screen.BusRouteDetailActivity
 import com.san.busing.databinding.ItemSearchResultBusRouteBinding
-import com.san.busing.domain.model.BusRouteModel
-import com.san.busing.domain.model.BusRouteRecentSearchModel
-import com.san.busing.domain.utils.Const
+import com.san.busing.domain.model.BusRouteSearchResultModel
+import com.san.busing.view.listener.ItemClickEventListener
 
 class BusRouteSearchResultAdapter(
-    private val items: List<BusRouteModel>, private val context: Context
+    private val items: List<BusRouteSearchResultModel>,
+    private val itemClickEventListener: ItemClickEventListener
 ) : RecyclerView.Adapter<BusRouteSearchResultAdapter.BusRouteSearchResultViewHolder>() {
     inner class BusRouteSearchResultViewHolder(
         private val binding: ItemSearchResultBusRouteBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(position: Int) {
-            bindContent(position)
-            setOnItemClickListener(position)
+            loadContent(position)
+            setItemClickEventListener(position)
         }
 
-        private fun bindContent(position: Int) {
+        private fun loadContent(position: Int) {
             binding.txtRouteName.text = items[position].name
             binding.txtRouteTypeName.text = items[position].type.name()
             binding.txtRegion.text = items[position].region
         }
 
-        private fun setOnItemClickListener(position: Int) {
+        private fun setItemClickEventListener(position: Int) {
             binding.clRouteItem.setOnClickListener {
-                val intent = Intent(context, BusRouteDetailActivity::class.java)
-                intent.putExtra(
-                    Const.TAG_ROUTE_ID,
-                    BusRouteRecentSearchModel(items[position].id, items[position].name))
-
-                context.startActivity(intent)
+                itemClickEventListener.onItemClickListener(position)
             }
         }
     }

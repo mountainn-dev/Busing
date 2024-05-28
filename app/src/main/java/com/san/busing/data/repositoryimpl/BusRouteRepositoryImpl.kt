@@ -9,7 +9,7 @@ import com.san.busing.data.source.local.database.RecentSearchDatabase
 import com.san.busing.data.source.remote.retrofit.BusRouteService
 import com.san.busing.data.vo.Id
 import com.san.busing.domain.model.BusRouteInfoModel
-import com.san.busing.domain.model.BusRouteModel
+import com.san.busing.domain.model.BusRouteSearchResultModel
 import com.san.busing.domain.model.BusRouteRecentSearchModel
 import retrofit2.Retrofit
 
@@ -21,7 +21,7 @@ class BusRouteRepositoryImpl(
     private val db = Room.databaseBuilder(
         context, RecentSearchDatabase::class.java, "recentSearch").build()
 
-    override suspend fun getBusRoutes(keyword: String): Result<List<BusRouteModel>> {
+    override suspend fun getBusRoutes(keyword: String): Result<List<BusRouteSearchResultModel>> {
         try {
             val response = service.getBusRouteList(BuildConfig.API_KEY, keyword)
             return Result.success(response.body()!!.get())

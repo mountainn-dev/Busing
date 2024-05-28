@@ -1,15 +1,11 @@
 package com.san.busing.view.adapter
 
-import android.content.Context
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.san.busing.databinding.ItemRecentSearchBusRouteBinding
 import com.san.busing.domain.model.BusRouteRecentSearchModel
-import com.san.busing.domain.utils.Const
 import com.san.busing.view.listener.ItemClickEventListener
-import com.san.busing.view.screen.BusRouteDetailActivity
 
 class BusRouteRecentSearchAdapter(
     private val items: List<BusRouteRecentSearchModel>,
@@ -30,8 +26,10 @@ class BusRouteRecentSearchAdapter(
         }
 
         private fun setItemClickEventListener(position: Int) {
-            binding.clBusRouteRecentSearch.setOnClickListener { itemClickEventListener.onItemClickListener(position) }
-            binding.btnDelete.setOnClickListener { itemClickEventListener.onDeleteButtonClickListener(position) }
+            binding.clBusRouteRecentSearch.setOnClickListener {
+                itemClickEventListener.onItemClickListener(position) }
+            binding.btnDelete.setOnClickListener {
+                itemClickEventListener.onDeleteButtonClickListener(position) }
         }
     }
 
