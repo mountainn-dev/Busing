@@ -57,7 +57,8 @@ class SearchRouteFragment : Fragment() {
         if (it) {   // 검색 결과 목록 활성화
             binding.rvSearchResult.adapter = BusRouteSearchResultAdapter(
                 viewModel.searchResultContent,
-                searchResultItemClickEventListener(viewModel.searchResultContent))
+                searchResultItemClickEventListener(viewModel.searchResultContent),
+                requireActivity())
             binding.rvSearchResult.layoutManager = LinearLayoutManager(activity)
             binding.rvSearchResult.visibility = RecyclerView.VISIBLE
         } else {   // 검색 결과 목록 비활성화
