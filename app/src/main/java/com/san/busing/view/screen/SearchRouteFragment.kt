@@ -71,7 +71,12 @@ class SearchRouteFragment : Fragment() {
             val intent = Intent(requireActivity(), BusRouteDetailActivity::class.java)
             intent.putExtra(
                 Const.TAG_ROUTE_ID,
-                BusRouteRecentSearchModel(items[position].id, items[position].name))
+                BusRouteRecentSearchModel(
+                    items[position].id,
+                    items[position].name,
+                    viewModel.recentSearchIndex(requireActivity())
+                )
+            )
 
             requireActivity().startActivity(intent)
         }
@@ -96,7 +101,11 @@ class SearchRouteFragment : Fragment() {
             val intent = Intent(requireActivity(), BusRouteDetailActivity::class.java)
             intent.putExtra(
                 Const.TAG_ROUTE_ID,
-                BusRouteRecentSearchModel(items[position].id, items[position].name)
+                BusRouteRecentSearchModel(
+                    items[position].id,
+                    items[position].name,
+                    viewModel.recentSearchIndex(requireActivity())
+                )
             )
             requireActivity().startActivity(intent)
         }
@@ -133,6 +142,6 @@ class SearchRouteFragment : Fragment() {
 
     private fun loadContent(viewModel: SearchViewModel) {
         binding.edRoute.setText(viewModel.keyword)   // 검색 키워드 복원
-        viewModel.load()
+        viewModel.loadContent()
     }
 }

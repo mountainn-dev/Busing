@@ -23,6 +23,7 @@ class BusRouteRecentSearchAdapter(
 
         private fun loadContent(position: Int) {
             binding.txtBusRouteRecentSearchName.text = items[position].name
+            binding.idx.text = items[position].index.toString()
         }
 
         private fun setItemClickEventListener(position: Int) {

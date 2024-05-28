@@ -1,5 +1,6 @@
 package com.san.busing.data.repositoryimpl
 
+import android.app.Activity
 import android.content.Context
 import androidx.room.Room
 import com.san.busing.BuildConfig
@@ -11,6 +12,7 @@ import com.san.busing.data.vo.Id
 import com.san.busing.domain.model.BusRouteInfoModel
 import com.san.busing.domain.model.BusRouteSearchResultModel
 import com.san.busing.domain.model.BusRouteRecentSearchModel
+import com.san.busing.domain.utils.Const
 import retrofit2.Retrofit
 
 class BusRouteRepositoryImpl(
@@ -42,6 +44,28 @@ class BusRouteRepositoryImpl(
     override fun getRecentSearch(): Result<List<BusRouteRecentSearchModel>> {
         try {
             return Result.success(db.recentSearchDao().getAll().map { it.toBusRouteRecentSearchModel() })
+        } catch (e: Exception) {
+            return Result.error(e)
+        }
+    }
+
+    /**
+     * fun getRecentSearchIndex(context: Activty): Result<Int>
+     *
+     * 최근 검색 아이템의 생성 고유 인덱스 호출 함수
+     * preference.getInt() 에서 디폴트값을 설정하기 때문에 별도 예외처리를 진행하지 않는다.
+     */
+    override fun getRecentSearchIndex(context: Activity): Result<Long> {
+        val preference = context.getPreferences(Context.MODE_PRIVATE)
+        return Result.success(
+            preference.getLong(BuildConfig.BUS_ROUTE_PREFERENCE_KEY, Const.ZERO.toLong()))
+    }
+
+    override fun updateRecentSearchIndex(context: Activity, newIdx: Long): Result<Boolean> {
+        val preference = context.getPreferences(Context.MODE_PRIVATE)
+        try {
+            preference.edit().putLong(BuildConfig.BUS_ROUTE_PREFERENCE_KEY, newIdx).apply()
+            return Result.success(true)
         } catch (e: Exception) {
             return Result.error(e)
         }

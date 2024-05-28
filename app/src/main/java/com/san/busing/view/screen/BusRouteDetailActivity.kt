@@ -53,6 +53,6 @@ class BusRouteDetailActivity : AppCompatActivity() {
     }
 
     private fun setFabRefreshListener(viewModel: BusRouteDetailViewModel) {
-        binding.fabRefresh.setOnClickListener { viewModel.load() }
+        binding.fabRefresh.setOnClickListener { viewModel.loadContent() }
     }
 }

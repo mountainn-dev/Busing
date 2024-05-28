@@ -20,6 +20,7 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         buildConfigField("String", "API_KEY", getApiKey("api.key"))
+        buildConfigField("String", "BUS_ROUTE_PREFERENCE_KEY", getApiKey("busroute.preference.key"))
         buildConfigField("String", "STATION_URL", getApiKey("station.api.url"))
         buildConfigField("String", "LOCATION_URL", getApiKey("location.api.url"))
         buildConfigField("String", "ARRIVAL_URL", getApiKey("arrival.api.url"))

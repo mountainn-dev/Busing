@@ -1,11 +1,13 @@
 package com.san.busing.domain.viewmodelimpl
 
+import android.app.Activity
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.san.busing.data.Error
+import com.san.busing.data.ExceptionMessage
 import com.san.busing.data.Success
 import com.san.busing.data.repository.BusRouteRepository
 import com.san.busing.domain.model.BusRouteSearchResultModel
@@ -56,7 +58,7 @@ class SearchBusRouteViewModelImpl(
             searchResultContentLoaded.postValue(true)
         } else {
             error = (result as Error).message()
-            Log.e(Const.BUS_ROUTE_EXCEPTION, error)
+            Log.e(ExceptionMessage.BUS_ROUTE_EXCEPTION, error)
             searchResultContentLoaded.postValue(false)
         }
     }
@@ -66,7 +68,7 @@ class SearchBusRouteViewModelImpl(
      *
      * HomeActivity 프레그먼트 탭 전환 혹은 BusRouteInfo 확인 이후 프레그먼트가 재개될 때 실행
      */
-    override fun load() {
+    override fun loadContent() {
         loadSearchResultContent()
         viewModelScope.launch {
             withContext(Dispatchers.IO) { loadRecentSearchContent() }
@@ -85,12 +87,34 @@ class SearchBusRouteViewModelImpl(
         val result = repository.getRecentSearch()
 
         if (result is Success) {
-            recentSearchContent = result.data()
+            recentSearchContent = result.data().sortedByDescending { it.index }
             recentSearchContentLoaded.postValue(true)
         } else {
             error = (result as Error).message()
-            Log.e(Const.RECENT_SEARCH_EXCEPTION, error)
+            Log.e(ExceptionMessage.RECENT_SEARCH_EXCEPTION, error)
             recentSearchContentLoaded.postValue(false)
+        }
+    }
+
+    override fun recentSearchIndex(context: Activity): Long {
+        val newIndex = getRecentSearchIndex(context)
+        updateRecentSearchIndex(context, newIndex)
+
+        return newIndex
+    }
+
+    private fun getRecentSearchIndex(context: Activity): Long {
+        val result = repository.getRecentSearchIndex(context)
+
+        return (result as Success).data() + 1
+    }
+
+    private fun updateRecentSearchIndex(context: Activity, newIdx: Long) {
+        val result = repository.updateRecentSearchIndex(context, newIdx)
+
+        if (result is Error) {
+            error = result.message()
+            Log.e(ExceptionMessage.RECENT_SEARCH_EXCEPTION, error)
         }
     }
 
@@ -108,7 +132,7 @@ class SearchBusRouteViewModelImpl(
 
         if (result is Error) {
             error = result.message()
-            Log.e(Const.RECENT_SEARCH_EXCEPTION, error)
+            Log.e(ExceptionMessage.RECENT_SEARCH_EXCEPTION, error)
         }
     }
 }

@@ -1,8 +1,9 @@
 package com.san.busing.domain.viewmodel
 
+import android.app.Activity
 import androidx.lifecycle.LiveData
-import com.san.busing.domain.model.BusRouteSearchResultModel
 import com.san.busing.domain.model.BusRouteRecentSearchModel
+import com.san.busing.domain.model.BusRouteSearchResultModel
 
 interface SearchViewModel {
     val searchResultContentReady: LiveData<Boolean>
@@ -11,6 +12,7 @@ interface SearchViewModel {
     var recentSearchContent: List<BusRouteRecentSearchModel>
     var keyword: String
     fun search(keyword: String)
-    fun load()
+    fun loadContent()
+    fun recentSearchIndex(context: Activity): Long
     fun delete(recentSearchModel: BusRouteRecentSearchModel)
 }

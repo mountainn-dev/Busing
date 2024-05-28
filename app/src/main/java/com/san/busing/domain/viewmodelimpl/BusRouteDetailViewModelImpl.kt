@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.san.busing.data.Error
+import com.san.busing.data.ExceptionMessage
 import com.san.busing.data.Success
 import com.san.busing.data.repository.BusRouteRepository
 import com.san.busing.domain.model.BusRouteInfoModel
@@ -29,21 +30,23 @@ class BusRouteDetailViewModelImpl(
 
     override lateinit var routeInfo: BusRouteInfoModel
 
-    init { load() }
+    init {
+        loadContent()
+        update()
+    }
 
-    override fun load() {
+    override fun loadContent() {
         if (!isLoading) {
             isLoading = true
 
             viewModelScope.launch {
-                loadRouteInfo()
-                withContext(Dispatchers.IO) { updateRecentSearch() }
+                loadRouteInfoContent()
                 isLoading = false
             }
         }
     }
 
-    private suspend fun loadRouteInfo() {
+    private suspend fun loadRouteInfoContent() {
         val result = repository.getBusRouteInfo(recentSearchModel.id)
 
         if (result is Success) {
@@ -51,8 +54,14 @@ class BusRouteDetailViewModelImpl(
             routeInfoLoaded.postValue(true)
         } else {
             error = (result as Error).message()
-            Log.e(Const.BUS_ROUTE_INFO_EXCEPTION, error)
+            Log.e(ExceptionMessage.BUS_ROUTE_INFO_EXCEPTION, error)
             routeInfoLoaded.postValue(false)
+        }
+    }
+
+    private fun update() {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) { updateRecentSearch() }
         }
     }
 
@@ -61,7 +70,7 @@ class BusRouteDetailViewModelImpl(
 
         if (result is Error) {
             error = result.message()
-            Log.e(Const.RECENT_SEARCH_EXCEPTION, error)
+            Log.e(ExceptionMessage.RECENT_SEARCH_EXCEPTION, error)
         }
     }
 }

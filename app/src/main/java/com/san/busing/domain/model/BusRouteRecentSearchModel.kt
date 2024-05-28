@@ -6,10 +6,12 @@ import java.io.Serializable
 
 data class BusRouteRecentSearchModel(
     val id: Id,
-    val name: String
+    val name: String,
+    val index: Long
 ) : Serializable {
     fun toBusRouteRecentSearchEntity() = BusRouteRecentSearch(
         id.get(),
-        name
+        name,
+        index
     )
 }
