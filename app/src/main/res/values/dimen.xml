@@ -21,7 +21,7 @@
 
         <!-- Search Result -->
         <dimen name="height_item_search_result">72dp</dimen>
-        <dimen name="text_size_search_result_route_name">20sp</dimen>
+        <dimen name="text_size_search_result_route_name">16sp</dimen>
         <dimen name="stroke_width_background_route_tag">1dp</dimen>
         <dimen name="radius_background_route_type_tag">4dp</dimen>
         <dimen name="padding_route_type_tag">4dp</dimen>
