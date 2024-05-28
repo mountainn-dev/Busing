@@ -10,11 +10,11 @@
     <dimen name="line_divider">4dp</dimen>
 
     <!-- Bus Route -->
-    <dimen name="height_search_layout">144dp</dimen>
+    <dimen name="height_search_layout">128dp</dimen>
     <dimen name="radius_background_edit_text">12dp</dimen>
 
         <!-- Recent Search -->
-        <dimen name="width_item_recent_search">76dp</dimen>
+        <dimen name="width_item_recent_search">84dp</dimen>
         <dimen name="size_icon_delete">12dp</dimen>
         <dimen name="margin_icon_delete">8dp</dimen>
         <dimen name="padding_icon_delete">8dp</dimen>

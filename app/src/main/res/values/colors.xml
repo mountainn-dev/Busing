@@ -6,7 +6,11 @@
     <color name="light_grey">#FBFBFD</color>
     <color name="semi_light_grey">#F4F4F8</color>
     <color name="red">#DB3512</color>
+    <color name="light_red">#FFC8DD</color>
     <color name="green">#4CAF50</color>
+    <color name="light_green">#D8F3DC</color>
     <color name="blue">#0092E1</color>
+    <color name="light_blue">#BDE0FE</color>
     <color name="deep_blue">#004C9D</color>
+    <color name="light_deep_blue">#A2D2FF</color>
 </resources>
