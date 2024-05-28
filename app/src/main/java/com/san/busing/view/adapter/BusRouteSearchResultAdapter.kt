@@ -1,41 +1,52 @@
 package com.san.busing.view.adapter
 
-import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.san.busing.view.screen.BusRouteDetailActivity
+import com.san.busing.R
 import com.san.busing.databinding.ItemSearchResultBusRouteBinding
-import com.san.busing.domain.model.BusRouteModel
-import com.san.busing.domain.model.BusRouteRecentSearchModel
-import com.san.busing.domain.utils.Const
+import com.san.busing.domain.model.BusRouteSearchResultModel
+import com.san.busing.domain.enums.RouteType.*
+import com.san.busing.view.listener.ItemClickEventListener
 
 class BusRouteSearchResultAdapter(
-    private val items: List<BusRouteModel>, private val context: Context
+    private val items: List<BusRouteSearchResultModel>,
+    private val itemClickEventListener: ItemClickEventListener,
+    private val context: Context
 ) : RecyclerView.Adapter<BusRouteSearchResultAdapter.BusRouteSearchResultViewHolder>() {
     inner class BusRouteSearchResultViewHolder(
         private val binding: ItemSearchResultBusRouteBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(position: Int) {
-            bindContent(position)
-            setOnItemClickListener(position)
+            loadContent(position)
+            setContentColor(position)
+            setItemClickEventListener(position)
         }
 
-        private fun bindContent(position: Int) {
+        private fun loadContent(position: Int) {
             binding.txtRouteName.text = items[position].name
+            binding.txtRouteTypeTag.text = items[position].type.tag
             binding.txtRegion.text = items[position].region
         }
 
-        private fun setOnItemClickListener(position: Int) {
-            binding.clRouteItem.setOnClickListener {
-                val intent = Intent(context, BusRouteDetailActivity::class.java)
-                intent.putExtra(
-                    Const.TAG_ROUTE_ID,
-                    BusRouteRecentSearchModel(items[position].id, items[position].name))
+        private fun setContentColor(position: Int) {
+            binding.txtRouteName.setTextColor(ContextCompat.getColor(context, colorIdByRouteType(position)))
+        }
 
-                context.startActivity(intent)
+        private fun colorIdByRouteType(position: Int): Int {
+            return when (items[position].type) {
+                AIRPORT_NORMAL, AIRPORT_LIMO, AIRPORT_SEAT, CIRCULAR -> R.color.deep_blue
+                NORMAL, NORMAL_SEAT, OUT_TOWN_NORMAL, OUT_TOWN_EXPRESS, OUT_TOWN_SEAT -> R.color.blue
+                AREA_EXPRESS, AREA_DIRECT -> R.color.red
+                RURAL_NORMAL, RURAL_DIRECT, RURAL_SEAT, VILLAGE -> R.color.green
+            }
+        }
+
+        private fun setItemClickEventListener(position: Int) {
+            binding.clRouteItem.setOnClickListener {
+                itemClickEventListener.onItemClickListener(position)
             }
         }
     }

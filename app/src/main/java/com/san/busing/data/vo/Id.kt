@@ -1,8 +1,10 @@
-package com.san.busing.data.type
+package com.san.busing.data.vo
 
-data class CodeNumber(
+import java.io.Serializable
+
+data class Id(
     private val value: Int
-) {
+) : Serializable {
     init {
         require(value > 0)
     }

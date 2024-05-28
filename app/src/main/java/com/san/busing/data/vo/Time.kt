@@ -1,4 +1,4 @@
-package com.san.busing.data.type
+package com.san.busing.data.vo
 
 import androidx.core.text.isDigitsOnly
 import kotlin.math.abs

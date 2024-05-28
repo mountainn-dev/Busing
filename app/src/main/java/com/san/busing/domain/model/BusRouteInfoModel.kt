@@ -1,7 +1,6 @@
 package com.san.busing.domain.model
 
-import com.san.busing.data.type.Id
-import com.san.busing.data.type.Time
+import com.san.busing.data.vo.Id
 
 data class BusRouteInfoModel(
     val id: Id,

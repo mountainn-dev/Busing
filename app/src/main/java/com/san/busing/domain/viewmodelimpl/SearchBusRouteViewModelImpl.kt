@@ -8,7 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.san.busing.data.Error
 import com.san.busing.data.Success
 import com.san.busing.data.repository.BusRouteRepository
-import com.san.busing.domain.model.BusRouteModel
+import com.san.busing.domain.model.BusRouteSearchResultModel
 import com.san.busing.domain.model.BusRouteRecentSearchModel
 import com.san.busing.domain.utils.Const
 import com.san.busing.domain.viewmodel.SearchViewModel
@@ -29,7 +29,7 @@ class SearchBusRouteViewModelImpl(
     override val recentSearchContentReady: LiveData<Boolean>
         get() = recentSearchContentLoaded
 
-    override var searchResultContent = listOf<BusRouteModel>()
+    override var searchResultContent = listOf<BusRouteSearchResultModel>()
 
     override var recentSearchContent = listOf<BusRouteRecentSearchModel>()
 

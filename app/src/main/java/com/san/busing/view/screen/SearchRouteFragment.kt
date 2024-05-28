@@ -16,6 +16,7 @@ import com.san.busing.BuildConfig
 import com.san.busing.data.repositoryimpl.BusRouteRepositoryImpl
 import com.san.busing.databinding.FragmentSearchRouteBinding
 import com.san.busing.domain.model.BusRouteRecentSearchModel
+import com.san.busing.domain.model.BusRouteSearchResultModel
 import com.san.busing.domain.utils.Const
 import com.san.busing.domain.utils.Utils
 import com.san.busing.domain.viewmodel.SearchViewModel
@@ -54,12 +55,28 @@ class SearchRouteFragment : Fragment() {
 
     private fun searchResultContentReadyObserver(viewModel: SearchViewModel) = Observer<Boolean> {
         if (it) {   // 검색 결과 목록 활성화
-            binding.rvSearchResult.adapter = BusRouteSearchResultAdapter(viewModel.searchResultContent, requireActivity())
+            binding.rvSearchResult.adapter = BusRouteSearchResultAdapter(
+                viewModel.searchResultContent,
+                searchResultItemClickEventListener(viewModel.searchResultContent),
+                requireActivity())
             binding.rvSearchResult.layoutManager = LinearLayoutManager(activity)
             binding.rvSearchResult.visibility = RecyclerView.VISIBLE
         } else {   // 검색 결과 목록 비활성화
             binding.rvSearchResult.visibility = RecyclerView.INVISIBLE
         }
+    }
+
+    private fun searchResultItemClickEventListener(items: List<BusRouteSearchResultModel>) = object: ItemClickEventListener {
+        override fun onItemClickListener(position: Int) {
+            val intent = Intent(requireActivity(), BusRouteDetailActivity::class.java)
+            intent.putExtra(
+                Const.TAG_ROUTE_ID,
+                BusRouteRecentSearchModel(items[position].id, items[position].name))
+
+            requireActivity().startActivity(intent)
+        }
+
+        override fun onDeleteButtonClickListener(position: Int) { }
     }
 
     private fun recentSearchContentReadyObserver(viewModel: SearchViewModel) = Observer<Boolean> {
