@@ -6,19 +6,18 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.san.busing.data.Error
+import com.san.busing.data.ExceptionMessage
 import com.san.busing.data.Success
-import com.san.busing.data.repository.BusRouteRepository
+import com.san.busing.data.repository.BusRepository
+import com.san.busing.data.vo.Id
 import com.san.busing.domain.model.BusRouteInfoModel
-import com.san.busing.domain.model.BusRouteRecentSearchModel
 import com.san.busing.domain.utils.Const
 import com.san.busing.domain.viewmodel.BusRouteDetailViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class BusRouteDetailViewModelImpl(
-    private val repository: BusRouteRepository,
-    private val recentSearchModel: BusRouteRecentSearchModel,
+    private val repository: BusRepository,
+    private val routeId: Id,
 ) : BusRouteDetailViewModel, ViewModel() {
     private val routeInfoLoaded = MutableLiveData<Boolean>()
     private var isLoading = false
@@ -29,39 +28,29 @@ class BusRouteDetailViewModelImpl(
 
     override lateinit var routeInfo: BusRouteInfoModel
 
-    init { load() }
+    init { loadContent() }
 
-    override fun load() {
+    override fun loadContent() {
         if (!isLoading) {
             isLoading = true
 
             viewModelScope.launch {
-                loadRouteInfo()
-                withContext(Dispatchers.IO) { updateRecentSearch() }
+                loadRouteInfoContent()
                 isLoading = false
             }
         }
     }
 
-    private suspend fun loadRouteInfo() {
-        val result = repository.getBusRouteInfo(recentSearchModel.id)
+    private suspend fun loadRouteInfoContent() {
+        val result = repository.getBusRouteInfo(routeId)
 
         if (result is Success) {
             routeInfo = result.data()
             routeInfoLoaded.postValue(true)
         } else {
             error = (result as Error).message()
-            Log.e(Const.BUS_ROUTE_INFO_EXCEPTION, error)
+            Log.e(ExceptionMessage.BUS_ROUTE_INFO_EXCEPTION, error)
             routeInfoLoaded.postValue(false)
-        }
-    }
-
-    private fun updateRecentSearch() {
-        val result = repository.insertRecentSearch(recentSearchModel)
-
-        if (result is Error) {
-            error = result.message()
-            Log.e(Const.RECENT_SEARCH_EXCEPTION, error)
         }
     }
 }

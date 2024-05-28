@@ -7,5 +7,5 @@ interface BusRouteDetailViewModel {
     val routeInfoReady: LiveData<Boolean>
     var routeInfo: BusRouteInfoModel
 
-    fun load()
+    fun loadContent()
 }
