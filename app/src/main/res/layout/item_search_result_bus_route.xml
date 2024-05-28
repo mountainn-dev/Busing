@@ -5,6 +5,7 @@
     android:id="@+id/clRouteItem"
     android:layout_width="match_parent"
     android:layout_height="@dimen/height_item_search_result"
+    android:padding="@dimen/padding_default"
     android:background="@drawable/background_search_result_item">
 
     <TextView
@@ -12,20 +13,25 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_default"
-        app:layout_constraintBottom_toTopOf="@+id/txtRouteTypeName"
+        android:textSize="@dimen/text_size_search_result_route_name"
+        app:layout_constraintBottom_toTopOf="@+id/txtRouteTypeTag"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="routeName" />
 
     <TextView
-        android:id="@+id/txtRouteTypeName"
+        android:id="@+id/txtRouteTypeTag"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="@drawable/background_route_type_tag"
         android:layout_marginStart="@dimen/margin_default"
+        android:padding="@dimen/padding_route_type_tag"
+        android:textSize="@dimen/text_size_route_type_tag"
+        android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtRouteName"
         app:layout_constraintStart_toStartOf="parent"
-        tools:text="routeTypeName"/>
+        tools:text="routeTypeTag"/>
 
     <TextView
         android:id="@+id/txtRegion"

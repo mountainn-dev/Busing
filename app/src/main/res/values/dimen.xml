@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Common -->
-    <dimen name="padding_default">8dp</dimen>
-    <dimen name="margin_default">8dp</dimen>
+    <dimen name="padding_default">12dp</dimen>
+    <dimen name="margin_default">12dp</dimen>
     <dimen name="margin_floating_action_button">24dp</dimen>
-    <dimen name="line_default">1dp</dimen>
+    <dimen name="line_default">2dp</dimen>
     <dimen name="zero_width">0dp</dimen>
     <dimen name="zero_height">0dp</dimen>
     <dimen name="line_divider">4dp</dimen>
@@ -21,6 +21,11 @@
 
         <!-- Search Result -->
         <dimen name="height_item_search_result">72dp</dimen>
+        <dimen name="text_size_search_result_route_name">20sp</dimen>
+        <dimen name="stroke_width_background_route_tag">1dp</dimen>
+        <dimen name="radius_background_route_type_tag">4dp</dimen>
+        <dimen name="padding_route_type_tag">4dp</dimen>
+        <dimen name="text_size_route_type_tag">12sp</dimen>
 
     <!-- Bus Route Info -->
     <dimen name="height_info_layout">200dp</dimen>

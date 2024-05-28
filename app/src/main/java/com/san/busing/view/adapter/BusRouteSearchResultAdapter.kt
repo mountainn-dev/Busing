@@ -27,7 +27,7 @@ class BusRouteSearchResultAdapter(
 
         private fun loadContent(position: Int) {
             binding.txtRouteName.text = items[position].name
-            binding.txtRouteTypeName.text = items[position].type.tag
+            binding.txtRouteTypeTag.text = items[position].type.tag
             binding.txtRegion.text = items[position].region
         }
 
