@@ -7,12 +7,12 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.san.busing.R
 import com.san.busing.databinding.ItemSearchResultBusRouteBinding
-import com.san.busing.domain.modelimpl.BusRouteSearchResultModelImpl
+import com.san.busing.domain.model.BusRouteSearchResultModel
 import com.san.busing.domain.enums.RouteType.*
 import com.san.busing.view.listener.ItemClickEventListener
 
 class BusRouteSearchResultAdapter(
-    private val items: List<BusRouteSearchResultModelImpl>,
+    private val items: List<BusRouteSearchResultModel>,
     private val itemClickEventListener: ItemClickEventListener,
     private val context: Context
 ) : RecyclerView.Adapter<BusRouteSearchResultAdapter.BusRouteSearchResultViewHolder>() {

@@ -3,7 +3,7 @@ package com.san.busing.data.entity
 import com.san.busing.data.ExceptionMessage
 import com.san.busing.data.vo.Id
 import com.san.busing.domain.enums.RouteType.*
-import com.san.busing.domain.modelimpl.BusRouteSearchResultModelImpl
+import com.san.busing.domain.model.BusRouteSearchResultModel
 import com.tickaroo.tikxml.annotation.*
 
 @Xml(name = "busRouteList")   // BusRoutes Element 의 자식 태그 이름과 일치화
@@ -15,7 +15,7 @@ data class BusRouteSearchResult(
     @PropertyElement val districtCd: Int,
     @PropertyElement val regionName: String,
 ) {
-    fun toBusRouteModel() = BusRouteSearchResultModelImpl(
+    fun toBusRouteModel() = BusRouteSearchResultModel(
         Id(routeId),
         routeName,
         routeType(routeTypeCd),
@@ -46,7 +46,7 @@ data class BusRouteSearchResult(
 data class BusRoutes(
     @Path("msgBody") @Element val busRoutes: List<BusRouteSearchResult>
 ) {
-    fun get(): List<BusRouteSearchResultModelImpl> {
+    fun get(): List<BusRouteSearchResultModel> {
         return busRoutes.map { it.toBusRouteModel() }.toList()
     }
 }

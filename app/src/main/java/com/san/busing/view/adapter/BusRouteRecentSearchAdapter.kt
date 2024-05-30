@@ -1,15 +1,20 @@
 package com.san.busing.view.adapter
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.san.busing.R
 import com.san.busing.databinding.ItemRecentSearchBusRouteBinding
-import com.san.busing.domain.modelimpl.BusRouteRecentSearchModelImpl
+import com.san.busing.domain.enums.RouteType.*
+import com.san.busing.domain.model.BusRouteRecentSearchModel
 import com.san.busing.view.listener.ItemClickEventListener
 
 class BusRouteRecentSearchAdapter(
-    private val items: List<BusRouteRecentSearchModelImpl>,
-    private val itemClickEventListener: ItemClickEventListener
+    private val items: List<BusRouteRecentSearchModel>,
+    private val itemClickEventListener: ItemClickEventListener,
+    private val context: Context
 ) : RecyclerView.Adapter<BusRouteRecentSearchAdapter.BusRouteRecentSearchViewHolder>() {
 
     inner class BusRouteRecentSearchViewHolder(
@@ -18,18 +23,33 @@ class BusRouteRecentSearchAdapter(
 
         fun bind(position: Int) {
             loadContent(position)
+            setContentColor(position)
             setItemClickEventListener(position)
         }
 
         private fun loadContent(position: Int) {
             binding.txtBusRouteRecentSearchName.text = items[position].name
-            binding.idx.text = items[position].index.toString()
+        }
+
+        private fun setContentColor(position: Int) {
+            binding.txtBusRouteRecentSearchName.setTextColor(
+                ContextCompat.getColor(context, colorIdByRouteType(position))
+            )
+        }
+
+        private fun colorIdByRouteType(position: Int): Int {
+            return when (items[position].type) {
+                AIRPORT_NORMAL, AIRPORT_LIMO, AIRPORT_SEAT, CIRCULAR -> R.color.deep_blue
+                NORMAL, NORMAL_SEAT, OUT_TOWN_NORMAL, OUT_TOWN_EXPRESS, OUT_TOWN_SEAT -> R.color.blue
+                AREA_EXPRESS, AREA_DIRECT -> R.color.red
+                RURAL_NORMAL, RURAL_DIRECT, RURAL_SEAT, VILLAGE -> R.color.green
+            }
         }
 
         private fun setItemClickEventListener(position: Int) {
             binding.clBusRouteRecentSearch.setOnClickListener {
                 itemClickEventListener.onItemClickListener(position) }
-            binding.btnDelete.setOnClickListener {
+            binding.btnDeleteRecentSearch.setOnClickListener {
                 itemClickEventListener.onDeleteButtonClickListener(position) }
         }
     }

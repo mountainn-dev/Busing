@@ -2,11 +2,11 @@ package com.san.busing.domain.viewmodelfactory
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.san.busing.data.repository.BusRepository
+import com.san.busing.data.repository.BusRouteRepository
 import com.san.busing.domain.viewmodelimpl.SearchBusRouteViewModelImpl
 
 class SearchBusRouteViewModelFactory(
-    private val repository: BusRepository
+    private val repository: BusRouteRepository
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(SearchBusRouteViewModelImpl::class.java)) {

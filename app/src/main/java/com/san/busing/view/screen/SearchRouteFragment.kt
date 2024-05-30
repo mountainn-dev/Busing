@@ -3,6 +3,7 @@ package com.san.busing.view.screen
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,13 +14,13 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.san.busing.BuildConfig
-import com.san.busing.data.repositoryimpl.BusRepositoryImpl
+import com.san.busing.data.repositoryimpl.BusRouteRepositoryImpl
 import com.san.busing.databinding.FragmentSearchRouteBinding
-import com.san.busing.domain.modelimpl.BusRouteRecentSearchModelImpl
-import com.san.busing.domain.modelimpl.BusRouteSearchResultModelImpl
+import com.san.busing.domain.model.BusRouteRecentSearchModel
+import com.san.busing.domain.model.BusRouteSearchResultModel
 import com.san.busing.domain.utils.Const
 import com.san.busing.domain.utils.Utils
-import com.san.busing.domain.viewmodel.SearchViewModel
+import com.san.busing.domain.viewmodel.SearchBusRouteViewModel
 import com.san.busing.domain.viewmodelfactory.SearchBusRouteViewModelFactory
 import com.san.busing.domain.viewmodelimpl.SearchBusRouteViewModelImpl
 import com.san.busing.view.adapter.BusRouteRecentSearchAdapter
@@ -29,7 +30,7 @@ import com.san.busing.view.listener.RecyclerViewScrollListener
 
 class SearchRouteFragment : Fragment() {
     private lateinit var binding: FragmentSearchRouteBinding
-    private lateinit var viewModel: SearchViewModel
+    private lateinit var viewModel: SearchBusRouteViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,7 +38,7 @@ class SearchRouteFragment : Fragment() {
     ): View {
         binding = FragmentSearchRouteBinding.inflate(layoutInflater)
 
-        val repository = BusRepositoryImpl(Utils.getRetrofit(BuildConfig.ROUTES_URL), requireActivity().applicationContext)
+        val repository = BusRouteRepositoryImpl(Utils.getRetrofit(BuildConfig.ROUTES_URL), requireActivity().applicationContext)
         viewModel = ViewModelProvider(requireActivity(), SearchBusRouteViewModelFactory(repository)).get(
             SearchBusRouteViewModelImpl::class.java
         )
@@ -48,16 +49,16 @@ class SearchRouteFragment : Fragment() {
         return binding.root
     }
 
-    private fun initObserver(viewModel: SearchViewModel) {
+    private fun initObserver(viewModel: SearchBusRouteViewModel) {
         viewModel.searchResultContentReady.observe(viewLifecycleOwner, searchResultContentReadyObserver(viewModel))
         viewModel.recentSearchContentReady.observe(viewLifecycleOwner, recentSearchContentReadyObserver(viewModel))
     }
 
-    private fun searchResultContentReadyObserver(viewModel: SearchViewModel) = Observer<Boolean> {
+    private fun searchResultContentReadyObserver(viewModel: SearchBusRouteViewModel) = Observer<Boolean> {
         if (it) {   // 검색 결과 목록 활성화
             binding.rvSearchResult.adapter = BusRouteSearchResultAdapter(
-                viewModel.searchResultContent as List<BusRouteSearchResultModelImpl>,
-                searchResultItemClickEventListener(viewModel.searchResultContent as List<BusRouteSearchResultModelImpl>),
+                viewModel.searchResultContent,
+                searchResultItemClickEventListener(viewModel.searchResultContent),
                 requireActivity())
             binding.rvSearchResult.layoutManager = LinearLayoutManager(activity)
             binding.rvSearchResult.visibility = RecyclerView.VISIBLE
@@ -66,7 +67,7 @@ class SearchRouteFragment : Fragment() {
         }
     }
 
-    private fun searchResultItemClickEventListener(items: List<BusRouteSearchResultModelImpl>) = object: ItemClickEventListener {
+    private fun searchResultItemClickEventListener(items: List<BusRouteSearchResultModel>) = object: ItemClickEventListener {
         override fun onItemClickListener(position: Int) {
             val intent = Intent(requireActivity(), BusRouteDetailActivity::class.java)
             intent.putExtra(
@@ -74,10 +75,12 @@ class SearchRouteFragment : Fragment() {
                 items[position].id
             )
 
-            viewModel.updateRecentSearch(BusRouteRecentSearchModelImpl(
-                items[position].id,
-                items[position].name,
-                viewModel.recentSearchIndex(requireActivity())
+            viewModel.updateRecentSearch(
+                BusRouteRecentSearchModel(
+                    items[position].id,
+                    items[position].name,
+                    items[position].type,
+                    viewModel.recentSearchIndex(requireActivity())
                 )
             )
 
@@ -87,11 +90,12 @@ class SearchRouteFragment : Fragment() {
         override fun onDeleteButtonClickListener(position: Int) { }
     }
 
-    private fun recentSearchContentReadyObserver(viewModel: SearchViewModel) = Observer<Boolean> {
+    private fun recentSearchContentReadyObserver(viewModel: SearchBusRouteViewModel) = Observer<Boolean> {
         if (it) {
             binding.rvRecentSearch.adapter = BusRouteRecentSearchAdapter(
-                viewModel.recentSearchContent as List<BusRouteRecentSearchModelImpl>,
-                recentSearchItemClickEventListener(viewModel.recentSearchContent as List<BusRouteRecentSearchModelImpl>))
+                viewModel.recentSearchContent,
+                recentSearchItemClickEventListener(viewModel.recentSearchContent),
+                requireActivity())
             binding.rvRecentSearch.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
             binding.rvRecentSearch.visibility = RecyclerView.VISIBLE
         } else {
@@ -99,7 +103,7 @@ class SearchRouteFragment : Fragment() {
         }
     }
 
-    private fun recentSearchItemClickEventListener(items: List<BusRouteRecentSearchModelImpl>) = object: ItemClickEventListener {
+    private fun recentSearchItemClickEventListener(items: List<BusRouteRecentSearchModel>) = object: ItemClickEventListener {
         override fun onItemClickListener(position: Int) {
             val intent = Intent(requireActivity(), BusRouteDetailActivity::class.java)
             intent.putExtra(
@@ -114,12 +118,13 @@ class SearchRouteFragment : Fragment() {
         }
     }
 
-    private fun initListener(viewModel: SearchViewModel) {
+    private fun initListener(viewModel: SearchBusRouteViewModel) {
         setEdRouteActionListener(viewModel)
+        setBtnDeleteSearchKeywordListener(viewModel)
         setRvBusRouteScrollListener(requireActivity())
     }
 
-    private fun setEdRouteActionListener(viewModel: SearchViewModel) {
+    private fun setEdRouteActionListener(viewModel: SearchBusRouteViewModel) {
         binding.edRoute.setOnEditorActionListener { textView, i, keyEvent ->
             if (i == EditorInfo.IME_ACTION_SEARCH) {
                 viewModel.search(binding.edRoute.text.toString())
@@ -130,16 +135,23 @@ class SearchRouteFragment : Fragment() {
         }
     }
 
+    private fun setBtnDeleteSearchKeywordListener(viewModel: SearchBusRouteViewModel) {
+        binding.btnDeleteSearchKeyword.setOnClickListener {
+            binding.edRoute.setText(Const.EMPTY_TEXT)
+            viewModel.clearKeyword()
+        }
+    }
+
     private fun setRvBusRouteScrollListener(context: Context) {
         binding.rvSearchResult.addOnScrollListener(RecyclerViewScrollListener(context))
     }
 
-    override fun onResume() {
-        super.onResume()
+    override fun onStart() {
+        super.onStart()
         loadContent(viewModel)
     }
 
-    private fun loadContent(viewModel: SearchViewModel) {
+    private fun loadContent(viewModel: SearchBusRouteViewModel) {
         binding.edRoute.setText(viewModel.keyword)   // 검색 키워드 복원
         viewModel.loadContent()
     }

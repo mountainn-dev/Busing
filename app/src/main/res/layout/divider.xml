@@ -4,4 +4,4 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:dividerThickness="@dimen/line_divider"
-    app:dividerColor="@color/semi_light_grey"/>
+    app:dividerColor="@color/grey"/>

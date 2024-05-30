@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Common -->
-    <dimen name="padding_default">12dp</dimen>
-    <dimen name="margin_default">12dp</dimen>
+    <dimen name="margin_padding_default">12dp</dimen>
+    <dimen name="margin_padding_small">8dp</dimen>
+    <dimen name="margin_padding_extremely_small">4dp</dimen>
     <dimen name="margin_floating_action_button">24dp</dimen>
     <dimen name="line_default">2dp</dimen>
     <dimen name="zero_width">0dp</dimen>
@@ -10,21 +11,18 @@
     <dimen name="line_divider">4dp</dimen>
 
     <!-- Bus Route -->
-    <dimen name="height_search_layout">144dp</dimen>
+    <dimen name="height_search_layout">128dp</dimen>
     <dimen name="radius_background_edit_text">12dp</dimen>
 
         <!-- Recent Search -->
-        <dimen name="width_item_recent_search">76dp</dimen>
-        <dimen name="size_icon_delete">12dp</dimen>
-        <dimen name="margin_icon_delete">8dp</dimen>
-        <dimen name="padding_icon_delete">8dp</dimen>
+        <dimen name="width_item_recent_search">100dp</dimen>
+        <dimen name="size_icon_delete">20dp</dimen>
 
         <!-- Search Result -->
         <dimen name="height_item_search_result">72dp</dimen>
         <dimen name="text_size_search_result_route_name">16sp</dimen>
         <dimen name="stroke_width_background_route_tag">1dp</dimen>
         <dimen name="radius_background_route_type_tag">4dp</dimen>
-        <dimen name="padding_route_type_tag">4dp</dimen>
         <dimen name="text_size_route_type_tag">12sp</dimen>
 
     <!-- Bus Route Info -->
