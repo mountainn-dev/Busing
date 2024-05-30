@@ -49,7 +49,7 @@ class BusRouteRecentSearchAdapter(
         private fun setItemClickEventListener(position: Int) {
             binding.clBusRouteRecentSearch.setOnClickListener {
                 itemClickEventListener.onItemClickListener(position) }
-            binding.btnDelete.setOnClickListener {
+            binding.btnDeleteRecentSearch.setOnClickListener {
                 itemClickEventListener.onDeleteButtonClickListener(position) }
         }
     }

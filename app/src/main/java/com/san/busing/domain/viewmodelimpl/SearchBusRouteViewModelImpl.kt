@@ -133,6 +133,10 @@ class SearchBusRouteViewModelImpl(
         }
     }
 
+    override fun clearKeyword() {
+        this.keyword = Const.EMPTY_TEXT
+    }
+
     override fun delete(recentSearchModel: BusRouteRecentSearchModel) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {

@@ -120,6 +120,7 @@ class SearchRouteFragment : Fragment() {
 
     private fun initListener(viewModel: SearchBusRouteViewModel) {
         setEdRouteActionListener(viewModel)
+        setBtnDeleteSearchKeywordListener(viewModel)
         setRvBusRouteScrollListener(requireActivity())
     }
 
@@ -131,6 +132,13 @@ class SearchRouteFragment : Fragment() {
             }
 
             return@setOnEditorActionListener false
+        }
+    }
+
+    private fun setBtnDeleteSearchKeywordListener(viewModel: SearchBusRouteViewModel) {
+        binding.btnDeleteSearchKeyword.setOnClickListener {
+            binding.edRoute.setText(Const.EMPTY_TEXT)
+            viewModel.clearKeyword()
         }
     }
 
