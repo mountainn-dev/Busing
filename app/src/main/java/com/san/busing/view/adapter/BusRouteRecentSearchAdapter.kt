@@ -39,10 +39,10 @@ class BusRouteRecentSearchAdapter(
 
         private fun colorIdByRouteType(position: Int): Int {
             return when (items[position].type) {
-                AIRPORT_NORMAL, AIRPORT_LIMO, AIRPORT_SEAT, CIRCULAR -> R.color.light_deep_blue
-                NORMAL, NORMAL_SEAT, OUT_TOWN_NORMAL, OUT_TOWN_EXPRESS, OUT_TOWN_SEAT -> R.color.light_blue
-                AREA_EXPRESS, AREA_DIRECT -> R.color.light_red
-                RURAL_NORMAL, RURAL_DIRECT, RURAL_SEAT, VILLAGE -> R.color.light_green
+                AIRPORT_NORMAL, AIRPORT_LIMO, AIRPORT_SEAT, CIRCULAR -> R.color.deep_blue
+                NORMAL, NORMAL_SEAT, OUT_TOWN_NORMAL, OUT_TOWN_EXPRESS, OUT_TOWN_SEAT -> R.color.blue
+                AREA_EXPRESS, AREA_DIRECT -> R.color.red
+                RURAL_NORMAL, RURAL_DIRECT, RURAL_SEAT, VILLAGE -> R.color.green
             }
         }
 

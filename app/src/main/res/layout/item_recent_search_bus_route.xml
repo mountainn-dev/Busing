@@ -5,7 +5,7 @@
     android:id="@+id/clBusRouteRecentSearch"
     android:layout_width="@dimen/width_item_recent_search"
     android:layout_height="match_parent"
-    android:layout_marginEnd="@dimen/margin_default"
+    android:layout_marginEnd="@dimen/margin_padding_default"
     android:orientation="horizontal"
     android:gravity="center"
     android:weightSum="1"
@@ -15,19 +15,18 @@
         android:id="@+id/txtBusRouteRecentSearchName"
         android:layout_width="@dimen/zero_width"
         android:layout_height="wrap_content"
-        android:layout_weight="0.8"
+        android:layout_weight="1"
+        android:layout_marginStart="@dimen/margin_padding_extremely_small"
         android:gravity="center"
         android:maxLines="1"
         android:ellipsize="end" />
 
-    <TextView
+    <ImageButton
         android:id="@+id/btnDelete"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:text="X"
-        android:textStyle="bold"
-        android:gravity="center"
-        android:clickable="true"
-        android:textColor="@color/semi_light_grey"/>
+        android:src="@drawable/ic_delete"
+        android:paddingHorizontal="@dimen/margin_padding_extremely_small"
+        android:background="@null"/>
 
 </LinearLayout>

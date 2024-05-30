@@ -3,6 +3,7 @@ package com.san.busing.view.screen
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -137,8 +138,8 @@ class SearchRouteFragment : Fragment() {
         binding.rvSearchResult.addOnScrollListener(RecyclerViewScrollListener(context))
     }
 
-    override fun onResume() {
-        super.onResume()
+    override fun onStart() {
+        super.onStart()
         loadContent(viewModel)
     }
 

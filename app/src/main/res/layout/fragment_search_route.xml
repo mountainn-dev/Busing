@@ -11,27 +11,51 @@
         android:layout_height="@dimen/height_search_layout"
         android:orientation="vertical"
         android:gravity="center"
-        android:padding="@dimen/padding_default"
+        android:padding="@dimen/margin_padding_default"
         android:weightSum="1"
-        android:background="@color/light_grey">
+        android:background="@color/semi_light_grey">
 
-        <EditText
-            android:id="@+id/edRoute"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/zero_height"
             android:layout_weight="0.6"
-            android:padding="@dimen/padding_default"
+            android:orientation="horizontal"
+            android:gravity="start|center_vertical"
+            android:background="@drawable/background_white_rounded_rectangle">
 
-            android:hint="@string/route_input_hint"
-            android:background="@drawable/background_white_rounded_rectangle"
-            android:inputType="text"
-            android:imeOptions="actionSearch"/>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/margin_padding_default"
+                android:src="@drawable/ic_search"/>
+
+            <EditText
+                android:id="@+id/edRoute"
+                android:layout_width="@dimen/zero_width"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+
+
+                android:hint="@string/route_input_hint"
+                android:textColorHint="@color/grey"
+                android:background="@drawable/background_white_rounded_rectangle"
+                android:inputType="text"
+                android:imeOptions="actionSearch"/>
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:paddingHorizontal="@dimen/margin_padding_default"
+                android:src="@drawable/ic_delete"
+                android:background="@null"/>
+
+        </LinearLayout>
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/zero_height"
             android:layout_weight="0.4"
-            android:layout_marginTop="@dimen/margin_default">
+            android:layout_marginTop="@dimen/margin_padding_default">
 
             <TextView
                 android:layout_width="match_parent"
@@ -45,7 +69,7 @@
                 android:id="@+id/rvRecentSearch"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/light_grey"
+                android:background="@color/semi_light_grey"
                 android:visibility="invisible"/>
 
         </FrameLayout>
