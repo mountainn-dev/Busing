@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -70,16 +71,11 @@ class SearchRouteFragment : Fragment() {
     private fun searchResultItemClickEventListener(items: List<BusRouteSearchResultModel>) = object: ItemClickEventListener {
         override fun onItemClickListener(position: Int) {
             val intent = Intent(requireActivity(), BusRouteDetailActivity::class.java)
-            intent.putExtra(
-                Const.TAG_ROUTE_ID,
-                items[position].id
-            )
+            intent.putExtra(Const.TAG_ROUTE_ID, items[position].id)
 
             viewModel.updateRecentSearch(
                 BusRouteRecentSearchModel(
-                    items[position].id,
-                    items[position].name,
-                    items[position].type,
+                    items[position].id, items[position].name, items[position].type,
                     viewModel.recentSearchIndex(requireActivity())
                 )
             )
@@ -106,10 +102,7 @@ class SearchRouteFragment : Fragment() {
     private fun recentSearchItemClickEventListener(items: List<BusRouteRecentSearchModel>) = object: ItemClickEventListener {
         override fun onItemClickListener(position: Int) {
             val intent = Intent(requireActivity(), BusRouteDetailActivity::class.java)
-            intent.putExtra(
-                Const.TAG_ROUTE_ID,
-                items[position].id
-            )
+            intent.putExtra(Const.TAG_ROUTE_ID, items[position].id)
             requireActivity().startActivity(intent)
         }
 
