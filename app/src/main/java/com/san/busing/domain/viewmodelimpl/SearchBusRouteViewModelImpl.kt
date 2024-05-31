@@ -1,6 +1,7 @@
 package com.san.busing.domain.viewmodelimpl
 
 import android.app.Activity
+import android.os.Parcelable
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -23,6 +24,7 @@ class SearchBusRouteViewModelImpl(
 ) : SearchBusRouteViewModel, ViewModel() {
     private val searchResultContentLoaded = MutableLiveData<Boolean>()
     private val recentSearchContentLoaded = MutableLiveData<Boolean>()
+    private var searchResultInstanceState: Parcelable? = null
     private var isSearching = false
     private var error = Const.EMPTY_TEXT
 
@@ -30,11 +32,8 @@ class SearchBusRouteViewModelImpl(
         get() = searchResultContentLoaded
     override val recentSearchContentReady: LiveData<Boolean>
         get() = recentSearchContentLoaded
-
     override var searchResultContent = listOf<BusRouteSearchResultModel>()
-
     override var recentSearchContent = listOf<BusRouteRecentSearchModel>()
-
     override var keyword = Const.EMPTY_TEXT
 
     override fun search(keyword: String) {
@@ -153,5 +152,11 @@ class SearchBusRouteViewModelImpl(
             error = result.message()
             Log.e(ExceptionMessage.RECENT_SEARCH_EXCEPTION, error)
         }
+    }
+
+    override fun getSearchResultViewInstanceState(): Parcelable? = searchResultInstanceState
+
+    override fun setSearchResultViewInstanceState(state: Parcelable?) {
+        searchResultInstanceState = state
     }
 }
