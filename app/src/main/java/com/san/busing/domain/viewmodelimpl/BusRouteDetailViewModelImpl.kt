@@ -10,7 +10,7 @@ import com.san.busing.data.ExceptionMessage
 import com.san.busing.data.Success
 import com.san.busing.data.repository.BusRouteRepository
 import com.san.busing.data.vo.Id
-import com.san.busing.domain.model.BusRouteInfoModel
+import com.san.busing.domain.model.BusRouteModel
 import com.san.busing.domain.utils.Const
 import com.san.busing.domain.viewmodel.BusRouteDetailViewModel
 import kotlinx.coroutines.launch
@@ -26,7 +26,7 @@ class BusRouteDetailViewModelImpl(
     override val routeInfoReady: LiveData<Boolean>
         get() = routeInfoLoaded
 
-    override lateinit var routeInfo: BusRouteInfoModel
+    override lateinit var routeInfo: BusRouteModel
 
     init { loadContent() }
 
@@ -42,7 +42,7 @@ class BusRouteDetailViewModelImpl(
     }
 
     private suspend fun loadRouteInfoContent() {
-        val result = repository.getBusRouteInfo(routeId)
+        val result = repository.getBusRoute(routeId)
 
         if (result is Success) {
             routeInfo = result.data()
