@@ -165,9 +165,9 @@ class SearchRouteFragment : Fragment() {
     }
 
     /**
-     * fun onStop(): void
+     * override fun onStop(): void
      *
-     * 프레그먼트 탭이 전환되거나 노선 상세 정보 화면으로 이동 시 호출
+     * 노선 검색 화면으로부터 포커스가 이동할 때 호출
      */
     override fun onStop() {
         super.onStop()

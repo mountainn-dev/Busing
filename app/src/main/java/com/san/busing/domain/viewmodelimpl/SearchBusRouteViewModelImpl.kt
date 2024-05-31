@@ -32,8 +32,8 @@ class SearchBusRouteViewModelImpl(
         get() = searchResultContentLoaded
     override val recentSearchContentReady: LiveData<Boolean>
         get() = recentSearchContentLoaded
-    override var searchResultContent = listOf<BusRouteSearchResultModel>()
-    override var recentSearchContent = listOf<BusRouteRecentSearchModel>()
+    override lateinit var searchResultContent: List<BusRouteSearchResultModel>
+    override lateinit var recentSearchContent: List<BusRouteRecentSearchModel>
     override var keyword = Const.EMPTY_TEXT
 
     override fun search(keyword: String) {
