@@ -1,14 +1,12 @@
 package com.san.busing.view.screen
 
-import android.content.Context
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
-import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -61,11 +59,18 @@ class SearchRouteFragment : Fragment() {
                 viewModel.searchResultContent,
                 searchResultItemClickEventListener(viewModel.searchResultContent),
                 requireActivity())
-            binding.rvSearchResult.layoutManager = LinearLayoutManager(activity)
+            binding.rvSearchResult.layoutManager = layoutManager(viewModel)
             binding.rvSearchResult.visibility = RecyclerView.VISIBLE
         } else {   // 검색 결과 목록 비활성화
             binding.rvSearchResult.visibility = RecyclerView.INVISIBLE
         }
+    }
+
+    private fun layoutManager(viewModel: SearchBusRouteViewModel): LinearLayoutManager {
+        val manager = LinearLayoutManager(requireActivity())
+        manager.onRestoreInstanceState(viewModel.getSearchResultViewInstanceState())
+
+        return manager
     }
 
     private fun searchResultItemClickEventListener(items: List<BusRouteSearchResultModel>) = object: ItemClickEventListener {
@@ -135,7 +140,7 @@ class SearchRouteFragment : Fragment() {
         }
     }
 
-    private fun setRvBusRouteScrollListener(context: Context) {
+    private fun setRvBusRouteScrollListener(context: Activity) {
         binding.rvSearchResult.addOnScrollListener(RecyclerViewScrollListener(context))
     }
 
@@ -147,5 +152,19 @@ class SearchRouteFragment : Fragment() {
     private fun loadContent(viewModel: SearchBusRouteViewModel) {
         binding.edRoute.setText(viewModel.keyword)   // 검색 키워드 복원
         viewModel.loadContent()
+    }
+
+    /**
+     * fun onStop(): void
+     *
+     * 프레그먼트 탭이 전환되거나 노선 상세 정보 화면으로 이동 시 호출
+     */
+    override fun onStop() {
+        super.onStop()
+        saveSearchResultViewInstanceState(viewModel)
+    }
+
+    private fun saveSearchResultViewInstanceState(viewModel: SearchBusRouteViewModel) {
+        viewModel.setSearchResultViewInstanceState(binding.rvSearchResult.layoutManager?.onSaveInstanceState())
     }
 }
