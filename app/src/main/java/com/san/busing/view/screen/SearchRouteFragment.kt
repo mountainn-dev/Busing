@@ -54,16 +54,17 @@ class SearchRouteFragment : Fragment() {
     }
 
     private fun searchResultContentReadyObserver(viewModel: SearchBusRouteViewModel) = Observer<Boolean> {
-        if (it) {   // 검색 결과 목록 활성화
-            binding.rvSearchResult.adapter = BusRouteSearchResultAdapter(
-                viewModel.searchResultContent,
-                searchResultItemClickEventListener(viewModel.searchResultContent),
-                requireActivity())
-            binding.rvSearchResult.layoutManager = layoutManager(viewModel)
-            binding.rvSearchResult.visibility = RecyclerView.VISIBLE
-        } else {   // 검색 결과 목록 비활성화
-            binding.rvSearchResult.visibility = RecyclerView.INVISIBLE
-        }
+        if (it) { whenSearchResultReady(viewModel) }
+        else { whenSearchResultNotReady() }
+    }
+
+    private fun whenSearchResultReady(viewModel: SearchBusRouteViewModel) {
+        binding.rvSearchResult.adapter = BusRouteSearchResultAdapter(
+            viewModel.searchResultContent,
+            searchResultItemClickEventListener(viewModel.searchResultContent),
+            requireActivity())
+        binding.rvSearchResult.layoutManager = layoutManager(viewModel)
+        binding.rvSearchResult.visibility = RecyclerView.VISIBLE
     }
 
     private fun layoutManager(viewModel: SearchBusRouteViewModel): LinearLayoutManager {
@@ -71,6 +72,10 @@ class SearchRouteFragment : Fragment() {
         manager.onRestoreInstanceState(viewModel.getSearchResultViewInstanceState())
 
         return manager
+    }
+
+    private fun whenSearchResultNotReady() {
+        binding.rvSearchResult.visibility = RecyclerView.INVISIBLE
     }
 
     private fun searchResultItemClickEventListener(items: List<BusRouteSearchResultModel>) = object: ItemClickEventListener {
@@ -92,16 +97,21 @@ class SearchRouteFragment : Fragment() {
     }
 
     private fun recentSearchContentReadyObserver(viewModel: SearchBusRouteViewModel) = Observer<Boolean> {
-        if (it) {
-            binding.rvRecentSearch.adapter = BusRouteRecentSearchAdapter(
-                viewModel.recentSearchContent,
-                recentSearchItemClickEventListener(viewModel.recentSearchContent),
-                requireActivity())
-            binding.rvRecentSearch.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
-            binding.rvRecentSearch.visibility = RecyclerView.VISIBLE
-        } else {
-            binding.rvRecentSearch.visibility = RecyclerView.INVISIBLE
-        }
+        if (it) { whenRecentSearchReady(viewModel) }
+        else { whenRecentSearchNotReady() }
+    }
+
+    private fun whenRecentSearchReady(viewModel: SearchBusRouteViewModel) {
+        binding.rvRecentSearch.adapter = BusRouteRecentSearchAdapter(
+            viewModel.recentSearchContent,
+            recentSearchItemClickEventListener(viewModel.recentSearchContent),
+            requireActivity())
+        binding.rvRecentSearch.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
+        binding.rvRecentSearch.visibility = RecyclerView.VISIBLE
+    }
+
+    private fun whenRecentSearchNotReady() {
+        binding.rvRecentSearch.visibility = RecyclerView.INVISIBLE
     }
 
     private fun recentSearchItemClickEventListener(items: List<BusRouteRecentSearchModel>) = object: ItemClickEventListener {
