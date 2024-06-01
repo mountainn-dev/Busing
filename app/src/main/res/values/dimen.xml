@@ -26,6 +26,9 @@
         <dimen name="text_size_route_type_tag">12sp</dimen>
 
     <!-- Bus Route Detail -->
-    <dimen name="height_detail_layout">256dp</dimen>
+    <dimen name="height_detail_layout">200dp</dimen>
     <dimen name="margin_icon_range">40dp</dimen>
+
+        <!-- Route Station -->
+        <dimen name="height_item_route_station">60dp</dimen>
 </resources>

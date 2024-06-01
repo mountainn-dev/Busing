@@ -6,10 +6,12 @@ import com.san.busing.data.vo.Id
 import com.san.busing.domain.model.BusRouteModel
 import com.san.busing.domain.model.BusRouteSearchResultModel
 import com.san.busing.domain.model.BusRouteRecentSearchModel
+import com.san.busing.domain.model.BusStationModel
 
 interface BusRouteRepository {
     suspend fun getBusRoute(id: Id): Result<BusRouteModel>
     suspend fun getBusRoutes(keyword: String): Result<List<BusRouteSearchResultModel>>
+    suspend fun getBusStations(id: Id): Result<List<BusStationModel>>
     fun getRecentSearch(): Result<List<BusRouteRecentSearchModel>>
     fun insertRecentSearch(recentSearchModel: BusRouteRecentSearchModel): Result<Boolean>
     fun deleteRecentSearch(recentSearchModel: BusRouteRecentSearchModel): Result<Boolean>

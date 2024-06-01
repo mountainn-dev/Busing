@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/clBusRouteRecentSearch"
+    android:id="@+id/clRouteRecentSearchItem"
     android:layout_width="@dimen/width_item_recent_search"
     android:layout_height="match_parent"
     android:layout_marginEnd="@dimen/margin_padding_default"

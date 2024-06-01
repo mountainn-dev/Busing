@@ -57,7 +57,7 @@ class SearchBusRouteViewModelImpl(
             searchResultContentLoaded.postValue(true)
         } else {
             error = (result as Error).message()
-            Log.e(ExceptionMessage.BUS_ROUTE_EXCEPTION, error)
+            Log.e(ExceptionMessage.TAG_BUS_ROUTE_EXCEPTION, error)
             searchResultContentLoaded.postValue(false)
         }
     }
@@ -90,7 +90,7 @@ class SearchBusRouteViewModelImpl(
             recentSearchContentLoaded.postValue(true)
         } else {
             error = (result as Error).message()
-            Log.e(ExceptionMessage.RECENT_SEARCH_EXCEPTION, error)
+            Log.e(ExceptionMessage.TAG_RECENT_SEARCH_EXCEPTION, error)
             recentSearchContentLoaded.postValue(false)
         }
     }
@@ -106,7 +106,7 @@ class SearchBusRouteViewModelImpl(
 
         if (result is Error) {
             error = result.message()
-            Log.e(ExceptionMessage.RECENT_SEARCH_EXCEPTION, error)
+            Log.e(ExceptionMessage.TAG_RECENT_SEARCH_EXCEPTION, error)
         }
     }
 
@@ -128,7 +128,7 @@ class SearchBusRouteViewModelImpl(
 
         if (result is Error) {
             error = result.message()
-            Log.e(ExceptionMessage.RECENT_SEARCH_EXCEPTION, error)
+            Log.e(ExceptionMessage.TAG_RECENT_SEARCH_EXCEPTION, error)
         }
     }
 
@@ -150,7 +150,7 @@ class SearchBusRouteViewModelImpl(
 
         if (result is Error) {
             error = result.message()
-            Log.e(ExceptionMessage.RECENT_SEARCH_EXCEPTION, error)
+            Log.e(ExceptionMessage.TAG_RECENT_SEARCH_EXCEPTION, error)
         }
     }
 

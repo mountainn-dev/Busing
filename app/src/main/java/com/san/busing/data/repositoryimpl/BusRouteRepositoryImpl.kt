@@ -12,6 +12,7 @@ import com.san.busing.data.vo.Id
 import com.san.busing.domain.model.BusRouteModel
 import com.san.busing.domain.model.BusRouteSearchResultModel
 import com.san.busing.domain.model.BusRouteRecentSearchModel
+import com.san.busing.domain.model.BusStationModel
 import com.san.busing.domain.utils.Const
 import retrofit2.Retrofit
 
@@ -35,6 +36,15 @@ class BusRouteRepositoryImpl(
     override suspend fun getBusRoutes(keyword: String): Result<List<BusRouteSearchResultModel>> {
         try {
             val response = service.getBusRouteList(BuildConfig.API_KEY, keyword)
+            return Result.success(response.body()!!.get())
+        } catch (e: Exception) {
+            return Result.error(e)
+        }
+    }
+
+    override suspend fun getBusStations(id: Id): Result<List<BusStationModel>> {
+        try {
+            val response = service.getBusStationList(BuildConfig.API_KEY, id.get())
             return Result.success(response.body()!!.get())
         } catch (e: Exception) {
             return Result.error(e)

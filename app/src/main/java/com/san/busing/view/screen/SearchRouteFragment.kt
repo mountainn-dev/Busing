@@ -67,17 +67,6 @@ class SearchRouteFragment : Fragment() {
         binding.rvSearchResult.visibility = RecyclerView.VISIBLE
     }
 
-    private fun layoutManager(viewModel: SearchBusRouteViewModel): LinearLayoutManager {
-        val manager = LinearLayoutManager(requireActivity())
-        manager.onRestoreInstanceState(viewModel.getSearchResultViewInstanceState())
-
-        return manager
-    }
-
-    private fun whenSearchResultNotReady() {
-        binding.rvSearchResult.visibility = RecyclerView.INVISIBLE
-    }
-
     private fun searchResultItemClickEventListener(items: List<BusRouteSearchResultModel>) = object: ItemClickEventListener {
         override fun onItemClickListener(position: Int) {
             val intent = Intent(requireActivity(), BusRouteDetailActivity::class.java)
@@ -94,6 +83,17 @@ class SearchRouteFragment : Fragment() {
         }
 
         override fun onDeleteButtonClickListener(position: Int) { }
+    }
+
+    private fun layoutManager(viewModel: SearchBusRouteViewModel): LinearLayoutManager {
+        val manager = LinearLayoutManager(requireActivity())
+        manager.onRestoreInstanceState(viewModel.getSearchResultViewInstanceState())
+
+        return manager
+    }
+
+    private fun whenSearchResultNotReady() {
+        binding.rvSearchResult.visibility = RecyclerView.INVISIBLE
     }
 
     private fun recentSearchContentReadyObserver(viewModel: SearchBusRouteViewModel) = Observer<Boolean> {
