@@ -6,81 +6,74 @@
     android:layout_height="match_parent"
     tools:context=".view.screen.BusRouteDetailActivity">
 
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fillViewport="true">
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="@dimen/height_detail_layout"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/txtRouteName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/height_detail_layout"
-                android:orientation="vertical"
-                android:gravity="center">
+                android:layout_height="wrap_content"
+                android:weightSum="1"
+                android:gravity="center"
+                android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/txtRouteName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
+                    android:id="@+id/txtRouteStartStation"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:weightSum="1"
-                    android:gravity="center"
-                    android:orientation="horizontal">
+                    android:textAlignment="center"
+                    android:layout_weight="0.3" />
 
-                    <TextView
-                        android:id="@+id/txtRouteStartStation"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:textAlignment="center"
-                        android:layout_weight="0.3" />
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.1"
+                    android:layout_marginHorizontal="@dimen/margin_icon_range"
+                    android:src="@drawable/ic_range"/>
 
-                    <ImageView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.1"
-                        android:layout_marginHorizontal="@dimen/margin_icon_range"
-                        android:src="@drawable/ic_range"/>
-
-                    <TextView
-                        android:id="@+id/txtRouteEndStation"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:textAlignment="center"
-                        android:layout_weight="0.3"/>
-
-                </LinearLayout>
+                <TextView
+                    android:id="@+id/txtRouteEndStation"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:layout_weight="0.3"/>
 
             </LinearLayout>
 
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/zero_height"
-                android:layout_weight="1">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rvBusRouteStationList"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-
-                    android:visibility="invisible"
-                    android:background="@color/white"/>
-
-            </FrameLayout>
-
         </LinearLayout>
 
-    </ScrollView>
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvBusRouteStationList"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+
+                android:visibility="invisible"
+                android:background="@color/white"/>
+
+        </FrameLayout>
+
+    </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabRefresh"
