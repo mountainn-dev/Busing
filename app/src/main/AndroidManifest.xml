@@ -16,7 +16,8 @@
         tools:targetApi="31">
         <activity
             android:name=".view.screen.BusRouteDetailActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:parentActivityName=".view.screen.HomeActivity"/>
         <activity
             android:name=".view.screen.HomeActivity"
             android:exported="true"

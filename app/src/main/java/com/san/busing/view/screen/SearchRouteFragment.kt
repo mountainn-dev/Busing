@@ -71,6 +71,7 @@ class SearchRouteFragment : Fragment() {
         override fun onItemClickListener(position: Int) {
             val intent = Intent(requireActivity(), BusRouteDetailActivity::class.java)
             intent.putExtra(Const.TAG_ROUTE_ID, items[position].id)
+            intent.putExtra(Const.TAG_ROUTE_NAME, items[position].name)
 
             viewModel.updateRecentSearch(
                 BusRouteRecentSearchModel(
@@ -118,6 +119,7 @@ class SearchRouteFragment : Fragment() {
         override fun onItemClickListener(position: Int) {
             val intent = Intent(requireActivity(), BusRouteDetailActivity::class.java)
             intent.putExtra(Const.TAG_ROUTE_ID, items[position].id)
+            intent.putExtra(Const.TAG_ROUTE_NAME, items[position].name)
             requireActivity().startActivity(intent)
         }
 

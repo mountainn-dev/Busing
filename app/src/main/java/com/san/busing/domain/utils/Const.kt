@@ -5,6 +5,7 @@ object Const {
     const val ZERO = 0
 
     const val TAG_ROUTE_ID = "routeId"
+    const val TAG_ROUTE_NAME = "routeName"
 
     const val TAG_AIRPORT = "공항"
     const val TAG_AREA = "광역"

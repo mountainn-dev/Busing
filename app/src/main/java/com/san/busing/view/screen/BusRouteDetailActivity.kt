@@ -1,6 +1,7 @@
 package com.san.busing.view.screen
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -30,12 +31,25 @@ class BusRouteDetailActivity : AppCompatActivity() {
 
         val repository = BusRouteRepositoryImpl(Utils.getRetrofit(BuildConfig.ROUTES_URL), this.applicationContext)
         val routeId = intent.getSerializableExtra(Const.TAG_ROUTE_ID) as Id
+        val routeName = intent.getStringExtra(Const.TAG_ROUTE_NAME) ?: Const.EMPTY_TEXT
         viewModel = ViewModelProvider(this, BusRouteDetailViewModelFactory(repository, routeId)).get(
             BusRouteDetailViewModelImpl::class.java
         )
 
+        initTitle(routeName)
+        initToolbar()
         initObserver(viewModel)
         initListener(viewModel)
+    }
+
+    private fun initTitle(routeName: String) {
+        binding.txtRouteName.text = routeName
+    }
+
+    private fun initToolbar() {
+        setSupportActionBar(binding.tbRouteDetail)
+        supportActionBar?.title = Const.EMPTY_TEXT
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
     private fun initObserver(viewModel: BusRouteDetailViewModel) {
@@ -49,13 +63,11 @@ class BusRouteDetailActivity : AppCompatActivity() {
     }
 
     private fun whenRouteInfoReady(viewModel: BusRouteDetailViewModel) {
-        binding.txtRouteName.text = viewModel.routeInfo.name
         binding.txtRouteStartStation.text = viewModel.routeInfo.startStationName
         binding.txtRouteEndStation.text = viewModel.routeInfo.endStationName
     }
 
     private fun whenRouteInfoNotReady() {
-        binding.txtRouteName.text = Const.EMPTY_TEXT
         binding.txtRouteStartStation.text = Const.EMPTY_TEXT
         binding.txtRouteEndStation.text = Const.EMPTY_TEXT
     }
