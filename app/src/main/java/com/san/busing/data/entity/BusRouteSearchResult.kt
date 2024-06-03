@@ -6,6 +6,12 @@ import com.san.busing.domain.enums.RouteType.*
 import com.san.busing.domain.model.BusRouteSearchResultModel
 import com.tickaroo.tikxml.annotation.*
 
+/**
+ * BusRouteSearchResult
+ *
+ * 버스 노선 검색 결과 목록 정보를 담는 클래스
+ * 버스 노선 검색 화면 검색 결과 아이템을 구성한다.
+ */
 @Xml(name = "busRouteList")   // BusRoutes Element 의 자식 태그 이름과 일치화
 data class BusRouteSearchResult(
     @PropertyElement val routeId: Int,
@@ -15,7 +21,7 @@ data class BusRouteSearchResult(
     @PropertyElement val districtCd: Int,
     @PropertyElement val regionName: String,
 ) {
-    fun toBusRouteModel() = BusRouteSearchResultModel(
+    fun toBusRouteSearchResultModel() = BusRouteSearchResultModel(
         Id(routeId),
         routeName,
         routeType(routeTypeCd),
@@ -39,14 +45,5 @@ data class BusRouteSearchResult(
         RURAL_SEAT.code -> RURAL_SEAT
         VILLAGE.code -> VILLAGE
         else -> throw Exception(ExceptionMessage.NO_ROUTE_TYPE_EXCEPTION)
-    }
-}
-
-@Xml
-data class BusRoutes(
-    @Path("msgBody") @Element val busRoutes: List<BusRouteSearchResult>
-) {
-    fun get(): List<BusRouteSearchResultModel> {
-        return busRoutes.map { it.toBusRouteModel() }.toList()
     }
 }

@@ -10,9 +10,12 @@ import com.san.busing.data.ExceptionMessage
 import com.san.busing.data.Success
 import com.san.busing.data.repository.BusRouteRepository
 import com.san.busing.data.vo.Id
-import com.san.busing.domain.model.BusRouteInfoModel
+import com.san.busing.domain.model.BusRouteModel
+import com.san.busing.domain.model.BusStationModel
 import com.san.busing.domain.utils.Const
 import com.san.busing.domain.viewmodel.BusRouteDetailViewModel
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
 
 class BusRouteDetailViewModelImpl(
@@ -20,37 +23,56 @@ class BusRouteDetailViewModelImpl(
     private val routeId: Id,
 ) : BusRouteDetailViewModel, ViewModel() {
     private val routeInfoLoaded = MutableLiveData<Boolean>()
+    private val routeStationLoaded = MutableLiveData<Boolean>()
     private var isLoading = false
     private var error = Const.EMPTY_TEXT
 
     override val routeInfoReady: LiveData<Boolean>
         get() = routeInfoLoaded
+    override val routeStationReady: LiveData<Boolean>
+        get() = routeStationLoaded
+    override lateinit var routeInfo: BusRouteModel
+    override lateinit var routeStation: List<BusStationModel>
 
-    override lateinit var routeInfo: BusRouteInfoModel
+    init { load() }
 
-    init { loadContent() }
-
-    override fun loadContent() {
+    override fun load() {
         if (!isLoading) {
             isLoading = true
 
             viewModelScope.launch {
-                loadRouteInfoContent()
+                awaitAll(
+                    async { loadRouteInfoContent() },
+                    async { loadRouteStationContent() }
+                )
                 isLoading = false
             }
         }
     }
 
     private suspend fun loadRouteInfoContent() {
-        val result = repository.getBusRouteInfo(routeId)
+        val result = repository.getBusRoute(routeId)
 
         if (result is Success) {
             routeInfo = result.data()
             routeInfoLoaded.postValue(true)
         } else {
             error = (result as Error).message()
-            Log.e(ExceptionMessage.BUS_ROUTE_INFO_EXCEPTION, error)
+            Log.e(ExceptionMessage.TAG_BUS_ROUTE_INFO_EXCEPTION, error)
             routeInfoLoaded.postValue(false)
+        }
+    }
+
+    private suspend fun loadRouteStationContent() {
+        val result = repository.getBusStations(routeId)
+
+        if (result is Success) {
+            routeStation = result.data()
+            routeStationLoaded.postValue(true)
+        } else {
+            error = (result as Error).message()
+            Log.e(ExceptionMessage.TAG_BUS_ROUTE_STATIONS_EXCEPTION, error)
+            routeStationLoaded.postValue(false)
         }
     }
 }

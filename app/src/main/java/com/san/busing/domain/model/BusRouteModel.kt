@@ -2,7 +2,7 @@ package com.san.busing.domain.model
 
 import com.san.busing.data.vo.Id
 
-data class BusRouteInfoModel(
+data class BusRouteModel(
     val id: Id,
     val name: String,
     val startStationId: Id,

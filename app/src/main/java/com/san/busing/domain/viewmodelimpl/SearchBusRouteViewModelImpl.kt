@@ -24,7 +24,6 @@ class SearchBusRouteViewModelImpl(
 ) : SearchBusRouteViewModel, ViewModel() {
     private val searchResultContentLoaded = MutableLiveData<Boolean>()
     private val recentSearchContentLoaded = MutableLiveData<Boolean>()
-    private var searchResultInstanceState: Parcelable? = null
     private var isSearching = false
     private var error = Const.EMPTY_TEXT
 
@@ -32,8 +31,8 @@ class SearchBusRouteViewModelImpl(
         get() = searchResultContentLoaded
     override val recentSearchContentReady: LiveData<Boolean>
         get() = recentSearchContentLoaded
-    override var searchResultContent = listOf<BusRouteSearchResultModel>()
-    override var recentSearchContent = listOf<BusRouteRecentSearchModel>()
+    override lateinit var searchResultContent: List<BusRouteSearchResultModel>
+    override lateinit var recentSearchContent: List<BusRouteRecentSearchModel>
     override var keyword = Const.EMPTY_TEXT
 
     override fun search(keyword: String) {
@@ -57,30 +56,49 @@ class SearchBusRouteViewModelImpl(
             searchResultContentLoaded.postValue(true)
         } else {
             error = (result as Error).message()
-            Log.e(ExceptionMessage.BUS_ROUTE_EXCEPTION, error)
+            Log.e(ExceptionMessage.TAG_BUS_ROUTE_EXCEPTION, error)
             searchResultContentLoaded.postValue(false)
         }
     }
 
-    /**
-     * fun load(): void
-     *
-     * HomeActivity 프레그먼트 탭 전환 혹은 BusRouteInfo 확인 이후 프레그먼트가 재개될 때 실행
-     */
-    override fun loadContent() {
-        loadSearchResultContent()
+    override fun update(recentSearchModel: BusRouteRecentSearchModel) {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) { insertRecentSearch(recentSearchModel) }
+        }
+    }
+
+    private fun insertRecentSearch(recentSearchModel: BusRouteRecentSearchModel) {
+        val result = repository.insertRecentSearch(recentSearchModel)
+
+        if (result is Error) {
+            error = result.message()
+            Log.e(ExceptionMessage.TAG_RECENT_SEARCH_EXCEPTION, error)
+        }
+    }
+
+    override fun delete(recentSearchModel: BusRouteRecentSearchModel) {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                deleteRecentSearch(recentSearchModel)
+                loadRecentSearchContent()
+            }
+        }
+    }
+
+    private fun deleteRecentSearch(recentSearchModel: BusRouteRecentSearchModel) {
+        val result = repository.deleteRecentSearch(recentSearchModel)
+
+        if (result is Error) {
+            error = result.message()
+            Log.e(ExceptionMessage.TAG_RECENT_SEARCH_EXCEPTION, error)
+        }
+    }
+
+    override fun restore() {
         viewModelScope.launch {
             withContext(Dispatchers.IO) { loadRecentSearchContent() }
         }
     }
-
-    private fun loadSearchResultContent() {
-        if (isSearchResultUsable()) searchResultContentLoaded.postValue(true)
-        else searchResultContentLoaded.postValue(false)
-    }
-
-    private fun isSearchResultUsable() =
-        searchResultContentLoaded.isInitialized && searchResultContentLoaded.value!!
 
     private fun loadRecentSearchContent() {
         val result = repository.getRecentSearch()
@@ -90,24 +108,13 @@ class SearchBusRouteViewModelImpl(
             recentSearchContentLoaded.postValue(true)
         } else {
             error = (result as Error).message()
-            Log.e(ExceptionMessage.RECENT_SEARCH_EXCEPTION, error)
+            Log.e(ExceptionMessage.TAG_RECENT_SEARCH_EXCEPTION, error)
             recentSearchContentLoaded.postValue(false)
         }
     }
 
-    override fun updateRecentSearch(recentSearchModel: BusRouteRecentSearchModel) {
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) { insert(recentSearchModel) }
-        }
-    }
-
-    private fun insert(recentSearchModel: BusRouteRecentSearchModel) {
-        val result = repository.insertRecentSearch(recentSearchModel)
-
-        if (result is Error) {
-            error = result.message()
-            Log.e(ExceptionMessage.RECENT_SEARCH_EXCEPTION, error)
-        }
+    override fun clear() {
+        this.keyword = Const.EMPTY_TEXT
     }
 
     override fun recentSearchIndex(context: Activity): Long {
@@ -128,35 +135,7 @@ class SearchBusRouteViewModelImpl(
 
         if (result is Error) {
             error = result.message()
-            Log.e(ExceptionMessage.RECENT_SEARCH_EXCEPTION, error)
+            Log.e(ExceptionMessage.TAG_RECENT_SEARCH_EXCEPTION, error)
         }
-    }
-
-    override fun clearKeyword() {
-        this.keyword = Const.EMPTY_TEXT
-    }
-
-    override fun delete(recentSearchModel: BusRouteRecentSearchModel) {
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                deleteRecentSearch(recentSearchModel)
-                loadRecentSearchContent()
-            }
-        }
-    }
-
-    private fun deleteRecentSearch(recentSearchModel: BusRouteRecentSearchModel) {
-        val result = repository.deleteRecentSearch(recentSearchModel)
-
-        if (result is Error) {
-            error = result.message()
-            Log.e(ExceptionMessage.RECENT_SEARCH_EXCEPTION, error)
-        }
-    }
-
-    override fun getSearchResultViewInstanceState(): Parcelable? = searchResultInstanceState
-
-    override fun setSearchResultViewInstanceState(state: Parcelable?) {
-        searchResultInstanceState = state
     }
 }
