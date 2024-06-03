@@ -14,6 +14,8 @@ import com.san.busing.domain.model.BusRouteModel
 import com.san.busing.domain.model.BusStationModel
 import com.san.busing.domain.utils.Const
 import com.san.busing.domain.viewmodel.BusRouteDetailViewModel
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
 
 class BusRouteDetailViewModelImpl(
@@ -39,8 +41,10 @@ class BusRouteDetailViewModelImpl(
             isLoading = true
 
             viewModelScope.launch {
-                loadRouteInfoContent()
-                loadRouteStationContent()
+                awaitAll(
+                    async { loadRouteInfoContent() },
+                    async { loadRouteStationContent() }
+                )
                 isLoading = false
             }
         }
