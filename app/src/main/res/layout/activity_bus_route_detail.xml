@@ -11,11 +11,20 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/semi_light_grey"
-
+        app:contentInsetStart="@dimen/margin_padding_default"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/flRouteDetail"/>
+        app:layout_constraintBottom_toTopOf="@id/flRouteDetail">
+
+        <ImageButton
+            android:id="@+id/btnBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_back"
+            android:background="@null"/>
+
+    </androidx.appcompat.widget.Toolbar>
 
     <FrameLayout
         android:id="@+id/flRouteDetail"

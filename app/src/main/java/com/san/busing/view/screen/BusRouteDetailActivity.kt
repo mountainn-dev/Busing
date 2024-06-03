@@ -48,9 +48,8 @@ class BusRouteDetailActivity : AppCompatActivity() {
     }
 
     private fun initToolbar() {
-        setSupportActionBar(binding.tbRouteDetail)
-        supportActionBar?.title = Const.EMPTY_TEXT
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        binding.tbRouteDetail.title = Const.EMPTY_TEXT
+        binding.btnBack.setOnClickListener { finish() }
     }
 
     private fun initObserver(viewModel: BusRouteDetailViewModel, context: Activity) {
