@@ -1,8 +1,9 @@
 package com.san.busing.view.screen
 
+import android.app.Activity
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -38,7 +39,7 @@ class BusRouteDetailActivity : AppCompatActivity() {
 
         initTitle(routeName)
         initToolbar()
-        initObserver(viewModel)
+        initObserver(viewModel, this)
         initListener(viewModel)
     }
 
@@ -52,9 +53,15 @@ class BusRouteDetailActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
-    private fun initObserver(viewModel: BusRouteDetailViewModel) {
-        viewModel.routeInfoReady.observe(this, routeInfoReadyObserver(viewModel))
-        viewModel.routeStationReady.observe(this, routeStationReadyObserver(viewModel))
+    private fun initObserver(viewModel: BusRouteDetailViewModel, context: Activity) {
+        viewModel.routeInfoReady.observe(
+            context as LifecycleOwner,
+            routeInfoReadyObserver(viewModel)
+        )
+        viewModel.routeStationReady.observe(
+            context as LifecycleOwner,
+            routeStationReadyObserver(viewModel, context)
+        )
     }
 
     private fun routeInfoReadyObserver(viewModel: BusRouteDetailViewModel) = Observer<Boolean> {
@@ -72,17 +79,20 @@ class BusRouteDetailActivity : AppCompatActivity() {
         binding.txtRouteEndStation.text = Const.EMPTY_TEXT
     }
 
-    private fun routeStationReadyObserver(viewModel: BusRouteDetailViewModel) = Observer<Boolean> {
-        if (it) { whenRouteStationReady() }
+    private fun routeStationReadyObserver(
+        viewModel: BusRouteDetailViewModel,
+        context: Activity
+    ) = Observer<Boolean> {
+        if (it) { whenRouteStationReady(viewModel, context) }
         else { whenRouteStationNotReady() }
     }
 
-    private fun whenRouteStationReady() {
+    private fun whenRouteStationReady(viewModel: BusRouteDetailViewModel, context: Activity) {
         binding.rvBusRouteStationList.adapter = BusRouteStationAdapter(
             viewModel.routeStation,
             routeStationClickEventListener(viewModel.routeStation)
         )
-        binding.rvBusRouteStationList.layoutManager = LinearLayoutManager(this)
+        binding.rvBusRouteStationList.layoutManager = LinearLayoutManager(context)
         binding.rvBusRouteStationList.visibility = RecyclerView.VISIBLE
     }
 
@@ -97,7 +107,7 @@ class BusRouteDetailActivity : AppCompatActivity() {
     }
 
     private fun whenRouteStationNotReady() {
-        binding.rvBusRouteStationList.visibility = RecyclerView.INVISIBLE
+        binding.rvBusRouteStationList.visibility = RecyclerView.GONE
     }
 
     private fun initListener(viewModel: BusRouteDetailViewModel) {
