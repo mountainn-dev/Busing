@@ -43,6 +43,6 @@ data class BusRouteRecentSearch(
         RURAL_DIRECT.code -> RURAL_DIRECT
         RURAL_SEAT.code -> RURAL_SEAT
         VILLAGE.code -> VILLAGE
-        else -> throw Exception(ExceptionMessage.NO_ROUTE_TYPE_EXCEPTION)
+        else -> throw IllegalArgumentException(ExceptionMessage.NO_ROUTE_TYPE_EXCEPTION)
     }
 }
