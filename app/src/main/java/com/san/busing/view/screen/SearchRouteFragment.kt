@@ -31,19 +31,29 @@ class SearchRouteFragment : Fragment() {
     private lateinit var binding: FragmentSearchRouteBinding
     private lateinit var viewModel: SearchBusRouteViewModel
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        val repository = BusRouteRepositoryImpl(Utils.getRetrofit(BuildConfig.ROUTES_URL), requireActivity().applicationContext)
+        viewModel = ViewModelProvider(requireActivity(), SearchBusRouteViewModelFactory(repository)).get(
+            SearchBusRouteViewModelImpl::class.java
+        )
+    }
+
+    /**
+     * override fun onCreateView(): View
+     *
+     * 프레그먼트 생성 및 bottomNav 탭 전환 시 호출
+     */
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentSearchRouteBinding.inflate(layoutInflater)
 
-        val repository = BusRouteRepositoryImpl(Utils.getRetrofit(BuildConfig.ROUTES_URL), requireActivity().applicationContext)
-        viewModel = ViewModelProvider(requireActivity(), SearchBusRouteViewModelFactory(repository)).get(
-            SearchBusRouteViewModelImpl::class.java
-        )
-
         initObserver(viewModel, requireActivity())
         initListener(viewModel, requireActivity())
+        restoreContent(viewModel)
 
         return binding.root
     }
@@ -76,7 +86,7 @@ class SearchRouteFragment : Fragment() {
             searchResultItemClickEventListener(viewModel.searchResultContent, context),
             context
         )
-        binding.rvSearchResult.layoutManager = layoutManager(viewModel, context)
+        binding.rvSearchResult.layoutManager = LinearLayoutManager(context)
         binding.rvSearchResult.visibility = RecyclerView.VISIBLE
     }
 
@@ -89,7 +99,7 @@ class SearchRouteFragment : Fragment() {
             intent.putExtra(Const.TAG_ROUTE_ID, items[position].id)
             intent.putExtra(Const.TAG_ROUTE_NAME, items[position].name)
 
-            viewModel.updateRecentSearch(
+            viewModel.update(
                 BusRouteRecentSearchModel(
                     items[position].id, items[position].name, items[position].type,
                     viewModel.recentSearchIndex(context)
@@ -100,16 +110,6 @@ class SearchRouteFragment : Fragment() {
         }
 
         override fun onDeleteButtonClickListener(position: Int) {}
-    }
-
-    private fun layoutManager(
-        viewModel: SearchBusRouteViewModel,
-        context: Activity
-    ): LinearLayoutManager {
-        val manager = LinearLayoutManager(context)
-        manager.onRestoreInstanceState(viewModel.getSearchResultViewInstanceState())
-
-        return manager
     }
 
     private fun whenSearchResultNotReady() {
@@ -176,7 +176,7 @@ class SearchRouteFragment : Fragment() {
     private fun setBtnDeleteSearchKeywordListener(viewModel: SearchBusRouteViewModel) {
         binding.btnDeleteSearchKeyword.setOnClickListener {
             binding.edRoute.setText(Const.EMPTY_TEXT)
-            viewModel.clearKeyword()
+            viewModel.clear()
         }
     }
 
@@ -184,27 +184,8 @@ class SearchRouteFragment : Fragment() {
         binding.rvSearchResult.addOnScrollListener(RecyclerViewScrollListener(context))
     }
 
-    override fun onStart() {
-        super.onStart()
-        loadContent(viewModel)
-    }
-
-    private fun loadContent(viewModel: SearchBusRouteViewModel) {
+    private fun restoreContent(viewModel: SearchBusRouteViewModel) {
         binding.edRoute.setText(viewModel.keyword)   // 검색 키워드 복원
-        viewModel.loadContent()
-    }
-
-    /**
-     * override fun onStop(): void
-     *
-     * 노선 검색 화면으로부터 포커스가 이동할 때 호출
-     */
-    override fun onStop() {
-        super.onStop()
-        saveSearchResultViewInstanceState(viewModel)
-    }
-
-    private fun saveSearchResultViewInstanceState(viewModel: SearchBusRouteViewModel) {
-        viewModel.setSearchResultViewInstanceState(binding.rvSearchResult.layoutManager?.onSaveInstanceState())
+        viewModel.restore()
     }
 }

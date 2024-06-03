@@ -10,5 +10,5 @@ interface BusRouteDetailViewModel {
     val routeInfo: BusRouteModel
     val routeStation: List<BusStationModel>
 
-    fun loadContent()
+    fun load()
 }

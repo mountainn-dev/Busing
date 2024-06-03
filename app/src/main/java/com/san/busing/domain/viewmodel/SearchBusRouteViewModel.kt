@@ -14,11 +14,9 @@ interface SearchBusRouteViewModel {
     var keyword: String
 
     fun search(keyword: String)
-    fun loadContent()
-    fun updateRecentSearch(recentSearchModel: BusRouteRecentSearchModel)
+    fun update(recentSearchModel: BusRouteRecentSearchModel)
     fun delete(recentSearchModel: BusRouteRecentSearchModel)
+    fun restore()
+    fun clear()
     fun recentSearchIndex(context: Activity): Long
-    fun clearKeyword()
-    fun getSearchResultViewInstanceState(): Parcelable?
-    fun setSearchResultViewInstanceState(state: Parcelable?)
 }

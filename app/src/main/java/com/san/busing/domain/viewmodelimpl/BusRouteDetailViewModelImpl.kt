@@ -34,9 +34,9 @@ class BusRouteDetailViewModelImpl(
     override lateinit var routeInfo: BusRouteModel
     override lateinit var routeStation: List<BusStationModel>
 
-    init { loadContent() }
+    init { load() }
 
-    override fun loadContent() {
+    override fun load() {
         if (!isLoading) {
             isLoading = true
 

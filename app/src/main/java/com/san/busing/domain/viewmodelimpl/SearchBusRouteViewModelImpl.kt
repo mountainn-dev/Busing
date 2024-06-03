@@ -24,7 +24,6 @@ class SearchBusRouteViewModelImpl(
 ) : SearchBusRouteViewModel, ViewModel() {
     private val searchResultContentLoaded = MutableLiveData<Boolean>()
     private val recentSearchContentLoaded = MutableLiveData<Boolean>()
-    private var searchResultInstanceState: Parcelable? = null
     private var isSearching = false
     private var error = Const.EMPTY_TEXT
 
@@ -62,25 +61,49 @@ class SearchBusRouteViewModelImpl(
         }
     }
 
+    override fun update(recentSearchModel: BusRouteRecentSearchModel) {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) { insertRecentSearch(recentSearchModel) }
+        }
+    }
+
+    private fun insertRecentSearch(recentSearchModel: BusRouteRecentSearchModel) {
+        val result = repository.insertRecentSearch(recentSearchModel)
+
+        if (result is Error) {
+            error = result.message()
+            Log.e(ExceptionMessage.TAG_RECENT_SEARCH_EXCEPTION, error)
+        }
+    }
+
+    override fun delete(recentSearchModel: BusRouteRecentSearchModel) {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                deleteRecentSearch(recentSearchModel)
+                loadRecentSearchContent()
+            }
+        }
+    }
+
+    private fun deleteRecentSearch(recentSearchModel: BusRouteRecentSearchModel) {
+        val result = repository.deleteRecentSearch(recentSearchModel)
+
+        if (result is Error) {
+            error = result.message()
+            Log.e(ExceptionMessage.TAG_RECENT_SEARCH_EXCEPTION, error)
+        }
+    }
+
     /**
-     * fun load(): void
+     * fun restore(): void
      *
-     * HomeActivity 프레그먼트 탭 전환 혹은 BusRouteInfo 확인 이후 프레그먼트가 재개될 때 실행
+     * 프레그먼트 탭 전환 시 실행
      */
-    override fun loadContent() {
-        loadSearchResultContent()
+    override fun restore() {
         viewModelScope.launch {
             withContext(Dispatchers.IO) { loadRecentSearchContent() }
         }
     }
-
-    private fun loadSearchResultContent() {
-        if (isSearchResultUsable()) searchResultContentLoaded.postValue(true)
-        else searchResultContentLoaded.postValue(false)
-    }
-
-    private fun isSearchResultUsable() =
-        searchResultContentLoaded.isInitialized && searchResultContentLoaded.value!!
 
     private fun loadRecentSearchContent() {
         val result = repository.getRecentSearch()
@@ -95,19 +118,8 @@ class SearchBusRouteViewModelImpl(
         }
     }
 
-    override fun updateRecentSearch(recentSearchModel: BusRouteRecentSearchModel) {
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) { insert(recentSearchModel) }
-        }
-    }
-
-    private fun insert(recentSearchModel: BusRouteRecentSearchModel) {
-        val result = repository.insertRecentSearch(recentSearchModel)
-
-        if (result is Error) {
-            error = result.message()
-            Log.e(ExceptionMessage.TAG_RECENT_SEARCH_EXCEPTION, error)
-        }
+    override fun clear() {
+        this.keyword = Const.EMPTY_TEXT
     }
 
     override fun recentSearchIndex(context: Activity): Long {
@@ -130,33 +142,5 @@ class SearchBusRouteViewModelImpl(
             error = result.message()
             Log.e(ExceptionMessage.TAG_RECENT_SEARCH_EXCEPTION, error)
         }
-    }
-
-    override fun clearKeyword() {
-        this.keyword = Const.EMPTY_TEXT
-    }
-
-    override fun delete(recentSearchModel: BusRouteRecentSearchModel) {
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                deleteRecentSearch(recentSearchModel)
-                loadRecentSearchContent()
-            }
-        }
-    }
-
-    private fun deleteRecentSearch(recentSearchModel: BusRouteRecentSearchModel) {
-        val result = repository.deleteRecentSearch(recentSearchModel)
-
-        if (result is Error) {
-            error = result.message()
-            Log.e(ExceptionMessage.TAG_RECENT_SEARCH_EXCEPTION, error)
-        }
-    }
-
-    override fun getSearchResultViewInstanceState(): Parcelable? = searchResultInstanceState
-
-    override fun setSearchResultViewInstanceState(state: Parcelable?) {
-        searchResultInstanceState = state
     }
 }
