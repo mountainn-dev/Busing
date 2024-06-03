@@ -31,6 +31,12 @@ class SearchRouteFragment : Fragment() {
     private lateinit var binding: FragmentSearchRouteBinding
     private lateinit var viewModel: SearchBusRouteViewModel
 
+    /**
+     * override fun onCreate(): void
+     *
+     * 프레그먼트 탭 전환 시 onCreateView() 직전에 호출
+     * 레포지토리 및 뷰모델 초기화 등 뷰 이전에 처리될 작업은 onCreate() 에서 진행
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -44,6 +50,7 @@ class SearchRouteFragment : Fragment() {
      * override fun onCreateView(): View
      *
      * 프레그먼트 생성 및 bottomNav 탭 전환 시 호출
+     * 뷰 관련 작업 실행
      */
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
