@@ -94,11 +94,6 @@ class SearchBusRouteViewModelImpl(
         }
     }
 
-    /**
-     * fun restore(): void
-     *
-     * 프레그먼트 탭 전환 시 실행
-     */
     override fun restore() {
         viewModelScope.launch {
             withContext(Dispatchers.IO) { loadRecentSearchContent() }

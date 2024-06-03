@@ -60,7 +60,7 @@ class SearchRouteFragment : Fragment() {
 
         initObserver(viewModel, requireActivity())
         initListener(viewModel, requireActivity())
-        restoreContent(viewModel)
+        loadContent(viewModel)
 
         return binding.root
     }
@@ -191,7 +191,7 @@ class SearchRouteFragment : Fragment() {
         binding.rvSearchResult.addOnScrollListener(RecyclerViewScrollListener(context))
     }
 
-    private fun restoreContent(viewModel: SearchBusRouteViewModel) {
+    private fun loadContent(viewModel: SearchBusRouteViewModel) {
         binding.edRoute.setText(viewModel.keyword)   // 검색 키워드 복원
         viewModel.restore()
     }
