@@ -4,7 +4,8 @@
     android:id="@+id/clRouteStationItem"
     android:layout_width="match_parent"
     android:layout_height="@dimen/height_item_route_station"
-    android:gravity="center">
+    android:gravity="center"
+    android:background="@drawable/background_rectangle_divided_item">
 
     <TextView
         android:id="@+id/txtRouteStationName"

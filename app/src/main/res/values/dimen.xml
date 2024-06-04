@@ -5,8 +5,7 @@
     <dimen name="margin_padding_small">8dp</dimen>
     <dimen name="margin_padding_extremely_small">4dp</dimen>
     <dimen name="margin_floating_action_button">24dp</dimen>
-    <dimen name="line_default">2dp</dimen>
-    <dimen name="line_divider">1dp</dimen>
+    <dimen name="line_default">1dp</dimen>
     <dimen name="radius_rounded_small">4dp</dimen>
 
     <!-- Bus Route -->
@@ -24,7 +23,7 @@
         <dimen name="text_size_route_type_tag">12sp</dimen>
 
     <!-- Bus Route Detail -->
-    <dimen name="height_detail_layout">160dp</dimen>
+    <dimen name="height_detail_layout">128dp</dimen>
     <dimen name="margin_icon_range">40dp</dimen>
 
         <!-- Route Station -->
