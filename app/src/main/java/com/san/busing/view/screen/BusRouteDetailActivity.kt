@@ -21,6 +21,8 @@ import com.san.busing.domain.viewmodelfactory.BusRouteDetailViewModelFactory
 import com.san.busing.domain.viewmodelimpl.BusRouteDetailViewModelImpl
 import com.san.busing.view.adapter.BusRouteStationAdapter
 import com.san.busing.view.listener.ItemClickEventListener
+import java.util.LinkedList
+import java.util.Queue
 
 class BusRouteDetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityBusRouteDetailBinding
@@ -59,9 +61,9 @@ class BusRouteDetailActivity : AppCompatActivity() {
             context as LifecycleOwner,
             routeInfoReadyObserver(viewModel)
         )
-        viewModel.routeStationReady.observe(
+        viewModel.routeStationBusReady.observe(
             context as LifecycleOwner,
-            routeStationReadyObserver(viewModel, context)
+            routeStationBusReadyObserver(viewModel, context)
         )
     }
 
@@ -80,17 +82,18 @@ class BusRouteDetailActivity : AppCompatActivity() {
         binding.txtRouteEndStation.text = Const.EMPTY_TEXT
     }
 
-    private fun routeStationReadyObserver(
+    private fun routeStationBusReadyObserver(
         viewModel: BusRouteDetailViewModel,
         context: Activity
     ) = Observer<Boolean> {
-        if (it) { whenRouteStationReady(viewModel, context) }
-        else { whenRouteStationNotReady() }
+        if (it) { whenRouteStationAndBusReady(viewModel, context) }
+        else { whenRouteStationAndBusNotReady() }
     }
 
-    private fun whenRouteStationReady(viewModel: BusRouteDetailViewModel, context: Activity) {
+    private fun whenRouteStationAndBusReady(viewModel: BusRouteDetailViewModel, context: Activity) {
         binding.rvBusRouteStationList.adapter = BusRouteStationAdapter(
             viewModel.routeStation,
+            LinkedList(viewModel.routeBus),
             routeStationClickEventListener(viewModel.routeStation)
         )
         binding.rvBusRouteStationList.layoutManager = LinearLayoutManager(context)
@@ -107,7 +110,7 @@ class BusRouteDetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun whenRouteStationNotReady() {
+    private fun whenRouteStationAndBusNotReady() {
         binding.rvBusRouteStationList.visibility = RecyclerView.GONE
     }
 
