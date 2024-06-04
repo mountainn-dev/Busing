@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.san.busing.BuildConfig
+import com.san.busing.data.repositoryimpl.BusLocationRepositoryImpl
 import com.san.busing.data.repositoryimpl.BusRouteRepositoryImpl
 import com.san.busing.data.vo.Id
 import com.san.busing.databinding.ActivityBusRouteDetailBinding
@@ -30,12 +31,13 @@ class BusRouteDetailActivity : AppCompatActivity() {
         binding = ActivityBusRouteDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val repository = BusRouteRepositoryImpl(Utils.getRetrofit(BuildConfig.ROUTES_URL), this.applicationContext)
+        val busRouteRepository = BusRouteRepositoryImpl(Utils.getRetrofit(BuildConfig.ROUTES_URL), this.applicationContext)
+        val busLocationRepository = BusLocationRepositoryImpl(Utils.getRetrofit(BuildConfig.LOCATION_URL))
         val routeId = intent.getSerializableExtra(Const.TAG_ROUTE_ID) as Id
         val routeName = intent.getStringExtra(Const.TAG_ROUTE_NAME) ?: Const.EMPTY_TEXT
-        viewModel = ViewModelProvider(this, BusRouteDetailViewModelFactory(repository, routeId)).get(
-            BusRouteDetailViewModelImpl::class.java
-        )
+        viewModel = ViewModelProvider(
+            this, BusRouteDetailViewModelFactory(busRouteRepository, busLocationRepository, routeId)
+        ).get(BusRouteDetailViewModelImpl::class.java)
 
         initTitle(routeName)
         initToolbar()

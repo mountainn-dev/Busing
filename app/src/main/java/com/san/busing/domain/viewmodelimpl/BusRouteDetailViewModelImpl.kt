@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.san.busing.data.Error
 import com.san.busing.data.ExceptionMessage
 import com.san.busing.data.Success
+import com.san.busing.data.repository.BusLocationRepository
 import com.san.busing.data.repository.BusRouteRepository
 import com.san.busing.data.vo.Id
 import com.san.busing.domain.model.BusRouteModel
@@ -19,7 +20,8 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
 
 class BusRouteDetailViewModelImpl(
-    private val repository: BusRouteRepository,
+    private val busRouteRepository: BusRouteRepository,
+    private val busLocationRepository: BusLocationRepository,
     private val routeId: Id,
 ) : BusRouteDetailViewModel, ViewModel() {
     private val routeInfoLoaded = MutableLiveData<Boolean>()
@@ -51,7 +53,7 @@ class BusRouteDetailViewModelImpl(
     }
 
     private suspend fun loadRouteInfoContent() {
-        val result = repository.getBusRoute(routeId)
+        val result = busRouteRepository.getBusRoute(routeId)
 
         if (result is Success) {
             routeInfo = result.data()
@@ -64,7 +66,7 @@ class BusRouteDetailViewModelImpl(
     }
 
     private suspend fun loadRouteStationContent() {
-        val result = repository.getBusStations(routeId)
+        val result = busRouteRepository.getBusStations(routeId)
 
         if (result is Success) {
             routeStation = result.data()

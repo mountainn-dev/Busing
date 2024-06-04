@@ -23,8 +23,8 @@ data class BusRouteSearchResult(
 ) {
     fun toBusRouteSearchResultModel() = BusRouteSearchResultModel(
         Id(routeId),
-        routeName,
         routeType(routeTypeCd),
+        routeName,
         regionName
     )
 
