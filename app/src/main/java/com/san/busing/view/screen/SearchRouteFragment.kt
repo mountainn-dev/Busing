@@ -12,6 +12,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 import com.san.busing.BuildConfig
 import com.san.busing.data.repositoryimpl.BusRouteRepositoryImpl
 import com.san.busing.databinding.FragmentSearchRouteBinding
@@ -60,7 +61,6 @@ class SearchRouteFragment : Fragment() {
 
         initObserver(viewModel, requireActivity())
         initListener(viewModel, requireActivity())
-        loadContent(viewModel)
 
         return binding.root
     }
@@ -191,8 +191,13 @@ class SearchRouteFragment : Fragment() {
         binding.rvSearchResult.addOnScrollListener(RecyclerViewScrollListener(context))
     }
 
-    private fun loadContent(viewModel: SearchBusRouteViewModel) {
-        binding.edRoute.setText(viewModel.keyword)   // 검색 키워드 복원
+    override fun onStart() {
+        super.onStart()
+        restore(viewModel)
+    }
+
+    private fun restore(viewModel: SearchBusRouteViewModel) {
+        binding.edRoute.setText(viewModel.keyword)
         viewModel.restore()
     }
 }

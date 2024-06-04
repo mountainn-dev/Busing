@@ -7,13 +7,13 @@
     <dimen name="margin_floating_action_button">24dp</dimen>
     <dimen name="line_default">2dp</dimen>
     <dimen name="line_divider">4dp</dimen>
+    <dimen name="radius_rounded_small">4dp</dimen>
 
     <!-- Bus Route -->
     <dimen name="height_search_layout">128dp</dimen>
-    <dimen name="radius_background_edit_text">12dp</dimen>
 
         <!-- Recent Search -->
-        <dimen name="width_item_recent_search">100dp</dimen>
+        <dimen name="width_item_recent_search">104dp</dimen>
         <dimen name="size_icon_delete">20dp</dimen>
 
         <!-- Search Result -->
