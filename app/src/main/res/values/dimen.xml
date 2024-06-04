@@ -6,7 +6,7 @@
     <dimen name="margin_padding_extremely_small">4dp</dimen>
     <dimen name="margin_floating_action_button">24dp</dimen>
     <dimen name="line_default">2dp</dimen>
-    <dimen name="line_divider">4dp</dimen>
+    <dimen name="line_divider">1dp</dimen>
     <dimen name="radius_rounded_small">4dp</dimen>
 
     <!-- Bus Route -->

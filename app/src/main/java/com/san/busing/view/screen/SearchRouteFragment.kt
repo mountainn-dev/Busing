@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -165,7 +166,7 @@ class SearchRouteFragment : Fragment() {
 
     private fun initListener(viewModel: SearchBusRouteViewModel, context: Activity) {
         setEdRouteActionListener(viewModel)
-        setBtnDeleteSearchKeywordListener(viewModel)
+        setBtnDeleteSearchKeywordListener(viewModel, context)
         setRvBusRouteScrollListener(context)
     }
 
@@ -180,10 +181,18 @@ class SearchRouteFragment : Fragment() {
         }
     }
 
-    private fun setBtnDeleteSearchKeywordListener(viewModel: SearchBusRouteViewModel) {
+    private fun setBtnDeleteSearchKeywordListener(viewModel: SearchBusRouteViewModel, context: Activity) {
         binding.btnDeleteSearchKeyword.setOnClickListener {
-            binding.edRoute.setText(Const.EMPTY_TEXT)
             viewModel.clear()
+            binding.edRoute.setText(viewModel.keyword)
+            showSoftInput(binding.edRoute, context)
+        }
+    }
+
+    private fun showSoftInput(view: View, context: Activity) {
+        if (view.requestFocus()) {
+            val imm = context.getSystemService(InputMethodManager::class.java)
+            imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
         }
     }
 
