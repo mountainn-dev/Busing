@@ -2,6 +2,7 @@
 <resources>
     <!-- Common -->
     <dimen name="margin_padding_default">12dp</dimen>
+    <dimen name="margin_padding_large">24dp</dimen>
     <dimen name="margin_padding_small">8dp</dimen>
     <dimen name="margin_padding_extremely_small">4dp</dimen>
     <dimen name="margin_floating_action_button">24dp</dimen>
@@ -23,7 +24,7 @@
         <dimen name="text_size_route_type_tag">12sp</dimen>
 
     <!-- Bus Route Detail -->
-    <dimen name="height_detail_layout">128dp</dimen>
+    <dimen name="height_detail_layout">200dp</dimen>
     <dimen name="margin_icon_range">40dp</dimen>
 
         <!-- Route Station -->

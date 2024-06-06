@@ -3,12 +3,14 @@ package com.san.busing.view.screen
 import android.app.Activity
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.san.busing.BuildConfig
+import com.san.busing.R
 import com.san.busing.data.repositoryimpl.BusLocationRepositoryImpl
 import com.san.busing.data.repositoryimpl.BusRouteRepositoryImpl
 import com.san.busing.data.vo.Id
@@ -41,19 +43,18 @@ class BusRouteDetailActivity : AppCompatActivity() {
             this, BusRouteDetailViewModelFactory(busRouteRepository, busLocationRepository, routeId)
         ).get(BusRouteDetailViewModelImpl::class.java)
 
-        initTitle(routeName)
-        initToolbar()
+        initToolbar(routeName)
         initObserver(viewModel, this)
         initListener(viewModel)
     }
 
-    private fun initTitle(routeName: String) {
-        binding.txtRouteName.text = routeName
+    private fun initToolbar(routeName: String) {
+        setTitle(routeName)
     }
 
-    private fun initToolbar() {
-        binding.tbRouteDetail.title = Const.EMPTY_TEXT
-        binding.btnBack.setOnClickListener { finish() }
+    private fun setTitle(routeName: String) {
+        binding.txtTitle.text = routeName
+        binding.txtRouteName.text = routeName
     }
 
     private fun initObserver(viewModel: BusRouteDetailViewModel, context: Activity) {
@@ -115,7 +116,12 @@ class BusRouteDetailActivity : AppCompatActivity() {
     }
 
     private fun initListener(viewModel: BusRouteDetailViewModel) {
+        setBtnBackListener()
         setFabRefreshListener(viewModel)
+    }
+
+    private fun setBtnBackListener() {
+        binding.btnBack.setOnClickListener { finish() }
     }
 
     private fun setFabRefreshListener(viewModel: BusRouteDetailViewModel) {

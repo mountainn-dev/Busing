@@ -27,7 +27,7 @@ class BusRouteStationAdapter(
         private fun loadContent(position: Int) {
             binding.txtRouteStationName.text = stationItems[position].name
             if (!busItems.isEmpty() && busItems.peek().sequenceNumber == position) {
-                val item = busItems.poll()
+                val item = busItems.poll()!!
                 binding.txtPlateNumber.text = item.plateNumber
                 binding.txtRemainSeat.text =item.remainSeat.toString()
             } else {
