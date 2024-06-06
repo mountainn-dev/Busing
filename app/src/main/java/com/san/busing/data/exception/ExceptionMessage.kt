@@ -1,4 +1,4 @@
-package com.san.busing.data
+package com.san.busing.data.exception
 
 object ExceptionMessage {
     const val TAG_BUS_ROUTE_EXCEPTION = "Bus route Exception"
@@ -14,4 +14,5 @@ object ExceptionMessage {
     const val WRONG_END_BUS_VALUE_EXCEPTION = "막차 여부 값이 올바르지 않습니다."
     const val WRONG_LOW_PLATE_VALUE_EXCEPTION = "저상 버스 여부 값이 올바르지 않습니다."
     const val WRONG_REMAIN_SEAT_VALUE_EXCEPTION = "차량 빈자리 수 값이 올바르지 않습니다."
+    const val NO_SERVICE_RESULT = "서비스 결과값이 존재하지 않습니다."
 }

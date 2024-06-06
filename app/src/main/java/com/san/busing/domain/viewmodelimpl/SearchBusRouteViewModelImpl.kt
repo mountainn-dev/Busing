@@ -1,14 +1,13 @@
 package com.san.busing.domain.viewmodelimpl
 
 import android.app.Activity
-import android.os.Parcelable
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.san.busing.data.Error
-import com.san.busing.data.ExceptionMessage
+import com.san.busing.data.exception.ExceptionMessage
 import com.san.busing.data.Success
 import com.san.busing.data.repository.BusRouteRepository
 import com.san.busing.domain.model.BusRouteRecentSearchModel

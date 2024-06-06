@@ -1,12 +1,9 @@
 package com.san.busing.data.entity
 
-import com.san.busing.data.ExceptionMessage
+import com.san.busing.data.exception.ExceptionMessage
 import com.san.busing.data.vo.Id
-import com.san.busing.domain.enums.PlateType.COMPACT
-import com.san.busing.domain.enums.PlateType.DOUBLE_DECKER
-import com.san.busing.domain.enums.PlateType.FULL_SIZE
-import com.san.busing.domain.enums.PlateType.MID_SIZE
 import com.san.busing.domain.model.BusModel
+import com.san.busing.domain.utils.Utils
 import com.tickaroo.tikxml.annotation.PropertyElement
 import com.tickaroo.tikxml.annotation.Xml
 
@@ -29,21 +26,13 @@ data class Bus(
 ) {
     fun toBusModel() = BusModel(
         Id(routeId),
-        plateType(plateType),
+        Utils.getPlateType(plateType),
         plateNo,
         stationSeq,
         isLast(endBus),
         isLowPlate(lowPlate),
         remainSeat(remainSeatCnt),
     )
-
-    private fun plateType(plateType: Int) = when(plateType) {
-        COMPACT.code -> COMPACT
-        MID_SIZE.code -> MID_SIZE
-        FULL_SIZE.code -> FULL_SIZE
-        DOUBLE_DECKER.code -> DOUBLE_DECKER
-        else -> throw Exception(ExceptionMessage.NO_PLATE_TYPE_EXCEPTION)
-    }
 
     private fun isLast(endBus: Int) = when(endBus) {
         0 -> false

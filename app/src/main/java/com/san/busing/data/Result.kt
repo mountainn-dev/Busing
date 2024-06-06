@@ -1,5 +1,6 @@
 package com.san.busing.data
 
+import com.san.busing.data.exception.ExceptionMessage
 import kotlin.Exception
 
 abstract class Result<T> {

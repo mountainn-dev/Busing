@@ -1,6 +1,6 @@
 package com.san.busing.data.vo
 
-import com.san.busing.data.ExceptionMessage
+import com.san.busing.data.exception.ExceptionMessage
 import java.io.Serializable
 
 data class Id(
