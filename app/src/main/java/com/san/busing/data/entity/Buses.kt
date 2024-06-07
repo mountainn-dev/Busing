@@ -3,6 +3,7 @@ package com.san.busing.data.entity
 import com.san.busing.domain.model.BusModel
 import com.tickaroo.tikxml.annotation.Element
 import com.tickaroo.tikxml.annotation.Path
+import com.tickaroo.tikxml.annotation.PropertyElement
 import com.tickaroo.tikxml.annotation.Xml
 
 @Xml

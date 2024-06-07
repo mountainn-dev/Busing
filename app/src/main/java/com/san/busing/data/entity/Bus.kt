@@ -2,6 +2,8 @@ package com.san.busing.data.entity
 
 import com.san.busing.data.exception.ExceptionMessage
 import com.san.busing.data.vo.Id
+import com.san.busing.domain.enums.PlateType.FULL_SIZE
+import com.san.busing.domain.enums.PlateType.MID_SIZE
 import com.san.busing.domain.model.BusModel
 import com.san.busing.domain.utils.Utils
 import com.tickaroo.tikxml.annotation.PropertyElement
@@ -46,7 +48,7 @@ data class Bus(
         else -> throw Exception(ExceptionMessage.WRONG_LOW_PLATE_VALUE_EXCEPTION)
     }
 
-    private fun remainSeat(remainSeatCnt: Int) = when(remainSeatCnt >= 0) {
+    private fun remainSeat(remainSeatCnt: Int) = when(remainSeatCnt >= -1) {
         true -> remainSeatCnt
         else -> throw Exception(ExceptionMessage.WRONG_REMAIN_SEAT_VALUE_EXCEPTION)
     }
