@@ -1,6 +1,7 @@
 package com.san.busing.domain.utils
 
 import com.san.busing.data.exception.ExceptionMessage
+import com.san.busing.data.source.remote.interceptor.ErrorInterceptor
 import com.san.busing.domain.enums.PlateType.*
 import com.san.busing.domain.enums.RouteType.*
 import com.san.busing.data.source.remote.retrofit.ServiceResult.*
@@ -14,10 +15,14 @@ object Utils {
     fun getRetrofit(baseUrl: String) = Retrofit.Builder()
         .baseUrl(baseUrl)
         .addConverterFactory(TikXmlConverterFactory.create(getXmlParse()))
-        .client(getClient(getInterceptor()))
+        .client(getErrorInterceptorClient())
         .build()
 
     private fun getInterceptor() = HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
+
+    private fun getErrorInterceptorClient() = OkHttpClient().newBuilder()
+        .addInterceptor(ErrorInterceptor())
+        .build()
 
     private fun getClient(interceptor: HttpLoggingInterceptor) =
         OkHttpClient.Builder().addInterceptor(interceptor).build()

@@ -1,6 +1,6 @@
 package com.san.busing.data.source.remote.retrofit
 
-enum class ServiceResult(val code: Int, message: String) {
+enum class ServiceResult(val code: Int, val message: String) {
     SUCCESS(0, "정상적으로 처리되었습니다."),
     SYSTEM_ERROR(1, "시스템 에러가 발생하였습니다."),
     NO_ESSENTIAL_PARAMETER(2, "필수 요청 Parameter 가 존재하지 않습니다."),
