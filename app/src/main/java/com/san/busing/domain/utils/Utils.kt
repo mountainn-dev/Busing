@@ -66,6 +66,7 @@ object Utils {
         else -> throw NoSuchElementException(ExceptionMessage.NO_ROUTE_TYPE_EXCEPTION)
     }
     fun getPlateType(plateType: Int) = when(plateType) {
+        NONE.code -> NONE
         COMPACT.code -> COMPACT
         MID_SIZE.code -> MID_SIZE
         FULL_SIZE.code -> FULL_SIZE
