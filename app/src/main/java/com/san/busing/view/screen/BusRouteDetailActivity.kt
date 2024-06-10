@@ -3,17 +3,19 @@ package com.san.busing.view.screen
 import android.app.Activity
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.san.busing.BuildConfig
-import com.san.busing.R
 import com.san.busing.data.repositoryimpl.BusLocationRepositoryImpl
 import com.san.busing.data.repositoryimpl.BusRouteRepositoryImpl
 import com.san.busing.data.vo.Id
 import com.san.busing.databinding.ActivityBusRouteDetailBinding
+import com.san.busing.domain.enums.RouteType
+import com.san.busing.domain.model.BusRouteSearchResultModel
 import com.san.busing.domain.model.BusStationModel
 import com.san.busing.domain.utils.Const
 import com.san.busing.domain.utils.Utils
@@ -37,22 +39,30 @@ class BusRouteDetailActivity : AppCompatActivity() {
         val busLocationRepository = BusLocationRepositoryImpl(Utils.getRetrofit(BuildConfig.LOCATION_URL))
         val routeId = intent.getSerializableExtra(Const.TAG_ROUTE_ID) as Id
         val routeName = intent.getStringExtra(Const.TAG_ROUTE_NAME) ?: Const.EMPTY_TEXT
+        val routeType = intent.getSerializableExtra(Const.TAG_ROUTE_TYPE) as RouteType
         viewModel = ViewModelProvider(
             this, BusRouteDetailViewModelFactory(busRouteRepository, busLocationRepository, routeId)
         ).get(BusRouteDetailViewModelImpl::class.java)
 
-        initToolbar(routeName)
+        initToolbar(routeName, routeType, this)
         initObserver(viewModel, this)
         initListener(viewModel)
     }
 
-    private fun initToolbar(routeName: String) {
+    private fun initToolbar(routeName: String, routeType: RouteType, context: Activity) {
         setTitle(routeName)
+        setBgColor(routeType, context)
     }
 
     private fun setTitle(routeName: String) {
         binding.txtTitle.text = routeName
         binding.txtRouteName.text = routeName
+    }
+
+    private fun setBgColor(type: RouteType, context: Activity) {
+        val color = ContextCompat.getColor(context, Utils.getLightColorByRouteType(type))
+        binding.ctbRouteDetail.setContentScrimColor(color)
+        binding.ctbRouteDetail.setBackgroundColor(color)
     }
 
     private fun initObserver(viewModel: BusRouteDetailViewModel, context: Activity) {

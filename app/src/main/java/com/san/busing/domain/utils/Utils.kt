@@ -1,10 +1,12 @@
 package com.san.busing.domain.utils
 
+import com.san.busing.R
 import com.san.busing.data.exception.ExceptionMessage
 import com.san.busing.data.source.remote.interceptor.ErrorInterceptor
 import com.san.busing.domain.enums.PlateType.*
 import com.san.busing.domain.enums.RouteType.*
 import com.san.busing.data.source.remote.retrofit.ServiceResult.*
+import com.san.busing.domain.enums.RouteType
 import com.tickaroo.tikxml.TikXml
 import com.tickaroo.tikxml.retrofit.TikXmlConverterFactory
 import okhttp3.OkHttpClient
@@ -20,12 +22,12 @@ object Utils {
 
     private fun getInterceptor() = HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
 
+    private fun getClient(interceptor: HttpLoggingInterceptor) =
+        OkHttpClient.Builder().addInterceptor(interceptor).build()
+
     private fun getErrorInterceptorClient() = OkHttpClient().newBuilder()
         .addInterceptor(ErrorInterceptor())
         .build()
-
-    private fun getClient(interceptor: HttpLoggingInterceptor) =
-        OkHttpClient.Builder().addInterceptor(interceptor).build()
 
     private fun getXmlParse() = TikXml.Builder().exceptionOnUnreadXml(false).build()
     fun getServiceResult(resultCd: Int) = when(resultCd) {
@@ -72,5 +74,19 @@ object Utils {
         FULL_SIZE.code -> FULL_SIZE
         DOUBLE_DECKER.code -> DOUBLE_DECKER
         else -> throw NoSuchElementException(ExceptionMessage.NO_PLATE_TYPE_EXCEPTION)
+    }
+
+    fun getColorByRouteType(type: RouteType) = when (type) {
+        AIRPORT_NORMAL, AIRPORT_LIMO, AIRPORT_SEAT, CIRCULAR -> R.color.deep_blue
+        NORMAL, NORMAL_SEAT, OUT_TOWN_NORMAL, OUT_TOWN_EXPRESS, OUT_TOWN_SEAT -> R.color.blue
+        AREA_EXPRESS, AREA_DIRECT -> R.color.red
+        RURAL_NORMAL, RURAL_DIRECT, RURAL_SEAT, VILLAGE -> R.color.green
+    }
+
+    fun getLightColorByRouteType(type: RouteType) = when (type) {
+        AIRPORT_NORMAL, AIRPORT_LIMO, AIRPORT_SEAT, CIRCULAR -> R.color.light_deep_blue
+        NORMAL, NORMAL_SEAT, OUT_TOWN_NORMAL, OUT_TOWN_EXPRESS, OUT_TOWN_SEAT -> R.color.light_blue
+        AREA_EXPRESS, AREA_DIRECT -> R.color.light_red
+        RURAL_NORMAL, RURAL_DIRECT, RURAL_SEAT, VILLAGE -> R.color.light_green
     }
 }

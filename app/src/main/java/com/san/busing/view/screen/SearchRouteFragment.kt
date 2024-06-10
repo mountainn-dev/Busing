@@ -106,7 +106,9 @@ class SearchRouteFragment : Fragment() {
             val intent = Intent(context, BusRouteDetailActivity::class.java)
             intent.putExtra(Const.TAG_ROUTE_ID, items[position].id)
             intent.putExtra(Const.TAG_ROUTE_NAME, items[position].name)
+            intent.putExtra(Const.TAG_ROUTE_TYPE, items[position].type)
 
+            // 최근 검색 갱신
             viewModel.update(
                 BusRouteRecentSearchModel(
                     items[position].id, items[position].name, items[position].type,
@@ -156,6 +158,7 @@ class SearchRouteFragment : Fragment() {
             val intent = Intent(context, BusRouteDetailActivity::class.java)
             intent.putExtra(Const.TAG_ROUTE_ID, items[position].id)
             intent.putExtra(Const.TAG_ROUTE_NAME, items[position].name)
+            intent.putExtra(Const.TAG_ROUTE_TYPE, items[position].type)
             context.startActivity(intent)
         }
 

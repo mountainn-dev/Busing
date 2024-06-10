@@ -14,8 +14,6 @@
             android:id="@+id/ctbRouteDetail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/semi_light_grey"
-            app:contentScrim="@color/semi_light_grey"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <LinearLayout

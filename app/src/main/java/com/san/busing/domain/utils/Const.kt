@@ -7,6 +7,7 @@ object Const {
     // Intent Tag
     const val TAG_ROUTE_ID = "routeId"
     const val TAG_ROUTE_NAME = "routeName"
+    const val TAG_ROUTE_TYPE = "routeType"
 
     // Plate Type Tag
     const val TAG_NONE = "-"
