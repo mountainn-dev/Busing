@@ -103,8 +103,11 @@ class SearchBusRouteViewModelImpl(
         val result = repository.getRecentSearch()
 
         if (result is Success) {
-            recentSearchContent = result.data().sortedByDescending { it.index }
-            recentSearchContentLoaded.postValue(true)
+            if (result.data().isEmpty()) recentSearchContentLoaded.postValue(false)
+            else {
+                recentSearchContent = result.data().sortedByDescending { it.index }
+                recentSearchContentLoaded.postValue(true)
+            }
         } else {
             error = (result as Error).message()
             Log.e(ExceptionMessage.TAG_RECENT_SEARCH_EXCEPTION, error)
