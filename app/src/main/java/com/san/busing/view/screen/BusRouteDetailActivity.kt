@@ -3,7 +3,6 @@ package com.san.busing.view.screen
 import android.app.Activity
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -24,7 +23,6 @@ import com.san.busing.domain.viewmodelimpl.BusRouteDetailViewModelImpl
 import com.san.busing.view.adapter.BusRouteStationAdapter
 import com.san.busing.view.listener.ItemClickEventListener
 import java.util.LinkedList
-import java.util.Queue
 
 class BusRouteDetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityBusRouteDetailBinding
@@ -103,11 +101,11 @@ class BusRouteDetailActivity : AppCompatActivity() {
 
     private fun routeStationClickEventListener(items: List<BusStationModel>) = object: ItemClickEventListener {
         override fun onItemClickListener(position: Int) {
-            TODO("Not yet implemented")
+
         }
 
         override fun onDeleteButtonClickListener(position: Int) {
-            TODO("Not yet implemented")
+
         }
     }
 

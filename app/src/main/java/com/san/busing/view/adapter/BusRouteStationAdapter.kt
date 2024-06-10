@@ -9,7 +9,6 @@ import com.san.busing.domain.model.BusStationModel
 import com.san.busing.domain.utils.Const
 import com.san.busing.view.listener.ItemClickEventListener
 import java.util.Queue
-import java.util.Stack
 
 class BusRouteStationAdapter(
     private val stationItems: List<BusStationModel>,

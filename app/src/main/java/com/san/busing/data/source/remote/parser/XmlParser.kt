@@ -7,6 +7,12 @@ import org.xmlpull.v1.XmlPullParserException
 import java.io.IOException
 import java.io.InputStream
 
+/**
+ * XmlParser
+ *
+ * Interceptor 클래스에서 특정 태그의 xml 데이터만을 추출하기 위한 Parser 클래스
+ * XmlPullParser 이용
+ */
 class XmlParser {
     private val ns: String? = null
 
