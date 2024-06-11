@@ -12,8 +12,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 import com.san.busing.BuildConfig
 import com.san.busing.data.repositoryimpl.BusRouteRepositoryImpl
 import com.san.busing.databinding.FragmentSearchRouteBinding
@@ -95,7 +93,7 @@ class SearchRouteFragment : Fragment() {
             context
         )
         binding.rvSearchResult.layoutManager = LinearLayoutManager(context)
-        binding.rvSearchResult.visibility = RecyclerView.VISIBLE
+        binding.rvSearchResult.visibility = View.VISIBLE
     }
 
     private fun searchResultItemClickEventListener(
@@ -123,7 +121,7 @@ class SearchRouteFragment : Fragment() {
     }
 
     private fun whenSearchResultNotReady() {
-        binding.rvSearchResult.visibility = RecyclerView.GONE
+        binding.rvSearchResult.visibility = View.GONE
     }
 
     private fun recentSearchContentReadyObserver(
@@ -143,11 +141,11 @@ class SearchRouteFragment : Fragment() {
         binding.rvRecentSearch.layoutManager = LinearLayoutManager(
             activity, LinearLayoutManager.HORIZONTAL, false
         )
-        binding.rvRecentSearch.visibility = RecyclerView.VISIBLE
+        binding.rvRecentSearch.visibility = View.VISIBLE
     }
 
     private fun whenRecentSearchNotReady() {
-        binding.rvRecentSearch.visibility = RecyclerView.GONE
+        binding.rvRecentSearch.visibility = View.GONE
     }
 
     private fun recentSearchItemClickEventListener(

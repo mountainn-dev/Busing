@@ -2,13 +2,13 @@ package com.san.busing.view.screen
 
 import android.app.Activity
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.san.busing.BuildConfig
 import com.san.busing.data.repositoryimpl.BusLocationRepositoryImpl
 import com.san.busing.data.repositoryimpl.BusRouteRepositoryImpl
@@ -112,7 +112,7 @@ class BusRouteDetailActivity : AppCompatActivity() {
             routeStationClickEventListener(viewModel.routeStation)
         )
         binding.rvBusRouteStationList.layoutManager = LinearLayoutManager(context)
-        binding.rvBusRouteStationList.visibility = RecyclerView.VISIBLE
+        binding.rvBusRouteStationList.visibility = View.VISIBLE
     }
 
     private fun routeStationClickEventListener(items: List<BusStationModel>) = object: ItemClickEventListener {
@@ -126,7 +126,7 @@ class BusRouteDetailActivity : AppCompatActivity() {
     }
 
     private fun whenRouteStationAndBusNotReady() {
-        binding.rvBusRouteStationList.visibility = RecyclerView.GONE
+        binding.rvBusRouteStationList.visibility = View.GONE
     }
 
     private fun initListener(viewModel: BusRouteDetailViewModel) {
