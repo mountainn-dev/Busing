@@ -113,6 +113,7 @@ class BusRouteDetailActivity : AppCompatActivity() {
         )
         binding.rvBusRouteStationList.layoutManager = LinearLayoutManager(context)
         binding.rvBusRouteStationList.visibility = View.VISIBLE
+        binding.pgbBusRouteStation.visibility = View.GONE
     }
 
     private fun routeStationClickEventListener(items: List<BusStationModel>) = object: ItemClickEventListener {
@@ -126,6 +127,7 @@ class BusRouteDetailActivity : AppCompatActivity() {
     }
 
     private fun whenRouteStationAndBusNotReady() {
+        binding.pgbBusRouteStation.visibility = View.VISIBLE
         binding.rvBusRouteStationList.visibility = View.GONE
     }
 
