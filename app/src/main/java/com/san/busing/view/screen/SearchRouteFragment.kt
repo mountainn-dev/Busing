@@ -7,11 +7,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.san.busing.BuildConfig
 import com.san.busing.data.repositoryimpl.BusRouteRepositoryImpl
 import com.san.busing.databinding.FragmentSearchRouteBinding
@@ -60,7 +60,6 @@ class SearchRouteFragment : Fragment() {
 
         initObserver(viewModel, requireActivity())
         initListener(viewModel, requireActivity())
-        loadContent(viewModel)
 
         return binding.root
     }
@@ -94,7 +93,7 @@ class SearchRouteFragment : Fragment() {
             context
         )
         binding.rvSearchResult.layoutManager = LinearLayoutManager(context)
-        binding.rvSearchResult.visibility = RecyclerView.VISIBLE
+        binding.rvSearchResult.visibility = View.VISIBLE
     }
 
     private fun searchResultItemClickEventListener(
@@ -105,7 +104,9 @@ class SearchRouteFragment : Fragment() {
             val intent = Intent(context, BusRouteDetailActivity::class.java)
             intent.putExtra(Const.TAG_ROUTE_ID, items[position].id)
             intent.putExtra(Const.TAG_ROUTE_NAME, items[position].name)
+            intent.putExtra(Const.TAG_ROUTE_TYPE, items[position].type)
 
+            // 최근 검색 갱신
             viewModel.update(
                 BusRouteRecentSearchModel(
                     items[position].id, items[position].name, items[position].type,
@@ -120,7 +121,7 @@ class SearchRouteFragment : Fragment() {
     }
 
     private fun whenSearchResultNotReady() {
-        binding.rvSearchResult.visibility = RecyclerView.GONE
+        binding.rvSearchResult.visibility = View.GONE
     }
 
     private fun recentSearchContentReadyObserver(
@@ -140,11 +141,11 @@ class SearchRouteFragment : Fragment() {
         binding.rvRecentSearch.layoutManager = LinearLayoutManager(
             activity, LinearLayoutManager.HORIZONTAL, false
         )
-        binding.rvRecentSearch.visibility = RecyclerView.VISIBLE
+        binding.rvRecentSearch.visibility = View.VISIBLE
     }
 
     private fun whenRecentSearchNotReady() {
-        binding.rvRecentSearch.visibility = RecyclerView.GONE
+        binding.rvRecentSearch.visibility = View.GONE
     }
 
     private fun recentSearchItemClickEventListener(
@@ -155,6 +156,7 @@ class SearchRouteFragment : Fragment() {
             val intent = Intent(context, BusRouteDetailActivity::class.java)
             intent.putExtra(Const.TAG_ROUTE_ID, items[position].id)
             intent.putExtra(Const.TAG_ROUTE_NAME, items[position].name)
+            intent.putExtra(Const.TAG_ROUTE_TYPE, items[position].type)
             context.startActivity(intent)
         }
 
@@ -165,7 +167,7 @@ class SearchRouteFragment : Fragment() {
 
     private fun initListener(viewModel: SearchBusRouteViewModel, context: Activity) {
         setEdRouteActionListener(viewModel)
-        setBtnDeleteSearchKeywordListener(viewModel)
+        setBtnDeleteSearchKeywordListener(viewModel, context)
         setRvBusRouteScrollListener(context)
     }
 
@@ -180,10 +182,18 @@ class SearchRouteFragment : Fragment() {
         }
     }
 
-    private fun setBtnDeleteSearchKeywordListener(viewModel: SearchBusRouteViewModel) {
+    private fun setBtnDeleteSearchKeywordListener(viewModel: SearchBusRouteViewModel, context: Activity) {
         binding.btnDeleteSearchKeyword.setOnClickListener {
-            binding.edRoute.setText(Const.EMPTY_TEXT)
             viewModel.clear()
+            binding.edRoute.setText(viewModel.keyword)
+            showSoftInput(binding.edRoute, context)
+        }
+    }
+
+    private fun showSoftInput(view: View, context: Activity) {
+        if (view.requestFocus()) {
+            val imm = context.getSystemService(InputMethodManager::class.java)
+            imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
         }
     }
 
@@ -191,8 +201,13 @@ class SearchRouteFragment : Fragment() {
         binding.rvSearchResult.addOnScrollListener(RecyclerViewScrollListener(context))
     }
 
-    private fun loadContent(viewModel: SearchBusRouteViewModel) {
-        binding.edRoute.setText(viewModel.keyword)   // 검색 키워드 복원
+    override fun onStart() {
+        super.onStart()
+        restore(viewModel)
+    }
+
+    private fun restore(viewModel: SearchBusRouteViewModel) {
+        binding.edRoute.setText(viewModel.keyword)
         viewModel.restore()
     }
 }

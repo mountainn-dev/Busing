@@ -23,19 +23,12 @@
             android:gravity="start|center_vertical"
             android:background="@drawable/background_white_rounded_rectangle">
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/margin_padding_default"
-                android:src="@drawable/ic_search"/>
-
             <EditText
                 android:id="@+id/edRoute"
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="match_parent"
-
-
+                android:layout_weight="1"
+                android:layout_marginStart="@dimen/margin_padding_default"
                 android:hint="@string/route_input_hint"
                 android:textColorHint="@color/grey"
                 android:background="@drawable/background_white_rounded_rectangle"

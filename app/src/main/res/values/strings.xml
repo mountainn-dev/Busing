@@ -3,7 +3,7 @@
 
     <!-- Bus Route -->
     <string name="route">노선</string>
-    <string name="route_input_hint">노선 번호</string>
+    <string name="route_input_hint">버스 번호 검색</string>
     <string name="route_no_recent_search">최근 조회한 노선이 없습니다.</string>
     <string name="route_no_result">검색 결과가 없습니다.</string>
 

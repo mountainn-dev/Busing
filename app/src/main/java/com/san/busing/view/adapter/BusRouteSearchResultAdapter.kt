@@ -5,10 +5,9 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.san.busing.R
 import com.san.busing.databinding.ItemSearchResultBusRouteBinding
 import com.san.busing.domain.model.BusRouteSearchResultModel
-import com.san.busing.domain.enums.RouteType.*
+import com.san.busing.domain.utils.Utils
 import com.san.busing.view.listener.ItemClickEventListener
 
 class BusRouteSearchResultAdapter(
@@ -32,16 +31,9 @@ class BusRouteSearchResultAdapter(
         }
 
         private fun setContentColor(position: Int) {
-            binding.txtRouteName.setTextColor(ContextCompat.getColor(context, colorIdByRouteType(position)))
-        }
-
-        private fun colorIdByRouteType(position: Int): Int {
-            return when (items[position].type) {
-                AIRPORT_NORMAL, AIRPORT_LIMO, AIRPORT_SEAT, CIRCULAR -> R.color.deep_blue
-                NORMAL, NORMAL_SEAT, OUT_TOWN_NORMAL, OUT_TOWN_EXPRESS, OUT_TOWN_SEAT -> R.color.blue
-                AREA_EXPRESS, AREA_DIRECT -> R.color.red
-                RURAL_NORMAL, RURAL_DIRECT, RURAL_SEAT, VILLAGE -> R.color.green
-            }
+            binding.txtRouteName.setTextColor(
+                ContextCompat.getColor(context, Utils.getColorByRouteType(items[position].type))
+            )
         }
 
         private fun setItemClickEventListener(position: Int) {

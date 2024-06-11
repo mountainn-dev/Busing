@@ -5,7 +5,7 @@ import com.san.busing.domain.enums.RouteType
 
 data class BusRouteSearchResultModel(
     val id: Id,
-    val name: String,
     val type: RouteType,
+    val name: String,
     val region: String
 )

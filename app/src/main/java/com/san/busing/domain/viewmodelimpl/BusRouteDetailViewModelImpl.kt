@@ -2,14 +2,17 @@ package com.san.busing.domain.viewmodelimpl
 
 import android.util.Log
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.san.busing.data.Error
-import com.san.busing.data.ExceptionMessage
+import com.san.busing.data.exception.ExceptionMessage
 import com.san.busing.data.Success
+import com.san.busing.data.repository.BusLocationRepository
 import com.san.busing.data.repository.BusRouteRepository
 import com.san.busing.data.vo.Id
+import com.san.busing.domain.model.BusModel
 import com.san.busing.domain.model.BusRouteModel
 import com.san.busing.domain.model.BusStationModel
 import com.san.busing.domain.utils.Const
@@ -19,22 +22,31 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
 
 class BusRouteDetailViewModelImpl(
-    private val repository: BusRouteRepository,
+    private val busRouteRepository: BusRouteRepository,
+    private val busLocationRepository: BusLocationRepository,
     private val routeId: Id,
 ) : BusRouteDetailViewModel, ViewModel() {
-    private val routeInfoLoaded = MutableLiveData<Boolean>()
-    private val routeStationLoaded = MutableLiveData<Boolean>()
     private var isLoading = false
     private var error = Const.EMPTY_TEXT
 
     override val routeInfoReady: LiveData<Boolean>
         get() = routeInfoLoaded
-    override val routeStationReady: LiveData<Boolean>
-        get() = routeStationLoaded
+    private val routeInfoLoaded = MutableLiveData<Boolean>()
+
+    override val routeStationBusReady: LiveData<Boolean>
+        get() = routeStationBusLoaded
+    private val routeStationBusLoaded = MediatorLiveData<Boolean>()
+    private val routeStationLoaded = MutableLiveData<Boolean>()
+    private val routeBusLoaded = MutableLiveData<Boolean>()
+
     override lateinit var routeInfo: BusRouteModel
     override lateinit var routeStation: List<BusStationModel>
+    override lateinit var routeBus: List<BusModel>
 
-    init { load() }
+    init {
+        load()
+        mergeStationBusData()
+    }
 
     override fun load() {
         if (!isLoading) {
@@ -43,7 +55,8 @@ class BusRouteDetailViewModelImpl(
             viewModelScope.launch {
                 awaitAll(
                     async { loadRouteInfoContent() },
-                    async { loadRouteStationContent() }
+                    async { loadRouteStationContent() },
+                    async { loadRouteBusContent() }
                 )
                 isLoading = false
             }
@@ -51,7 +64,7 @@ class BusRouteDetailViewModelImpl(
     }
 
     private suspend fun loadRouteInfoContent() {
-        val result = repository.getBusRoute(routeId)
+        val result = busRouteRepository.getBusRoute(routeId)
 
         if (result is Success) {
             routeInfo = result.data()
@@ -64,7 +77,7 @@ class BusRouteDetailViewModelImpl(
     }
 
     private suspend fun loadRouteStationContent() {
-        val result = repository.getBusStations(routeId)
+        val result = busRouteRepository.getBusStations(routeId)
 
         if (result is Success) {
             routeStation = result.data()
@@ -75,4 +88,30 @@ class BusRouteDetailViewModelImpl(
             routeStationLoaded.postValue(false)
         }
     }
+
+    private suspend fun loadRouteBusContent() {
+        val result = busLocationRepository.getBusLocations(routeId)
+
+        if (result is Success) {
+            routeBus = result.data().sortedBy { it.sequenceNumber }
+            routeBusLoaded.postValue(true)
+        } else {
+            error = (result as Error).message()
+            Log.e(ExceptionMessage.TAG_BUS_ROUTE_BUS_EXCEPTION, error)
+            routeBusLoaded.postValue(false)
+        }
+    }
+
+    private fun mergeStationBusData() {
+        routeStationBusLoaded.addSource(routeStationLoaded) {
+            routeStationBusLoaded.value = it && isRouteBusReady()
+        }
+        routeStationBusLoaded.addSource(routeBusLoaded) {
+            routeStationBusLoaded.value = it && isRouteStationReady()
+        }
+    }
+
+    private fun isRouteStationReady() = routeStationLoaded.isInitialized && routeStationLoaded.value!!
+
+    private fun isRouteBusReady() = routeBusLoaded.isInitialized && routeBusLoaded.value!!
 }

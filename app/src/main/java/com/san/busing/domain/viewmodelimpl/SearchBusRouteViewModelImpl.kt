@@ -1,14 +1,13 @@
 package com.san.busing.domain.viewmodelimpl
 
 import android.app.Activity
-import android.os.Parcelable
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.san.busing.data.Error
-import com.san.busing.data.ExceptionMessage
+import com.san.busing.data.exception.ExceptionMessage
 import com.san.busing.data.Success
 import com.san.busing.data.repository.BusRouteRepository
 import com.san.busing.domain.model.BusRouteRecentSearchModel
@@ -104,8 +103,11 @@ class SearchBusRouteViewModelImpl(
         val result = repository.getRecentSearch()
 
         if (result is Success) {
-            recentSearchContent = result.data().sortedByDescending { it.index }
-            recentSearchContentLoaded.postValue(true)
+            if (result.data().isEmpty()) recentSearchContentLoaded.postValue(false)
+            else {
+                recentSearchContent = result.data().sortedByDescending { it.index }
+                recentSearchContentLoaded.postValue(true)
+            }
         } else {
             error = (result as Error).message()
             Log.e(ExceptionMessage.TAG_RECENT_SEARCH_EXCEPTION, error)

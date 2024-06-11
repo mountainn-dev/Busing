@@ -10,7 +10,7 @@ data class BusRouteRecentSearchModel(
     val name: String,
     val type: RouteType,
     val index: Long
-) : Serializable {
+) {
     fun toBusRouteRecentSearchEntity() = BusRouteRecentSearch(
         id.get(),
         name,
