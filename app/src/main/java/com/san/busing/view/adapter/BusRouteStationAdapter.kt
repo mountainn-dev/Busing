@@ -34,6 +34,7 @@ class BusRouteStationAdapter(
                 binding.llBusInfo.visibility = View.VISIBLE
                 binding.txtPlateNumber.text = item.plateNumber
                 binding.txtRemainSeat.text =item.remainSeat.toString()
+                binding.imgBus.visibility = View.VISIBLE
             } else {
                 binding.txtPlateNumber.text = Const.EMPTY_TEXT
                 binding.txtRemainSeat.text = Const.EMPTY_TEXT

@@ -19,15 +19,18 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:orientation="vertical"
+            android:gravity="center"
             android:layout_weight="0.2">
 
             <TextView
                 android:id="@+id/txtPlateNumber"
+                android:textAlignment="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
             <TextView
                 android:id="@+id/txtRemainSeat"
+                android:textAlignment="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
@@ -52,8 +55,8 @@
 
             <ImageView
                 android:id="@+id/imgBus"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:visibility="gone"/>
 
