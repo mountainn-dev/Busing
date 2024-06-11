@@ -89,4 +89,11 @@ object Utils {
         AREA_EXPRESS, AREA_DIRECT -> R.color.light_red
         RURAL_NORMAL, RURAL_DIRECT, RURAL_SEAT, VILLAGE -> R.color.light_green
     }
+
+    fun getBusImageResourceByRouteType(type: RouteType) = when (type) {
+        AIRPORT_NORMAL, AIRPORT_LIMO, AIRPORT_SEAT, CIRCULAR -> R.drawable.ic_bus_deep_blue
+        NORMAL, NORMAL_SEAT, OUT_TOWN_NORMAL, OUT_TOWN_EXPRESS, OUT_TOWN_SEAT -> R.drawable.ic_bus_blue
+        AREA_EXPRESS, AREA_DIRECT -> R.drawable.ic_bus_red
+        RURAL_NORMAL, RURAL_DIRECT, RURAL_SEAT, VILLAGE -> R.drawable.ic_bus_green
+    }
 }

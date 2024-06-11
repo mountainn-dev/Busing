@@ -15,7 +15,6 @@ import com.san.busing.data.repositoryimpl.BusRouteRepositoryImpl
 import com.san.busing.data.vo.Id
 import com.san.busing.databinding.ActivityBusRouteDetailBinding
 import com.san.busing.domain.enums.RouteType
-import com.san.busing.domain.model.BusRouteSearchResultModel
 import com.san.busing.domain.model.BusStationModel
 import com.san.busing.domain.utils.Const
 import com.san.busing.domain.utils.Utils
@@ -45,7 +44,7 @@ class BusRouteDetailActivity : AppCompatActivity() {
         ).get(BusRouteDetailViewModelImpl::class.java)
 
         initToolbar(routeName, routeType, this)
-        initObserver(viewModel, this)
+        initObserver(viewModel, routeType, this)
         initListener(viewModel)
     }
 
@@ -65,14 +64,18 @@ class BusRouteDetailActivity : AppCompatActivity() {
         binding.ctbRouteDetail.setBackgroundColor(color)
     }
 
-    private fun initObserver(viewModel: BusRouteDetailViewModel, context: Activity) {
+    private fun initObserver(
+        viewModel: BusRouteDetailViewModel,
+        routeType: RouteType,
+        context: Activity
+    ) {
         viewModel.routeInfoReady.observe(
             context as LifecycleOwner,
             routeInfoReadyObserver(viewModel)
         )
         viewModel.routeStationBusReady.observe(
             context as LifecycleOwner,
-            routeStationBusReadyObserver(viewModel, context)
+            routeStationBusReadyObserver(viewModel, routeType, context)
         )
     }
 
@@ -93,14 +96,17 @@ class BusRouteDetailActivity : AppCompatActivity() {
 
     private fun routeStationBusReadyObserver(
         viewModel: BusRouteDetailViewModel,
+        routeType: RouteType,
         context: Activity
     ) = Observer<Boolean> {
-        if (it) { whenRouteStationAndBusReady(viewModel, context) }
+        if (it) { whenRouteStationAndBusReady(viewModel, routeType, context) }
         else { whenRouteStationAndBusNotReady() }
     }
 
-    private fun whenRouteStationAndBusReady(viewModel: BusRouteDetailViewModel, context: Activity) {
+    private fun whenRouteStationAndBusReady(
+        viewModel: BusRouteDetailViewModel, routeType: RouteType, context: Activity) {
         binding.rvBusRouteStationList.adapter = BusRouteStationAdapter(
+            routeType,
             viewModel.routeStation,
             LinkedList(viewModel.routeBus),
             routeStationClickEventListener(viewModel.routeStation)
