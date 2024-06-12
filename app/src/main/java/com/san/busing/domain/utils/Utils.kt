@@ -17,15 +17,11 @@ object Utils {
     fun getRetrofit(baseUrl: String) = Retrofit.Builder()
         .baseUrl(baseUrl)
         .addConverterFactory(TikXmlConverterFactory.create(getXmlParse()))
-        .client(getErrorInterceptorClient())
+        .client(getClient())
         .build()
 
-    private fun getInterceptor() = HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
-
-    private fun getClient(interceptor: HttpLoggingInterceptor) =
-        OkHttpClient.Builder().addInterceptor(interceptor).build()
-
-    private fun getErrorInterceptorClient() = OkHttpClient().newBuilder()
+    private fun getClient() = OkHttpClient().newBuilder()
+        .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
         .addInterceptor(ErrorInterceptor())
         .build()
 
