@@ -20,7 +20,6 @@ data class Bus(
     @PropertyElement val routeId: Int,
     @PropertyElement val stationId: Int,
     @PropertyElement val stationSeq: Int,
-    @PropertyElement val endBus: Int,
     @PropertyElement val lowPlate: Int,
     @PropertyElement val plateNo: String,
     @PropertyElement val plateType: Int,
@@ -31,16 +30,9 @@ data class Bus(
         Utils.getPlateType(plateType),
         plateNo,
         stationSeq,
-        isLast(endBus),
         isLowPlate(lowPlate),
         remainSeat(remainSeatCnt),
     )
-
-    private fun isLast(endBus: Int) = when(endBus) {
-        0 -> false
-        1 -> true
-        else -> throw Exception(ExceptionMessage.WRONG_END_BUS_VALUE_EXCEPTION)
-    }
 
     private fun isLowPlate(lowPlate: Int) = when(lowPlate) {
         0 -> false
