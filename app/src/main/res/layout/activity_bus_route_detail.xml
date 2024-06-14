@@ -19,7 +19,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/height_detail_layout"
-                android:gravity="center"
+                android:gravity="center_horizontal|bottom"
                 android:layout_marginTop="@dimen/margin_padding_large"
                 android:orientation="vertical"
                 app:layout_collapseMode="parallax"
@@ -57,6 +57,34 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="0.3"
                         android:textAlignment="center" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_margin="@dimen/margin_padding_default"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/margin_padding_small"
+                        android:text="@string/start_route_bus_count"/>
+
+                    <TextView
+                        android:id="@+id/txtRouteBusCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/red"
+                        android:layout_gravity="end"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/margin_padding_small"
+                        android:text="@string/end_route_bus_count"/>
 
                 </LinearLayout>
 

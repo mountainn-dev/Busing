@@ -1,5 +1,6 @@
 package com.san.busing.view.screen
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.os.Bundle
 import android.view.View
@@ -112,6 +113,7 @@ class BusRouteDetailActivity : AppCompatActivity() {
             routeStationClickEventListener(viewModel.routeStation)
         )
         binding.rvBusRouteStationList.layoutManager = LinearLayoutManager(context)
+        binding.txtRouteBusCount.text = String.format(Const.ROUTE_BUS_COUNT, viewModel.routeBus.size)
         binding.rvBusRouteStationList.visibility = View.VISIBLE
         binding.pgbBusRouteStation.visibility = View.GONE
     }

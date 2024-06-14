@@ -7,8 +7,11 @@
     <string name="route_no_recent_search">최근 조회한 노선이 없습니다.</string>
     <string name="route_no_result">검색 결과가 없습니다.</string>
 
+    <!-- Bus Route Detail -->
+    <string name="start_route_bus_count">현재 </string>
+    <string name="end_route_bus_count"> 운행중</string>
+
     <!-- Common -->
-    <string name="search">검색</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
