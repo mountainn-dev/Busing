@@ -28,11 +28,19 @@ data class Bus(
     fun toBusModel() = BusModel(
         Id(routeId),
         Utils.getPlateType(plateType),
-        plateNo,
+        plateNumber(plateNo),
         stationSeq,
         isLowPlate(lowPlate),
         remainSeat(remainSeatCnt),
     )
+
+    private fun plateNumber(plateNo: String): String {
+        try {
+            return plateNo.substring(plateNo.length-4, plateNo.length)
+        } catch (e: Exception) {
+            throw Exception(ExceptionMessage.WRONG_PLATE_NUMBER_FORMAT_EXCEPTION)
+        }
+    }
 
     private fun isLowPlate(lowPlate: Int) = when(lowPlate) {
         0 -> false

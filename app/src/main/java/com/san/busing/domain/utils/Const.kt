@@ -3,6 +3,7 @@ package com.san.busing.domain.utils
 object Const {
     const val EMPTY_TEXT = ""
     const val ZERO = 0
+    const val NO_DATA = -1
 
     // Intent Tag
     const val TAG_ROUTE_ID = "routeId"
@@ -27,4 +28,6 @@ object Const {
 
     // message
     const val ROUTE_BUS_COUNT = "%d대"
+    const val REMAIN_SEAT_COUNT = "%d석"
+    const val NO_REMAIN_SEAT_COUNT = "-석"
 }
