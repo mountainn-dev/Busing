@@ -1,5 +1,6 @@
 package com.san.busing.data.repositoryimpl
 
+import android.util.Log
 import com.san.busing.BuildConfig
 import com.san.busing.data.Result
 import com.san.busing.data.exception.ApiException
