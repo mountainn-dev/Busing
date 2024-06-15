@@ -4,6 +4,7 @@
     android:id="@+id/clRouteStationItem"
     android:layout_width="match_parent"
     android:layout_height="@dimen/height_item_route_station"
+    android:paddingHorizontal="@dimen/margin_padding_default"
     android:gravity="center"
     android:background="@drawable/background_rectangle_divided_item">
 
@@ -20,7 +21,7 @@
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:gravity="end|center_vertical"
-            android:layout_weight="0.2">
+            android:layout_weight="0.15">
 
             <TextView
                 android:id="@+id/txtPlateNumber"
@@ -67,7 +68,7 @@
             android:id="@+id/txtRouteStationName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.7"
+            android:layout_weight="0.75"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

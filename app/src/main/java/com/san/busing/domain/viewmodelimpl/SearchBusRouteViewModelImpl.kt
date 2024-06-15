@@ -60,7 +60,7 @@ class SearchBusRouteViewModelImpl(
         }
     }
 
-    override fun update(recentSearchModel: BusRouteRecentSearchModel) {
+    override fun insert(recentSearchModel: BusRouteRecentSearchModel) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) { insertRecentSearch(recentSearchModel) }
         }
@@ -68,6 +68,21 @@ class SearchBusRouteViewModelImpl(
 
     private fun insertRecentSearch(recentSearchModel: BusRouteRecentSearchModel) {
         val result = repository.insertRecentSearch(recentSearchModel)
+
+        if (result is Error) {
+            error = result.message()
+            Log.e(ExceptionMessage.TAG_RECENT_SEARCH_EXCEPTION, error)
+        }
+    }
+
+    override fun update(recentSearchModel: BusRouteRecentSearchModel) {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) { updateRecentSearch(recentSearchModel) }
+        }
+    }
+
+    private fun updateRecentSearch(recentSearchModel: BusRouteRecentSearchModel) {
+        val result = repository.updateRecentSearch(recentSearchModel)
 
         if (result is Error) {
             error = result.message()
