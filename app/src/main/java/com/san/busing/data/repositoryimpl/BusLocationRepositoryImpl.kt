@@ -17,7 +17,7 @@ class BusLocationRepositoryImpl(
         try {
             val response = service.getBusLocationList(BuildConfig.API_KEY, id.get())
             return Result.success(response.body()!!.get())
-        } catch (e: ServiceException.NoResultException) {
+        } catch (e: ServiceException.ResultException) {
             return Result.success(listOf())
         } catch (e: Exception) {
             return Result.error(e)

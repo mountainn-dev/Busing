@@ -1,5 +1,10 @@
 package com.san.busing.data.source.remote.retrofit
 
+/**
+ * ServiceResult
+ *
+ * 경기도 버스 정보에서 제공하는 서비스 API 통신 결과 유형
+ */
 enum class ServiceResult(val code: Int, val message: String) {
     SUCCESS(0, "정상적으로 처리되었습니다."),
     SYSTEM_ERROR(1, "시스템 에러가 발생하였습니다."),

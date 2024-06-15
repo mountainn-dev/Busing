@@ -5,7 +5,7 @@ import com.san.busing.domain.utils.Const
 /**
  * RouteType
  *
- * 경기도 공공 데이터 포털에서 제공하는 노선 유형
+ * 경기도 버스 정보에서 제공하는 노선 유형
  */
 enum class RouteType(val code: Int, val typeName: String, val tag: String) {
     AREA_DIRECT(11, "직행좌석형시내버스", Const.TAG_AREA),

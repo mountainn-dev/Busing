@@ -2,7 +2,6 @@ package com.san.busing.data.repositoryimpl
 
 import android.app.Activity
 import android.content.Context
-import android.util.Log
 import androidx.room.Room
 import com.san.busing.BuildConfig
 import com.san.busing.data.Result
@@ -11,8 +10,8 @@ import com.san.busing.data.source.local.database.RecentSearchDatabase
 import com.san.busing.data.source.remote.retrofit.BusRouteService
 import com.san.busing.data.vo.Id
 import com.san.busing.domain.model.BusRouteModel
-import com.san.busing.domain.model.BusRouteSearchResultModel
 import com.san.busing.domain.model.BusRouteRecentSearchModel
+import com.san.busing.domain.model.BusRouteSearchResultModel
 import com.san.busing.domain.model.BusStationModel
 import com.san.busing.domain.utils.Const
 import retrofit2.Retrofit

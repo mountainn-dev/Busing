@@ -26,25 +26,6 @@ object Utils {
         .build()
 
     private fun getXmlParse() = TikXml.Builder().exceptionOnUnreadXml(false).build()
-    fun getServiceResult(resultCd: Int) = when(resultCd) {
-        SUCCESS.code -> SUCCESS
-        SYSTEM_ERROR.code -> SYSTEM_ERROR
-        NO_ESSENTIAL_PARAMETER.code -> NO_ESSENTIAL_PARAMETER
-        WRONG_ESSENTIAL_PARAMETER.code -> WRONG_ESSENTIAL_PARAMETER
-        NO_RESULT.code -> NO_RESULT
-        NO_SERVICE_KEY.code -> NO_SERVICE_KEY
-        WRONG_SERVICE_KEY.code -> WRONG_SERVICE_KEY
-        UNAUTHORIZED_SERVICE_KEY.code -> UNAUTHORIZED_SERVICE_KEY
-        OVER_REQUEST_LIMIT.code -> OVER_REQUEST_LIMIT
-        WRONG_POSITION_REQUEST.code -> WRONG_POSITION_REQUEST
-        WRONG_FORMAT_ROUTE_NAME.code -> WRONG_FORMAT_ROUTE_NAME
-        WRONG_FORMAT_STATION_NAME.code -> WRONG_FORMAT_STATION_NAME
-        NO_RESULT_BUS_ARRIVAL.code -> NO_RESULT_BUS_ARRIVAL
-        WRONG_START_STATION_ID.code -> WRONG_START_STATION_ID
-        WRONG_ARRIVAL_STATION_ID.code -> WRONG_ARRIVAL_STATION_ID
-        SERVICE_NOT_READY.code -> SERVICE_NOT_READY
-        else -> throw NoSuchElementException(ExceptionMessage.NO_SERVICE_RESULT)
-    }
     fun getRouteType(routeTypeCd: Int) = when(routeTypeCd) {
         AIRPORT_NORMAL.code -> AIRPORT_NORMAL
         AIRPORT_LIMO.code -> AIRPORT_LIMO
