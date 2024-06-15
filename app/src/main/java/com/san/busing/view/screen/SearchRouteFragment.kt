@@ -177,6 +177,7 @@ class SearchRouteFragment : Fragment() {
     private fun initListener(viewModel: SearchBusRouteViewModel, context: Activity) {
         setEdRouteActionListener(viewModel)
         setBtnDeleteSearchKeywordListener(viewModel, context)
+        setBtnDeleteAllRecentSearchListener(viewModel)
         setRvBusRouteScrollListener(context)
     }
 
@@ -203,6 +204,12 @@ class SearchRouteFragment : Fragment() {
         if (view.requestFocus()) {
             val imm = context.getSystemService(InputMethodManager::class.java)
             imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
+        }
+    }
+
+    private fun setBtnDeleteAllRecentSearchListener(viewModel: SearchBusRouteViewModel) {
+        binding.btnDeleteAllRecentSearch.setOnClickListener {
+            viewModel.deleteAll()
         }
     }
 

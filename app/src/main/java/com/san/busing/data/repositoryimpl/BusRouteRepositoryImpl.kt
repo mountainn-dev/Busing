@@ -89,6 +89,16 @@ class BusRouteRepositoryImpl(
         }
     }
 
+    override fun deleteAllRecentSearch(recentSearchModels: List<BusRouteRecentSearchModel>): Result<Boolean> {
+        try {
+            db.recentSearchDao().deleteAll(
+                recentSearchModels.map { it.toBusRouteRecentSearchEntity() }.toList())
+            return Result.success(true)
+        } catch (e: Exception) {
+            return Result.error(e)
+        }
+    }
+
     /**
      * fun getRecentSearchIndex(context: Activty): Result<Int>
      *

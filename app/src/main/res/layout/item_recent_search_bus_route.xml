@@ -5,7 +5,7 @@
     android:id="@+id/clRouteRecentSearchItem"
     android:layout_width="@dimen/width_item_recent_search"
     android:layout_height="match_parent"
-    android:layout_marginEnd="@dimen/margin_padding_default"
+    android:layout_marginEnd="@dimen/margin_padding_small"
     android:orientation="horizontal"
     android:gravity="center"
     android:weightSum="1"

@@ -108,6 +108,29 @@ class SearchBusRouteViewModelImpl(
         }
     }
 
+    override fun deleteAll() {
+        if (isRecentSearchContentReady()) {
+            viewModelScope.launch {
+                withContext(Dispatchers.IO) {
+                    deleteAllRecentSearch(recentSearchContent)
+                    loadRecentSearchContent()
+                }
+            }
+        }
+    }
+
+    private fun isRecentSearchContentReady() =
+        recentSearchContentLoaded.isInitialized && recentSearchContentLoaded.value!!
+
+    private fun deleteAllRecentSearch(recentSearchModels: List<BusRouteRecentSearchModel>) {
+        val result = repository.deleteAllRecentSearch(recentSearchModels)
+
+        if (result is Error) {
+            error = result.message()
+            Log.e(ExceptionMessage.TAG_RECENT_SEARCH_EXCEPTION, error)
+        }
+    }
+
     override fun restore() {
         viewModelScope.launch {
             withContext(Dispatchers.IO) { loadRecentSearchContent() }

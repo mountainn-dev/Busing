@@ -21,4 +21,7 @@ interface RecentSearchDao {
 
     @Delete
     fun delete(busRouteRecentSearch: BusRouteRecentSearch)
+
+    @Delete
+    fun deleteAll(busRouteRecentSearches: List<BusRouteRecentSearch>)
 }

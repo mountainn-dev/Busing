@@ -16,6 +16,7 @@ interface SearchBusRouteViewModel {
     fun insert(recentSearchModel: BusRouteRecentSearchModel)
     fun update(recentSearchModel: BusRouteRecentSearchModel)
     fun delete(recentSearchModel: BusRouteRecentSearchModel)
+    fun deleteAll()
     fun restore()
     fun clear()
     fun recentSearchIndex(context: Activity): Long
