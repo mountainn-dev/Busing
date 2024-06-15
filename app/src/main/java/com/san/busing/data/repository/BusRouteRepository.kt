@@ -14,7 +14,9 @@ interface BusRouteRepository {
     suspend fun getBusStations(id: Id): Result<List<BusStationModel>>
     fun getRecentSearch(): Result<List<BusRouteRecentSearchModel>>
     fun insertRecentSearch(recentSearchModel: BusRouteRecentSearchModel): Result<Boolean>
+    fun updateRecentSearch(recentSearchModel: BusRouteRecentSearchModel): Result<Boolean>
     fun deleteRecentSearch(recentSearchModel: BusRouteRecentSearchModel): Result<Boolean>
+    fun deleteAllRecentSearch(recentSearchModels: List<BusRouteRecentSearchModel>): Result<Boolean>
     fun getRecentSearchIndex(context: Activity): Result<Long>
     fun updateRecentSearchIndex(context: Activity, newIdx: Long): Result<Boolean>
 }

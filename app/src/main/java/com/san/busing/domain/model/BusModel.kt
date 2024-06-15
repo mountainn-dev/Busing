@@ -8,7 +8,6 @@ data class BusModel(
     val type: PlateType,
     val plateNumber: String,
     val sequenceNumber: Int,
-    val isLast: Boolean,
     val isLowPlate: Boolean,
     val remainSeat: Int
 )

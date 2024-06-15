@@ -45,28 +45,48 @@
 
         </LinearLayout>
 
-        <FrameLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="0.4"
-            android:layout_marginTop="@dimen/margin_padding_default">
+            android:weightSum="1"
+            android:gravity="center_vertical|end"
+            android:layout_marginTop="@dimen/margin_padding_default"
+            android:orientation="horizontal">
 
-            <TextView
-                android:layout_width="match_parent"
+            <FrameLayout
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:visibility="visible"
-                android:gravity="center"
-                android:text="@string/route_no_recent_search"
-                android:textColor="@color/grey"/>
+                android:layout_weight="1"
+                android:paddingEnd="@dimen/margin_padding_small"
+                tools:ignore="NestedWeights">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvRecentSearch"
-                android:layout_width="match_parent"
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="visible"
+                    android:gravity="center"
+                    android:text="@string/route_no_recent_search"
+                    android:textColor="@color/grey"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvRecentSearch"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/semi_light_grey"
+                    android:visibility="gone"/>
+
+            </FrameLayout>
+
+            <ImageButton
+                android:id="@+id/btnDeleteAllRecentSearch"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:background="@color/semi_light_grey"
-                android:visibility="gone"/>
+                android:padding="@dimen/margin_padding_small"
+                android:src="@drawable/ic_delete_rounded"
+                android:background="@null"/>
 
-        </FrameLayout>
+        </LinearLayout>
 
     </LinearLayout>
 

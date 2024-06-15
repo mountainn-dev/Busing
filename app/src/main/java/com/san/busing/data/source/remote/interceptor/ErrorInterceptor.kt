@@ -1,8 +1,10 @@
 package com.san.busing.data.source.remote.interceptor
 
+import com.san.busing.data.exception.ExceptionMessage
+import com.san.busing.data.exception.ServiceException
 import com.san.busing.data.source.remote.parser.XmlParser
-import com.san.busing.data.source.remote.retrofit.ServiceResult.*
-import com.san.busing.data.exception.ApiException
+import com.san.busing.data.source.remote.retrofit.ServiceResult.NO_RESULT
+import com.san.busing.data.source.remote.retrofit.ServiceResult.SUCCESS
 import okhttp3.Interceptor
 import okhttp3.Response
 import java.io.InputStream
@@ -14,15 +16,12 @@ import java.io.InputStream
  */
 class ErrorInterceptor : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
-        val response = chain.proceed(chain.request())
+        val request = chain.request()
+        val response = chain.proceed(request)
+        val body = response.body()
 
-        when (response.code()) {
-            200 -> parseApiResult(response.body()!!.byteStream())
-            else -> throw RuntimeException()
-        }
-
-        response.close()
-        return chain.proceed(chain.request())
+        parseApiResult(body!!.byteStream())
+        return chain.proceed(request)
     }
 
     /**
@@ -31,12 +30,18 @@ class ErrorInterceptor : Interceptor {
      * API 결과 코드값에 따른 분기
      */
     private fun parseApiResult(inputStream: InputStream) {
-        val resultCode = XmlParser().parse(inputStream)
+        var resultCode = -1
 
-        when (resultCode.toInt()) {
+        try {
+            resultCode = XmlParser().parse(inputStream).toInt()
+        } catch (e: Exception) {
+            throw Exception(e.message)
+        }
+
+        when (resultCode) {
             SUCCESS.code -> {}
-            NO_RESULT.code -> throw ApiException.NoResultException(NO_RESULT.message)
-            else -> throw RuntimeException()
+            NO_RESULT.code -> throw ServiceException.NoResultException(NO_RESULT.message)
+            else -> throw Exception(ExceptionMessage.NO_SERVICE_RESULT_CODE)
         }
     }
 }

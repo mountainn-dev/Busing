@@ -106,8 +106,8 @@ class SearchRouteFragment : Fragment() {
             intent.putExtra(Const.TAG_ROUTE_NAME, items[position].name)
             intent.putExtra(Const.TAG_ROUTE_TYPE, items[position].type)
 
-            // 최근 검색 갱신
-            viewModel.update(
+            // 최근 검색 추가
+            viewModel.insert(
                 BusRouteRecentSearchModel(
                     items[position].id, items[position].name, items[position].type,
                     viewModel.recentSearchIndex(context)
@@ -157,6 +157,15 @@ class SearchRouteFragment : Fragment() {
             intent.putExtra(Const.TAG_ROUTE_ID, items[position].id)
             intent.putExtra(Const.TAG_ROUTE_NAME, items[position].name)
             intent.putExtra(Const.TAG_ROUTE_TYPE, items[position].type)
+
+            // 최근 검색 갱신
+            viewModel.update(
+                BusRouteRecentSearchModel(
+                    items[position].id, items[position].name, items[position].type,
+                    viewModel.recentSearchIndex(context)
+                )
+            )
+
             context.startActivity(intent)
         }
 
@@ -168,6 +177,7 @@ class SearchRouteFragment : Fragment() {
     private fun initListener(viewModel: SearchBusRouteViewModel, context: Activity) {
         setEdRouteActionListener(viewModel)
         setBtnDeleteSearchKeywordListener(viewModel, context)
+        setBtnDeleteAllRecentSearchListener(viewModel)
         setRvBusRouteScrollListener(context)
     }
 
@@ -194,6 +204,12 @@ class SearchRouteFragment : Fragment() {
         if (view.requestFocus()) {
             val imm = context.getSystemService(InputMethodManager::class.java)
             imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
+        }
+    }
+
+    private fun setBtnDeleteAllRecentSearchListener(viewModel: SearchBusRouteViewModel) {
+        binding.btnDeleteAllRecentSearch.setOnClickListener {
+            viewModel.deleteAll()
         }
     }
 

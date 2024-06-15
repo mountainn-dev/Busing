@@ -29,16 +29,21 @@ class BusRouteStationAdapter(
 
         private fun loadContent(position: Int) {
             binding.txtRouteStationName.text = stationItems[position].name
-            if (!busItems.isEmpty() && busItems.peek().sequenceNumber == (position+1)) {
+            if (busItems.peek()?.sequenceNumber == (position+1)) {
                 val item = busItems.poll()!!
                 binding.llBusInfo.visibility = View.VISIBLE
                 binding.txtPlateNumber.text = item.plateNumber
-                binding.txtRemainSeat.text =item.remainSeat.toString()
+                binding.txtRemainSeat.text = remainSeatText(item.remainSeat)
                 binding.imgBus.visibility = View.VISIBLE
             } else {
-                binding.txtPlateNumber.text = Const.EMPTY_TEXT
-                binding.txtRemainSeat.text = Const.EMPTY_TEXT
+                binding.txtPlateNumber.visibility = View.GONE
+                binding.txtRemainSeat.visibility = View.GONE
             }
+        }
+
+        private fun remainSeatText(count: Int): String {
+            if (count == Const.NO_DATA) return Const.NO_REMAIN_SEAT_COUNT
+            else return String.format(Const.REMAIN_SEAT_COUNT, count)
         }
 
         private fun setItemClickEventListener(position: Int) {
