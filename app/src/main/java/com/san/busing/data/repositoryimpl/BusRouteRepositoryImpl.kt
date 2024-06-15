@@ -2,6 +2,7 @@ package com.san.busing.data.repositoryimpl
 
 import android.app.Activity
 import android.content.Context
+import android.util.Log
 import androidx.room.Room
 import com.san.busing.BuildConfig
 import com.san.busing.data.Result

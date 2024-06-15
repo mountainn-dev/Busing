@@ -7,6 +7,7 @@ import com.san.busing.data.source.remote.retrofit.ServiceResult.NO_RESULT
 import com.san.busing.data.source.remote.retrofit.ServiceResult.SUCCESS
 import okhttp3.Interceptor
 import okhttp3.Response
+import java.io.IOException
 import java.io.InputStream
 
 /**
@@ -35,13 +36,13 @@ class ErrorInterceptor : Interceptor {
         try {
             resultCode = XmlParser().parse(inputStream).toInt()
         } catch (e: Exception) {
-            throw Exception(e.message)
+            throw IOException(e.message)
         }
 
         when (resultCode) {
             SUCCESS.code -> {}
             NO_RESULT.code -> throw ServiceException.NoResultException(NO_RESULT.message)
-            else -> throw Exception(ExceptionMessage.NO_SERVICE_RESULT_CODE)
+            else -> throw IOException(ExceptionMessage.NO_SERVICE_RESULT_CODE)
         }
     }
 }
