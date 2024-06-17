@@ -2,8 +2,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/navRoute"
-        android:title="@string/route"/>
+        android:title="@string/tab_name_route"/>
     <item
-        android:id="@+id/navTest"
-        android:title="test"/>
+        android:id="@+id/navStation"
+        android:title="@string/tab_name_station"/>
 </menu>
