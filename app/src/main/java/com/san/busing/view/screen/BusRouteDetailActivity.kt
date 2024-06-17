@@ -1,6 +1,5 @@
 package com.san.busing.view.screen
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.os.Bundle
 import android.view.View
@@ -46,7 +45,7 @@ class BusRouteDetailActivity : AppCompatActivity() {
 
         initToolbar(routeName, routeType, this)
         initObserver(viewModel, routeType, this)
-        initListener(viewModel)
+        initListener(viewModel, routeId)
     }
 
     private fun initToolbar(routeName: String, routeType: RouteType, context: Activity) {
@@ -70,11 +69,11 @@ class BusRouteDetailActivity : AppCompatActivity() {
         routeType: RouteType,
         context: Activity
     ) {
-        viewModel.routeInfoReady.observe(
+        viewModel.routeInfoContentReady.observe(
             context as LifecycleOwner,
             routeInfoReadyObserver(viewModel)
         )
-        viewModel.routeStationBusReady.observe(
+        viewModel.routeStationBusContentReady.observe(
             context as LifecycleOwner,
             routeStationBusReadyObserver(viewModel, routeType, context)
         )
@@ -86,8 +85,8 @@ class BusRouteDetailActivity : AppCompatActivity() {
     }
 
     private fun whenRouteInfoReady(viewModel: BusRouteDetailViewModel) {
-        binding.txtRouteStartStation.text = viewModel.routeInfo.startStationName
-        binding.txtRouteEndStation.text = viewModel.routeInfo.endStationName
+        binding.txtRouteStartStation.text = viewModel.routeInfoContent.startStationName
+        binding.txtRouteEndStation.text = viewModel.routeInfoContent.endStationName
     }
 
     private fun whenRouteInfoNotReady() {
@@ -108,12 +107,12 @@ class BusRouteDetailActivity : AppCompatActivity() {
         viewModel: BusRouteDetailViewModel, routeType: RouteType, context: Activity) {
         binding.rvBusRouteStationList.adapter = BusRouteStationAdapter(
             routeType,
-            viewModel.routeStation,
-            LinkedList(viewModel.routeBus),
-            routeStationClickEventListener(viewModel.routeStation)
+            viewModel.routeStationContent,
+            LinkedList(viewModel.routeBusContent),
+            routeStationClickEventListener(viewModel.routeStationContent)
         )
         binding.rvBusRouteStationList.layoutManager = LinearLayoutManager(context)
-        binding.txtRouteBusCount.text = String.format(Const.ROUTE_BUS_COUNT, viewModel.routeBus.size)
+        binding.txtRouteBusCount.text = String.format(Const.ROUTE_BUS_COUNT, viewModel.routeBusContent.size)
         binding.rvBusRouteStationList.visibility = View.VISIBLE
         binding.pgbBusRouteStation.visibility = View.GONE
     }
@@ -133,16 +132,16 @@ class BusRouteDetailActivity : AppCompatActivity() {
         binding.rvBusRouteStationList.visibility = View.GONE
     }
 
-    private fun initListener(viewModel: BusRouteDetailViewModel) {
+    private fun initListener(viewModel: BusRouteDetailViewModel, routeId: Id) {
         setBtnBackListener()
-        setFabRefreshListener(viewModel)
+        setFabRefreshListener(viewModel, routeId)
     }
 
     private fun setBtnBackListener() {
         binding.btnBack.setOnClickListener { finish() }
     }
 
-    private fun setFabRefreshListener(viewModel: BusRouteDetailViewModel) {
-        binding.fabRefresh.setOnClickListener { viewModel.load() }
+    private fun setFabRefreshListener(viewModel: BusRouteDetailViewModel, routeId: Id) {
+        binding.fabRefresh.setOnClickListener { viewModel.load(routeId) }
     }
 }

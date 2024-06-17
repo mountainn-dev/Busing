@@ -29,45 +29,45 @@ class BusRouteDetailViewModelImpl(
     private var isLoading = false
     private var error = Const.EMPTY_TEXT
 
-    override val routeInfoReady: LiveData<Boolean>
+    override val routeInfoContentReady: LiveData<Boolean>
         get() = routeInfoLoaded
     private val routeInfoLoaded = MutableLiveData<Boolean>()
 
-    override val routeStationBusReady: LiveData<Boolean>
+    override val routeStationBusContentReady: LiveData<Boolean>
         get() = routeStationBusLoaded
     private val routeStationBusLoaded = MediatorLiveData<Boolean>()
     private val routeStationLoaded = MutableLiveData<Boolean>()
     private val routeBusLoaded = MutableLiveData<Boolean>()
 
-    override lateinit var routeInfo: BusRouteModel
-    override lateinit var routeStation: List<BusStationModel>
-    override lateinit var routeBus: List<BusModel>
+    override lateinit var routeInfoContent: BusRouteModel
+    override lateinit var routeStationContent: List<BusStationModel>
+    override lateinit var routeBusContent: List<BusModel>
 
     init {
-        load()
-        mergeStationBusData()
+        load(routeId)
+        merge(routeStationBusLoaded, routeStationLoaded, routeBusLoaded)
     }
 
-    override fun load() {
+    override fun load(routeId: Id) {
         if (!isLoading) {
             isLoading = true
 
             viewModelScope.launch {
                 awaitAll(
-                    async { loadRouteInfoContent() },
-                    async { loadRouteStationContent() },
-                    async { loadRouteBusContent() }
+                    async { loadRouteInfoContent(routeId) },
+                    async { loadRouteStationContent(routeId) },
+                    async { loadRouteBusContent(routeId) }
                 )
                 isLoading = false
             }
         }
     }
 
-    private suspend fun loadRouteInfoContent() {
+    private suspend fun loadRouteInfoContent(routeId: Id) {
         val result = busRouteRepository.getBusRoute(routeId)
 
         if (result is Success) {
-            routeInfo = result.data()
+            routeInfoContent = result.data()
             routeInfoLoaded.postValue(true)
         } else {
             error = (result as Error).message()
@@ -76,11 +76,11 @@ class BusRouteDetailViewModelImpl(
         }
     }
 
-    private suspend fun loadRouteStationContent() {
+    private suspend fun loadRouteStationContent(routeId: Id) {
         val result = busRouteRepository.getBusStations(routeId)
 
         if (result is Success) {
-            routeStation = result.data()
+            routeStationContent = result.data()
             routeStationLoaded.postValue(true)
         } else {
             error = (result as Error).message()
@@ -89,11 +89,11 @@ class BusRouteDetailViewModelImpl(
         }
     }
 
-    private suspend fun loadRouteBusContent() {
+    private suspend fun loadRouteBusContent(routeId: Id) {
         val result = busLocationRepository.getBusLocations(routeId)
 
         if (result is Success) {
-            routeBus = result.data().sortedBy { it.sequenceNumber }
+            routeBusContent = result.data().sortedBy { it.sequenceNumber }
             routeBusLoaded.postValue(true)
         } else {
             error = (result as Error).message()
@@ -102,16 +102,14 @@ class BusRouteDetailViewModelImpl(
         }
     }
 
-    private fun mergeStationBusData() {
-        routeStationBusLoaded.addSource(routeStationLoaded) {
-            routeStationBusLoaded.value = it && isRouteBusReady()
-        }
-        routeStationBusLoaded.addSource(routeBusLoaded) {
-            routeStationBusLoaded.value = it && isRouteStationReady()
-        }
+    private fun merge(
+        parent: MediatorLiveData<Boolean>,
+        child1: MutableLiveData<Boolean>, child2: MutableLiveData<Boolean>
+    ) {
+        parent.addSource(child1) { parent.value = it && isContentReady(child2) }
+        parent.addSource(child2) { parent.value = it && isContentReady(child1) }
     }
 
-    private fun isRouteStationReady() = routeStationLoaded.isInitialized && routeStationLoaded.value!!
-
-    private fun isRouteBusReady() = routeBusLoaded.isInitialized && routeBusLoaded.value!!
+    private fun isContentReady(contentLoaded: MutableLiveData<Boolean>) =
+        contentLoaded.isInitialized && contentLoaded.value!!
 }
