@@ -40,7 +40,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:paddingHorizontal="@dimen/margin_padding_default"
-                android:src="@drawable/ic_delete"
+                android:src="@drawable/ic_delete_rounded"
                 android:background="@null"/>
 
         </LinearLayout>
@@ -82,7 +82,7 @@
                 android:id="@+id/btnDeleteAllRecentSearch"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:padding="@dimen/margin_padding_small"
+                android:padding="@dimen/margin_padding_default"
                 android:src="@drawable/ic_delete_rounded"
                 android:background="@null"/>
 

@@ -108,8 +108,9 @@ class SearchBusRouteViewModelImpl(
         }
     }
 
-    override fun deleteAll() {
+    override fun deleteAll(context: Activity) {
         if (isContentReady(recentSearchContentLoaded)) {
+            updateRecentSearchIndex(context, Const.ZERO.toLong())   // 최근 검색 인덱스 초기화
             viewModelScope.launch {
                 withContext(Dispatchers.IO) {
                     deleteAllRecentSearch(recentSearchContent)
@@ -150,7 +151,7 @@ class SearchBusRouteViewModelImpl(
         }
     }
 
-    override fun clear() {
+    override fun clearKeyword() {
         this.keyword = Const.EMPTY_TEXT
     }
 
