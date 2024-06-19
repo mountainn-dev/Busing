@@ -71,7 +71,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="@dimen/margin_padding_small"
-                        android:text="@string/start_route_bus_count"/>
+                        android:text="@string/start_tag_route_bus_count"/>
 
                     <TextView
                         android:id="@+id/txtRouteBusCount"
@@ -84,7 +84,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="@dimen/margin_padding_small"
-                        android:text="@string/end_route_bus_count"/>
+                        android:text="@string/end_tag_route_bus_count"/>
 
                 </LinearLayout>
 
