@@ -6,15 +6,15 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.san.busing.databinding.ItemSearchResultBusRouteBinding
-import com.san.busing.domain.model.BusRouteSearchResultModel
+import com.san.busing.domain.model.RouteSummaryModel
 import com.san.busing.domain.utils.Utils
 import com.san.busing.view.listener.ItemClickEventListener
 
-class BusRouteSearchResultAdapter(
-    private val items: List<BusRouteSearchResultModel>,
+class RouteSearchResultAdapter(
+    private val items: List<RouteSummaryModel>,
     private val itemClickEventListener: ItemClickEventListener,
     private val context: Context
-) : RecyclerView.Adapter<BusRouteSearchResultAdapter.BusRouteSearchResultViewHolder>() {
+) : RecyclerView.Adapter<RouteSearchResultAdapter.BusRouteSearchResultViewHolder>() {
     inner class BusRouteSearchResultViewHolder(
         private val binding: ItemSearchResultBusRouteBinding
     ) : RecyclerView.ViewHolder(binding.root) {

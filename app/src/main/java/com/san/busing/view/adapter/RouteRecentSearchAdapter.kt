@@ -8,14 +8,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.san.busing.R
 import com.san.busing.databinding.ItemRecentSearchBusRouteBinding
 import com.san.busing.domain.enums.RouteType.*
-import com.san.busing.domain.model.BusRouteRecentSearchModel
+import com.san.busing.domain.model.RouteRecentSearchModel
 import com.san.busing.view.listener.ItemClickEventListener
 
-class BusRouteRecentSearchAdapter(
-    private val items: List<BusRouteRecentSearchModel>,
+class RouteRecentSearchAdapter(
+    private val items: List<RouteRecentSearchModel>,
     private val itemClickEventListener: ItemClickEventListener,
     private val context: Context
-) : RecyclerView.Adapter<BusRouteRecentSearchAdapter.BusRouteRecentSearchViewHolder>() {
+) : RecyclerView.Adapter<RouteRecentSearchAdapter.BusRouteRecentSearchViewHolder>() {
 
     inner class BusRouteRecentSearchViewHolder(
         private val binding: ItemRecentSearchBusRouteBinding

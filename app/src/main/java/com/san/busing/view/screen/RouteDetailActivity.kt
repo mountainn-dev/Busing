@@ -11,37 +11,37 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.san.busing.BuildConfig
 import com.san.busing.data.repositoryimpl.BusLocationRepositoryImpl
-import com.san.busing.data.repositoryimpl.BusRouteRepositoryImpl
+import com.san.busing.data.repositoryimpl.RouteRepositoryImpl
 import com.san.busing.data.vo.Id
 import com.san.busing.databinding.ActivityBusRouteDetailBinding
 import com.san.busing.domain.enums.RouteType
-import com.san.busing.domain.model.BusStationModel
+import com.san.busing.domain.model.RouteStationModel
 import com.san.busing.domain.utils.Const
 import com.san.busing.domain.utils.Utils
-import com.san.busing.domain.viewmodel.BusRouteDetailViewModel
-import com.san.busing.domain.viewmodelfactory.BusRouteDetailViewModelFactory
-import com.san.busing.domain.viewmodelimpl.BusRouteDetailViewModelImpl
-import com.san.busing.view.adapter.BusRouteStationAdapter
+import com.san.busing.domain.viewmodel.RouteDetailViewModel
+import com.san.busing.domain.viewmodelfactory.RouteDetailViewModelFactory
+import com.san.busing.domain.viewmodelimpl.RouteDetailViewModelImpl
+import com.san.busing.view.adapter.RouteStationAdapter
 import com.san.busing.view.listener.ItemClickEventListener
 import java.util.LinkedList
 
-class BusRouteDetailActivity : AppCompatActivity() {
+class RouteDetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityBusRouteDetailBinding
-    private lateinit var viewModel: BusRouteDetailViewModel
+    private lateinit var viewModel: RouteDetailViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityBusRouteDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val busRouteRepository = BusRouteRepositoryImpl(Utils.getRetrofit(BuildConfig.ROUTES_URL), this.applicationContext)
+        val busRouteRepository = RouteRepositoryImpl(Utils.getRetrofit(BuildConfig.ROUTES_URL), this.applicationContext)
         val busLocationRepository = BusLocationRepositoryImpl(Utils.getRetrofit(BuildConfig.LOCATION_URL))
         val routeId = intent.getSerializableExtra(Const.TAG_ROUTE_ID) as Id
         val routeName = intent.getStringExtra(Const.TAG_ROUTE_NAME) ?: Const.EMPTY_TEXT
         val routeType = intent.getSerializableExtra(Const.TAG_ROUTE_TYPE) as RouteType
         viewModel = ViewModelProvider(
-            this, BusRouteDetailViewModelFactory(busRouteRepository, busLocationRepository, routeId)
-        ).get(BusRouteDetailViewModelImpl::class.java)
+            this, RouteDetailViewModelFactory(busRouteRepository, busLocationRepository, routeId)
+        ).get(RouteDetailViewModelImpl::class.java)
 
         initToolbar(routeName, routeType, this)
         initObserver(viewModel, routeType, this)
@@ -65,7 +65,7 @@ class BusRouteDetailActivity : AppCompatActivity() {
     }
 
     private fun initObserver(
-        viewModel: BusRouteDetailViewModel,
+        viewModel: RouteDetailViewModel,
         routeType: RouteType,
         context: Activity
     ) {
@@ -73,20 +73,20 @@ class BusRouteDetailActivity : AppCompatActivity() {
             context as LifecycleOwner,
             routeInfoReadyObserver(viewModel)
         )
-        viewModel.routeStationBusContentReady.observe(
+        viewModel.routeStationContentReady.observe(
             context as LifecycleOwner,
             routeStationBusReadyObserver(viewModel, routeType, context)
         )
     }
 
-    private fun routeInfoReadyObserver(viewModel: BusRouteDetailViewModel) = Observer<Boolean> {
+    private fun routeInfoReadyObserver(viewModel: RouteDetailViewModel) = Observer<Boolean> {
         if (it) { whenRouteInfoReady(viewModel) }
         else { whenRouteInfoNotReady() }
     }
 
-    private fun whenRouteInfoReady(viewModel: BusRouteDetailViewModel) {
-        binding.txtRouteStartStation.text = viewModel.routeInfoContent.startStationName
-        binding.txtRouteEndStation.text = viewModel.routeInfoContent.endStationName
+    private fun whenRouteInfoReady(viewModel: RouteDetailViewModel) {
+        binding.txtRouteStartStation.text = viewModel.routeInfo.startStationName
+        binding.txtRouteEndStation.text = viewModel.routeInfo.endStationName
     }
 
     private fun whenRouteInfoNotReady() {
@@ -95,7 +95,7 @@ class BusRouteDetailActivity : AppCompatActivity() {
     }
 
     private fun routeStationBusReadyObserver(
-        viewModel: BusRouteDetailViewModel,
+        viewModel: RouteDetailViewModel,
         routeType: RouteType,
         context: Activity
     ) = Observer<Boolean> {
@@ -104,20 +104,20 @@ class BusRouteDetailActivity : AppCompatActivity() {
     }
 
     private fun whenRouteStationAndBusReady(
-        viewModel: BusRouteDetailViewModel, routeType: RouteType, context: Activity) {
-        binding.rvBusRouteStationList.adapter = BusRouteStationAdapter(
+        viewModel: RouteDetailViewModel, routeType: RouteType, context: Activity) {
+        binding.rvBusRouteStationList.adapter = RouteStationAdapter(
             routeType,
-            viewModel.routeStationContent,
-            LinkedList(viewModel.routeBusContent),
-            routeStationClickEventListener(viewModel.routeStationContent)
+            viewModel.routeStations,
+            LinkedList(viewModel.routeBuses),
+            routeStationClickEventListener(viewModel.routeStations)
         )
         binding.rvBusRouteStationList.layoutManager = LinearLayoutManager(context)
-        binding.txtRouteBusCount.text = String.format(Const.ROUTE_BUS_COUNT, viewModel.routeBusContent.size)
+        binding.txtRouteBusCount.text = String.format(Const.ROUTE_BUS_COUNT, viewModel.routeBuses.size)
         binding.rvBusRouteStationList.visibility = View.VISIBLE
         binding.pgbBusRouteStation.visibility = View.GONE
     }
 
-    private fun routeStationClickEventListener(items: List<BusStationModel>) = object: ItemClickEventListener {
+    private fun routeStationClickEventListener(items: List<RouteStationModel>) = object: ItemClickEventListener {
         override fun onItemClickListener(position: Int) {
 
         }
@@ -132,7 +132,7 @@ class BusRouteDetailActivity : AppCompatActivity() {
         binding.rvBusRouteStationList.visibility = View.GONE
     }
 
-    private fun initListener(viewModel: BusRouteDetailViewModel, routeId: Id) {
+    private fun initListener(viewModel: RouteDetailViewModel, routeId: Id) {
         setBtnBackListener()
         setFabRefreshListener(viewModel, routeId)
     }
@@ -141,7 +141,7 @@ class BusRouteDetailActivity : AppCompatActivity() {
         binding.btnBack.setOnClickListener { finish() }
     }
 
-    private fun setFabRefreshListener(viewModel: BusRouteDetailViewModel, routeId: Id) {
+    private fun setFabRefreshListener(viewModel: RouteDetailViewModel, routeId: Id) {
         binding.fabRefresh.setOnClickListener { viewModel.load(routeId) }
     }
 }

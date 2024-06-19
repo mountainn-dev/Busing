@@ -10,22 +10,22 @@ import com.san.busing.data.Error
 import com.san.busing.data.exception.ExceptionMessage
 import com.san.busing.data.Success
 import com.san.busing.data.repository.BusLocationRepository
-import com.san.busing.data.repository.BusRouteRepository
+import com.san.busing.data.repository.RouteRepository
 import com.san.busing.data.vo.Id
 import com.san.busing.domain.model.BusModel
-import com.san.busing.domain.model.BusRouteModel
-import com.san.busing.domain.model.BusStationModel
+import com.san.busing.domain.model.RouteInfoModel
+import com.san.busing.domain.model.RouteStationModel
 import com.san.busing.domain.utils.Const
-import com.san.busing.domain.viewmodel.BusRouteDetailViewModel
+import com.san.busing.domain.viewmodel.RouteDetailViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
 
-class BusRouteDetailViewModelImpl(
-    private val busRouteRepository: BusRouteRepository,
+class RouteDetailViewModelImpl(
+    private val routeRepository: RouteRepository,
     private val busLocationRepository: BusLocationRepository,
     private val routeId: Id,
-) : BusRouteDetailViewModel, ViewModel() {
+) : RouteDetailViewModel, ViewModel() {
     private var isLoading = false
     private var error = Const.EMPTY_TEXT
 
@@ -33,19 +33,19 @@ class BusRouteDetailViewModelImpl(
         get() = routeInfoLoaded
     private val routeInfoLoaded = MutableLiveData<Boolean>()
 
-    override val routeStationBusContentReady: LiveData<Boolean>
-        get() = routeStationBusLoaded
-    private val routeStationBusLoaded = MediatorLiveData<Boolean>()
+    override val routeStationContentReady: LiveData<Boolean>
+        get() = routeStationAndBusLoaded
+    private val routeStationAndBusLoaded = MediatorLiveData<Boolean>()
     private val routeStationLoaded = MutableLiveData<Boolean>()
     private val routeBusLoaded = MutableLiveData<Boolean>()
 
-    override lateinit var routeInfoContent: BusRouteModel
-    override lateinit var routeStationContent: List<BusStationModel>
-    override lateinit var routeBusContent: List<BusModel>
+    override lateinit var routeInfo: RouteInfoModel
+    override lateinit var routeStations: List<RouteStationModel>
+    override lateinit var routeBuses: List<BusModel>
 
     init {
         load(routeId)
-        merge(routeStationBusLoaded, routeStationLoaded, routeBusLoaded)
+        merge(routeStationAndBusLoaded, routeStationLoaded, routeBusLoaded)
     }
 
     override fun load(routeId: Id) {
@@ -64,10 +64,10 @@ class BusRouteDetailViewModelImpl(
     }
 
     private suspend fun loadRouteInfoContent(routeId: Id) {
-        val result = busRouteRepository.getBusRoute(routeId)
+        val result = routeRepository.getRouteInfo(routeId)
 
         if (result is Success) {
-            routeInfoContent = result.data()
+            routeInfo = result.data()
             routeInfoLoaded.postValue(true)
         } else {
             error = (result as Error).message()
@@ -77,10 +77,10 @@ class BusRouteDetailViewModelImpl(
     }
 
     private suspend fun loadRouteStationContent(routeId: Id) {
-        val result = busRouteRepository.getBusStations(routeId)
+        val result = routeRepository.getRouteStations(routeId)
 
         if (result is Success) {
-            routeStationContent = result.data()
+            routeStations = result.data()
             routeStationLoaded.postValue(true)
         } else {
             error = (result as Error).message()
@@ -93,7 +93,7 @@ class BusRouteDetailViewModelImpl(
         val result = busLocationRepository.getBusLocations(routeId)
 
         if (result is Success) {
-            routeBusContent = result.data().sortedBy { it.sequenceNumber }
+            routeBuses = result.data().sortedBy { it.sequenceNumber }
             routeBusLoaded.postValue(true)
         } else {
             error = (result as Error).message()

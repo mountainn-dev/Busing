@@ -5,26 +5,26 @@ import android.content.Context
 import androidx.room.Room
 import com.san.busing.BuildConfig
 import com.san.busing.data.Result
-import com.san.busing.data.repository.BusRouteRepository
+import com.san.busing.data.repository.RouteRepository
 import com.san.busing.data.source.local.database.RecentSearchDatabase
-import com.san.busing.data.source.remote.retrofit.BusRouteService
+import com.san.busing.data.source.remote.retrofit.RouteService
 import com.san.busing.data.vo.Id
-import com.san.busing.domain.model.BusRouteModel
-import com.san.busing.domain.model.BusRouteRecentSearchModel
-import com.san.busing.domain.model.BusRouteSearchResultModel
-import com.san.busing.domain.model.BusStationModel
+import com.san.busing.domain.model.RouteInfoModel
+import com.san.busing.domain.model.RouteRecentSearchModel
+import com.san.busing.domain.model.RouteSummaryModel
+import com.san.busing.domain.model.RouteStationModel
 import com.san.busing.domain.utils.Const
 import retrofit2.Retrofit
 
-class BusRouteRepositoryImpl(
+class RouteRepositoryImpl(
     private val retrofit: Retrofit,
     private val context: Context
-) : BusRouteRepository {
-    private val service = retrofit.create(BusRouteService::class.java)
+) : RouteRepository {
+    private val service = retrofit.create(RouteService::class.java)
     private val db = Room.databaseBuilder(
         context, RecentSearchDatabase::class.java, "recentSearch").build()
 
-    override suspend fun getBusRoute(id: Id): Result<BusRouteModel> {
+    override suspend fun getRouteInfo(id: Id): Result<RouteInfoModel> {
         try {
             val response = service.getBusRouteInfoItem(BuildConfig.API_KEY, id.get())
             return Result.success(response.body()!!.get())
@@ -33,7 +33,7 @@ class BusRouteRepositoryImpl(
         }
     }
 
-    override suspend fun getBusRoutes(keyword: String): Result<List<BusRouteSearchResultModel>> {
+    override suspend fun getRoutes(keyword: String): Result<List<RouteSummaryModel>> {
         try {
             val response = service.getBusRouteList(BuildConfig.API_KEY, keyword)
             return Result.success(response.body()!!.get())
@@ -42,7 +42,7 @@ class BusRouteRepositoryImpl(
         }
     }
 
-    override suspend fun getBusStations(id: Id): Result<List<BusStationModel>> {
+    override suspend fun getRouteStations(id: Id): Result<List<RouteStationModel>> {
         try {
             val response = service.getBusStationList(BuildConfig.API_KEY, id.get())
             return Result.success(response.body()!!.get())
@@ -51,15 +51,15 @@ class BusRouteRepositoryImpl(
         }
     }
 
-    override fun getRecentSearch(): Result<List<BusRouteRecentSearchModel>> {
+    override fun getRecentSearch(): Result<List<RouteRecentSearchModel>> {
         try {
-            return Result.success(db.recentSearchDao().getAll().map { it.toBusRouteRecentSearchModel() })
+            return Result.success(db.recentSearchDao().getAll().map { it.toRouteRecentSearchModel() })
         } catch (e: Exception) {
             return Result.error(e)
         }
     }
 
-    override fun insertRecentSearch(recentSearchModel: BusRouteRecentSearchModel): Result<Boolean> {
+    override fun insertRecentSearch(recentSearchModel: RouteRecentSearchModel): Result<Boolean> {
         try {
             db.recentSearchDao().insert(
                 recentSearchModel.toBusRouteRecentSearchEntity())
@@ -69,7 +69,7 @@ class BusRouteRepositoryImpl(
         }
     }
 
-    override fun updateRecentSearch(recentSearchModel: BusRouteRecentSearchModel): Result<Boolean> {
+    override fun updateRecentSearch(recentSearchModel: RouteRecentSearchModel): Result<Boolean> {
         try {
             db.recentSearchDao().update(
                 recentSearchModel.toBusRouteRecentSearchEntity())
@@ -79,7 +79,7 @@ class BusRouteRepositoryImpl(
         }
     }
 
-    override fun deleteRecentSearch(recentSearchModel: BusRouteRecentSearchModel): Result<Boolean> {
+    override fun deleteRecentSearch(recentSearchModel: RouteRecentSearchModel): Result<Boolean> {
         try {
             db.recentSearchDao().delete(
                 recentSearchModel.toBusRouteRecentSearchEntity())
@@ -89,7 +89,7 @@ class BusRouteRepositoryImpl(
         }
     }
 
-    override fun deleteAllRecentSearch(recentSearchModels: List<BusRouteRecentSearchModel>): Result<Boolean> {
+    override fun deleteAllRecentSearch(recentSearchModels: List<RouteRecentSearchModel>): Result<Boolean> {
         try {
             db.recentSearchDao().deleteAll(
                 recentSearchModels.map { it.toBusRouteRecentSearchEntity() }.toList())

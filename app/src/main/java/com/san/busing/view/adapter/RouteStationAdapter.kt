@@ -7,18 +7,18 @@ import androidx.recyclerview.widget.RecyclerView
 import com.san.busing.databinding.ItemBusRouteStationBinding
 import com.san.busing.domain.enums.RouteType
 import com.san.busing.domain.model.BusModel
-import com.san.busing.domain.model.BusStationModel
+import com.san.busing.domain.model.RouteStationModel
 import com.san.busing.domain.utils.Const
 import com.san.busing.domain.utils.Utils
 import com.san.busing.view.listener.ItemClickEventListener
 import java.util.Queue
 
-class BusRouteStationAdapter(
+class RouteStationAdapter(
     private val routeType: RouteType,
-    private val stationItems: List<BusStationModel>,
+    private val stationItems: List<RouteStationModel>,
     private val busItems: Queue<BusModel>,
     private val itemClickEventListener: ItemClickEventListener,
-) : RecyclerView.Adapter<BusRouteStationAdapter.BusRouteStationViewHolder>() {
+) : RecyclerView.Adapter<RouteStationAdapter.BusRouteStationViewHolder>() {
     inner class BusRouteStationViewHolder(
         private val binding: ItemBusRouteStationBinding
     ) : RecyclerView.ViewHolder(binding.root) {

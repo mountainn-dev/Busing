@@ -1,20 +1,20 @@
 package com.san.busing.data.entity
 
 import com.san.busing.data.vo.Id
-import com.san.busing.domain.model.BusRouteModel
+import com.san.busing.domain.model.RouteInfoModel
 import com.tickaroo.tikxml.annotation.Element
 import com.tickaroo.tikxml.annotation.Path
 import com.tickaroo.tikxml.annotation.PropertyElement
 import com.tickaroo.tikxml.annotation.Xml
 
 /**
- * BusRoute
+ * RouteInfo
  *
- * 버스 노선 목록 중 특정 노선에 대한 정보를 담는 클래스
- * 버스 노선 상세 정보 화면 컨텐츠를 구성한다.
+ * 특정 노선의 상세 정보를 담는 클래스
+ * 버스 노선 상세 화면 컨텐츠를 구성한다.
  */
 @Xml(name = "busRouteInfoItem")
-data class BusRoute(
+data class RouteInfo(
     // up - 기점, down - 종점
     @PropertyElement val routeId: Int,
     @PropertyElement val routeName: String,
@@ -30,7 +30,7 @@ data class BusRoute(
 //    @PropertyElement(name = "downLastTime") val finishLastTime: String,
 //    @PropertyElement(name = "nPeekAlloc") val maxPeekAlloc: Int
 ) {
-    fun toBusRouteModel() = BusRouteModel(
+    fun toRouteInfoModel() = RouteInfoModel(
         Id(routeId),
         routeName,
         Id(startStationId),
@@ -45,12 +45,12 @@ data class BusRoute(
     )
 }
 
-// BusRoute Path 어노테이션 중복 입력을 최소화하기 위해 제작
+// RouteInfo Path 어노테이션 중복 입력을 최소화하기 위한 클래스
 @Xml
-data class BusRouteItem(
-    @Path("msgBody") @Element val item: BusRoute
+data class RouteInfoItem(
+    @Path("msgBody") @Element val item: RouteInfo
 ) {
-    fun get(): BusRouteModel {
-        return item.toBusRouteModel()
+    fun get(): RouteInfoModel {
+        return item.toRouteInfoModel()
     }
 }

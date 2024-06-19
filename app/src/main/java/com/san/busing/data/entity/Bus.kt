@@ -6,6 +6,8 @@ import com.san.busing.domain.enums.PlateType.FULL_SIZE
 import com.san.busing.domain.enums.PlateType.MID_SIZE
 import com.san.busing.domain.model.BusModel
 import com.san.busing.domain.utils.Utils
+import com.tickaroo.tikxml.annotation.Element
+import com.tickaroo.tikxml.annotation.Path
 import com.tickaroo.tikxml.annotation.PropertyElement
 import com.tickaroo.tikxml.annotation.Xml
 
@@ -51,5 +53,15 @@ data class Bus(
     private fun remainSeat(remainSeatCnt: Int) = when(remainSeatCnt >= -1) {
         true -> remainSeatCnt
         else -> throw Exception(ExceptionMessage.WRONG_REMAIN_SEAT_VALUE_EXCEPTION)
+    }
+}
+
+// for Service
+@Xml
+data class Buses(
+    @Path("msgBody") @Element val buses: List<Bus>
+) {
+    fun get(): List<BusModel> {
+        return buses.map { it.toBusModel() }.toList()
     }
 }
