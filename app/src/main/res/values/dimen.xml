@@ -5,10 +5,12 @@
     <dimen name="margin_padding_large">24dp</dimen>
     <dimen name="margin_padding_small">8dp</dimen>
     <dimen name="margin_padding_extremely_small">4dp</dimen>
+    <dimen name="margin_padding_smallest">2dp</dimen>
     <dimen name="margin_floating_action_button">24dp</dimen>
     <dimen name="line_default">1dp</dimen>
     <dimen name="line_thick">4dp</dimen>
-    <dimen name="radius_rounded_small">4dp</dimen>
+    <dimen name="radius_small_rounded">4dp</dimen>
+    <dimen name="radius_extremely_small_rounded">2dp</dimen>
 
     <!-- Bus Route -->
     <dimen name="height_search_layout">128dp</dimen>
@@ -21,7 +23,6 @@
         <dimen name="height_item_search_result">72dp</dimen>
         <dimen name="text_size_search_result_route_name">16sp</dimen>
         <dimen name="stroke_width_background_route_tag">1dp</dimen>
-        <dimen name="radius_background_route_type_tag">4dp</dimen>
         <dimen name="text_size_route_type_tag">12sp</dimen>
 
     <!-- Bus Route Detail -->

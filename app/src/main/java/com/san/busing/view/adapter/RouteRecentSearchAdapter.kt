@@ -32,9 +32,9 @@ class RouteRecentSearchAdapter(
         }
 
         private fun setContentColor(position: Int) {
-            binding.txtBusRouteRecentSearchName.setTextColor(
-                ContextCompat.getColor(context, colorIdByRouteType(position))
-            )
+            val color = ContextCompat.getColor(context, colorIdByRouteType(position))
+
+            binding.txtBusRouteRecentSearchName.setTextColor(color)
         }
 
         private fun colorIdByRouteType(position: Int): Int {

@@ -31,9 +31,11 @@ class RouteSearchResultAdapter(
         }
 
         private fun setContentColor(position: Int) {
-            binding.txtRouteName.setTextColor(
-                ContextCompat.getColor(context, Utils.getColorByRouteType(items[position].type))
-            )
+            val color = ContextCompat.getColor(
+                context, Utils.getColorByRouteType(items[position].type))
+
+            binding.txtRouteName.setTextColor(color)
+            binding.txtRouteTypeTag.setTextColor(color)
         }
 
         private fun setItemClickEventListener(position: Int) {

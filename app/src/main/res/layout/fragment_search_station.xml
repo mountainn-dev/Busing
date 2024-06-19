@@ -21,7 +21,7 @@
             android:layout_weight="0.6"
             android:orientation="horizontal"
             android:gravity="start|center_vertical"
-            android:background="@drawable/background_white_rounded_rectangle">
+            android:background="@drawable/bg_white_rounded_rectangle">
 
             <EditText
                 android:id="@+id/edStation"
@@ -31,7 +31,7 @@
                 android:layout_marginStart="@dimen/margin_padding_default"
                 android:hint="@string/station_input_hint"
                 android:textColorHint="@color/grey"
-                android:background="@drawable/background_white_rounded_rectangle"
+                android:background="@drawable/bg_white_rounded_rectangle"
                 android:inputType="text"
                 android:imeOptions="actionSearch"/>
 
