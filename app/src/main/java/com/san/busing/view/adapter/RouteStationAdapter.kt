@@ -29,7 +29,7 @@ class RouteStationAdapter(
 
         private fun loadContent(position: Int) {
             binding.txtRouteStationName.text = stationItems[position].name
-            binding.txtRouteStationNumber.text = stationItems[position].number.toString()
+            binding.txtRouteStationNumber.text = stationItems[position].number
 
             if (busItems.peek()?.sequenceNumber == (position+1)) {   // 버스 위치와 정류소 순번이 일치하는 경우
                 val item = busItems.poll()!!

@@ -10,7 +10,7 @@ import com.san.busing.data.vo.Id
  */
 data class RouteStationModel(
     val id: Id,
-    val number: Int,
+    val number: String,
     val name: String,
     val sequenceNumber: Int,
     val isTurnaround: Boolean,

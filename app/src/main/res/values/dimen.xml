@@ -33,5 +33,5 @@
                 <dimen name="height_item_route_station">60dp</dimen>
                 <dimen name="padding_top_loading_indicator">200dp</dimen>
                 <dimen name="thickness_loading_indicator">4dp</dimen>
-                <dimen name="text_size_route_station_number">10sp</dimen>
+                <dimen name="text_size_route_station_number">12sp</dimen>
 </resources>

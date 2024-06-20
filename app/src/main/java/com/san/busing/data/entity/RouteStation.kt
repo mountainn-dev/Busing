@@ -17,7 +17,7 @@ import com.tickaroo.tikxml.annotation.Xml
 @Xml(name = "busRouteStationList")
 data class RouteStation(
     @PropertyElement val stationId: Int,
-    @PropertyElement val mobileNo: Int,
+    @PropertyElement val mobileNo: String?,
     @PropertyElement val stationName: String,
     @PropertyElement val stationSeq: Int,
     @PropertyElement val turnYn: String,
@@ -26,7 +26,7 @@ data class RouteStation(
 ) {
     fun toRouteStationModel() = RouteStationModel(
         Id(stationId),
-        mobileNo,
+        mobileNo(mobileNo),
         stationName,
         stationSeq,
         isTurnaround(turnYn),
@@ -34,14 +34,20 @@ data class RouteStation(
         positionY
     )
 
+    private fun mobileNo(mobileNo: String?) = when(mobileNo.isNullOrBlank()) {
+        true -> NO_MOBILE_NUMBER
+        false -> mobileNo
+    }
+
     private fun isTurnaround(turnYn: String) = when(turnYn) {
-        NORMAL -> false
+        NOT_TURNAROUND -> false
         TURNAROUND -> true
         else -> throw Exception(ExceptionMessage.WRONG_TURNAROUND_VALUE_EXCEPTION)
     }
 
     companion object {
-        private const val NORMAL = "N"
+        private const val NO_MOBILE_NUMBER = "00000"
+        private const val NOT_TURNAROUND = "N"
         private const val TURNAROUND = "Y"
     }
 }
