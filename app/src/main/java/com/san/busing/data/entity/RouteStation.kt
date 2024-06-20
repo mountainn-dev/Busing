@@ -1,5 +1,6 @@
 package com.san.busing.data.entity
 
+import com.san.busing.data.exception.ExceptionMessage
 import com.san.busing.data.vo.Id
 import com.san.busing.domain.model.RouteStationModel
 import com.tickaroo.tikxml.annotation.Element
@@ -16,21 +17,36 @@ import com.tickaroo.tikxml.annotation.Xml
 @Xml(name = "busRouteStationList")
 data class RouteStation(
     @PropertyElement val stationId: Int,
+    @PropertyElement val mobileNo: Int,
     @PropertyElement val stationName: String,
     @PropertyElement val stationSeq: Int,
+    @PropertyElement val turnYn: String,
     @PropertyElement(name = "x") val positionX: Double,
     @PropertyElement(name = "y") val positionY: Double
 ) {
     fun toRouteStationModel() = RouteStationModel(
         Id(stationId),
+        mobileNo,
         stationName,
         stationSeq,
+        isTurnaround(turnYn),
         positionX,
         positionY
     )
+
+    private fun isTurnaround(turnYn: String) = when(turnYn) {
+        NORMAL -> false
+        TURNAROUND -> true
+        else -> throw Exception(ExceptionMessage.WRONG_TURNAROUND_VALUE_EXCEPTION)
+    }
+
+    companion object {
+        private const val NORMAL = "N"
+        private const val TURNAROUND = "Y"
+    }
 }
 
-// RouteStation Path 어노테이션 중복 입력을 최소하하기 위한 클래스
+// RouteStation Path 어노테이션 중복 입력을 최소화하기 위한 클래스
 data class RouteStationItem(
     @Path("msgBody") @Element val item: RouteStation
 ) {

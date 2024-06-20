@@ -56,7 +56,7 @@ class ErrorInterceptor : Interceptor {
             WRONG_FORMAT_STATION_NAME.code -> throw ServiceException.KeywordFormatException(WRONG_FORMAT_STATION_NAME.message)
             WRONG_START_STATION_ID.code -> throw ServiceException.IdException(WRONG_START_STATION_ID.message)
             WRONG_ARRIVAL_STATION_ID.code -> throw ServiceException.IdException(WRONG_ARRIVAL_STATION_ID.message)
-            else -> throw IOException(ExceptionMessage.NO_SERVICE_RESULT_CODE)
+            else -> throw IOException(ExceptionMessage.NO_SERVICE_RESULT_EXCEPTION)
         }
     }
 }
