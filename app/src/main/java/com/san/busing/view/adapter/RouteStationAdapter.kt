@@ -1,6 +1,7 @@
 package com.san.busing.view.adapter
 
 import android.app.Activity
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -41,11 +42,15 @@ class RouteStationAdapter(
         }
 
         private fun loadBusInfo(item: BusModel) {
-                binding.llBusInfo.visibility = View.VISIBLE
-                binding.lineBusInfo.visibility = View.VISIBLE
-                binding.imgBus.visibility = View.VISIBLE
-                binding.txtPlateNumber.text = item.plateNumber
-                binding.txtRemainSeat.text = remainSeatText(item.remainSeat)
+            Log.d("busItem", item.sequenceNumber.toString())
+            binding.llBusInfo.visibility = View.VISIBLE
+            binding.lineBusInfo.visibility = View.VISIBLE
+            binding.imgBus.visibility = View.VISIBLE
+            binding.txtPlateNumber.text = item.plateNumber
+            binding.txtRemainSeat.text = remainSeatText(item.remainSeat)
+
+            // 중복 차량 처리
+            while (busItems.peek()?.sequenceNumber == item.sequenceNumber) busItems.poll()
         }
 
         private fun remainSeatText(count: Int): String {
