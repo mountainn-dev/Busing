@@ -7,7 +7,8 @@
     <dimen name="margin_padding_extremely_small">4dp</dimen>
     <dimen name="margin_padding_smallest">2dp</dimen>
     <dimen name="margin_floating_action_button">24dp</dimen>
-    <dimen name="line_default">1dp</dimen>
+    <dimen name="line_default">2dp</dimen>
+    <dimen name="line_thin">1dp</dimen>
     <dimen name="line_thick">4dp</dimen>
     <dimen name="radius_small_rounded">4dp</dimen>
     <dimen name="radius_extremely_small_rounded">2dp</dimen>
@@ -33,5 +34,6 @@
                 <dimen name="height_item_route_station">60dp</dimen>
                 <dimen name="padding_top_loading_indicator">200dp</dimen>
                 <dimen name="thickness_loading_indicator">4dp</dimen>
-                <dimen name="text_size_route_station_number">12sp</dimen>
+                <dimen name="text_size_bus_info">12sp</dimen>
+                <dimen name="text_size_station_number">12sp</dimen>
 </resources>

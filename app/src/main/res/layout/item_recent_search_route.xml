@@ -9,7 +9,7 @@
     android:orientation="horizontal"
     android:gravity="center"
     android:weightSum="1"
-    android:background="@drawable/bg_white_rounded_rectangle">
+    android:background="@drawable/bg_rectangle_white_rounded">
 
     <TextView
         android:id="@+id/txtBusRouteRecentSearchName"

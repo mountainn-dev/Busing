@@ -34,12 +34,13 @@ class RouteStationAdapter(
             if (busItems.peek()?.sequenceNumber == (position+1)) {   // 버스 위치와 정류소 순번이 일치하는 경우
                 val item = busItems.poll()!!
                 binding.llBusInfo.visibility = View.VISIBLE
+                binding.lineBusInfo.visibility = View.VISIBLE
                 binding.imgBus.visibility = View.VISIBLE
                 binding.txtPlateNumber.text = item.plateNumber
                 binding.txtRemainSeat.text = remainSeatText(item.remainSeat)
             } else {
-                binding.txtPlateNumber.visibility = View.GONE
-                binding.txtRemainSeat.visibility = View.GONE
+                binding.llBusInfo.visibility = View.GONE
+                binding.lineBusInfo.visibility = View.GONE
             }
         }
 

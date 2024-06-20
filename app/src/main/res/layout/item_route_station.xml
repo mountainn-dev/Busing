@@ -6,7 +6,7 @@
     android:layout_height="@dimen/height_item_route_station"
     android:paddingHorizontal="@dimen/margin_padding_default"
     android:gravity="center"
-    android:background="@drawable/bg_rectangle_divided_item">
+    android:background="@drawable/bg_item_downside_bordered">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,25 +16,43 @@
         android:weightSum="1">
 
         <LinearLayout
-            android:id="@+id/llBusInfo"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:orientation="vertical"
             android:gravity="end|center_vertical"
+            android:orientation="horizontal"
             android:layout_weight="0.15">
 
-            <TextView
-                android:id="@+id/txtPlateNumber"
-                android:textAlignment="center"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-
-            <TextView
-                android:id="@+id/txtRemainSeat"
+            <LinearLayout
+                android:id="@+id/llBusInfo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAlignment="center"
-                android:textColor="@color/blue"/>
+                android:orientation="vertical"
+                android:gravity="end|center_vertical">
+
+                <TextView
+                    android:id="@+id/txtPlateNumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:textSize="@dimen/text_size_bus_info"/>
+
+                <TextView
+                    android:id="@+id/txtRemainSeat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:textSize="@dimen/text_size_bus_info"
+                    android:textColor="@color/blue"/>
+
+            </LinearLayout>
+
+            <com.google.android.material.divider.MaterialDivider
+                android:id="@+id/lineBusInfo"
+                android:layout_width="8dp"
+                android:layout_height="@dimen/line_default"
+                android:layout_marginStart="@dimen/margin_padding_small"
+                android:visibility="gone"
+                app:dividerColor="@color/grey"/>
 
         </LinearLayout>
 
@@ -80,7 +98,7 @@
                 android:id="@+id/txtRouteStationNumber"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/text_size_route_station_number"
+                android:textSize="@dimen/text_size_station_number"
                 android:textColor="@color/grey"/>
 
         </LinearLayout>
