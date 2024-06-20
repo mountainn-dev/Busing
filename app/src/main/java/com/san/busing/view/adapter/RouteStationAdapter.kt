@@ -1,8 +1,10 @@
 package com.san.busing.view.adapter
 
+import android.app.Activity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.san.busing.R
 import com.san.busing.databinding.ItemRouteStationBinding
@@ -19,13 +21,14 @@ class RouteStationAdapter(
     private val stationItems: List<RouteStationModel>,
     private val busItems: Queue<BusModel>,
     private val itemClickEventListener: ItemClickEventListener,
+    private val context: Activity
 ) : RecyclerView.Adapter<RouteStationAdapter.BusRouteStationViewHolder>() {
     inner class BusRouteStationViewHolder(
         private val binding: ItemRouteStationBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(position: Int) {
             loadContent(position)
-            setTurnaroundIcon(position)
+            setTurnaround(position)
             setItemClickEventListener(position)
         }
 
@@ -55,9 +58,12 @@ class RouteStationAdapter(
             binding.lineBusInfo.visibility = View.GONE
         }
 
-        private fun setTurnaroundIcon(position: Int) {
-            if (stationItems[position].isTurnaround)   // 회차지인 경우
+        private fun setTurnaround(position: Int) {
+            if (stationItems[position].isTurnaround) {   // 회차지인 경우
+                binding.clRouteStationItem.setBackgroundColor(
+                    ContextCompat.getColor(context, R.color.semi_light_grey))
                 binding.imgWay.setImageResource(R.drawable.ic_turnaround)
+            }
         }
 
         private fun setItemClickEventListener(position: Int) {

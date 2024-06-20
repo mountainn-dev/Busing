@@ -109,7 +109,8 @@ class RouteDetailActivity : AppCompatActivity() {
             routeType,
             viewModel.routeStations,
             LinkedList(viewModel.routeBuses),
-            routeStationClickEventListener(viewModel.routeStations)
+            routeStationClickEventListener(viewModel.routeStations),
+            context
         )
         binding.rvBusRouteStationList.layoutManager = LinearLayoutManager(context)
         binding.txtRouteBusCount.text = String.format(Const.ROUTE_BUS_COUNT, viewModel.routeBuses.size)

@@ -1,20 +1,34 @@
 package com.san.busing.view.adapter
 
-import android.content.Context
+import android.app.Activity
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.san.busing.R
 import com.san.busing.databinding.ItemRecentSearchRouteBinding
-import com.san.busing.domain.enums.RouteType.*
+import com.san.busing.domain.enums.RouteType.AIRPORT_LIMO
+import com.san.busing.domain.enums.RouteType.AIRPORT_NORMAL
+import com.san.busing.domain.enums.RouteType.AIRPORT_SEAT
+import com.san.busing.domain.enums.RouteType.AREA_DIRECT
+import com.san.busing.domain.enums.RouteType.AREA_EXPRESS
+import com.san.busing.domain.enums.RouteType.CIRCULAR
+import com.san.busing.domain.enums.RouteType.NORMAL
+import com.san.busing.domain.enums.RouteType.NORMAL_SEAT
+import com.san.busing.domain.enums.RouteType.OUT_TOWN_EXPRESS
+import com.san.busing.domain.enums.RouteType.OUT_TOWN_NORMAL
+import com.san.busing.domain.enums.RouteType.OUT_TOWN_SEAT
+import com.san.busing.domain.enums.RouteType.RURAL_DIRECT
+import com.san.busing.domain.enums.RouteType.RURAL_NORMAL
+import com.san.busing.domain.enums.RouteType.RURAL_SEAT
+import com.san.busing.domain.enums.RouteType.VILLAGE
 import com.san.busing.domain.model.RouteRecentSearchModel
 import com.san.busing.view.listener.ItemClickEventListener
 
 class RouteRecentSearchAdapter(
     private val items: List<RouteRecentSearchModel>,
     private val itemClickEventListener: ItemClickEventListener,
-    private val context: Context
+    private val context: Activity
 ) : RecyclerView.Adapter<RouteRecentSearchAdapter.BusRouteRecentSearchViewHolder>() {
 
     inner class BusRouteRecentSearchViewHolder(
