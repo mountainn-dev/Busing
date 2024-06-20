@@ -5,12 +5,12 @@
     <string name="route_no_result">검색 결과가 없습니다.</string>
     <string name="delete_all">All</string>
 
-    <!-- Bus Route -->
+    <!-- Route -->
     <string name="tab_name_route">버스</string>
     <string name="route_input_hint">버스 번호 검색</string>
     <string name="route_no_recent_search">최근 조회한 노선이 없습니다.</string>
 
-        <!-- Bus Route Detail -->
+        <!-- Detail -->
         <string name="start_tag_route_bus_count">현재</string>
         <string name="end_tag_route_bus_count">운행중</string>
 

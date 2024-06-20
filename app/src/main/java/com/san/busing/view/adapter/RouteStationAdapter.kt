@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.san.busing.databinding.ItemBusRouteStationBinding
+import com.san.busing.databinding.ItemRouteStationBinding
 import com.san.busing.domain.enums.RouteType
 import com.san.busing.domain.model.BusModel
 import com.san.busing.domain.model.RouteStationModel
@@ -20,7 +20,7 @@ class RouteStationAdapter(
     private val itemClickEventListener: ItemClickEventListener,
 ) : RecyclerView.Adapter<RouteStationAdapter.BusRouteStationViewHolder>() {
     inner class BusRouteStationViewHolder(
-        private val binding: ItemBusRouteStationBinding
+        private val binding: ItemRouteStationBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(position: Int) {
             loadContent(position)
@@ -29,12 +29,14 @@ class RouteStationAdapter(
 
         private fun loadContent(position: Int) {
             binding.txtRouteStationName.text = stationItems[position].name
-            if (busItems.peek()?.sequenceNumber == (position+1)) {
+            binding.txtRouteStationNumber.text = stationItems[position].number.toString()
+
+            if (busItems.peek()?.sequenceNumber == (position+1)) {   // 버스 위치와 정류소 순번이 일치하는 경우
                 val item = busItems.poll()!!
                 binding.llBusInfo.visibility = View.VISIBLE
+                binding.imgBus.visibility = View.VISIBLE
                 binding.txtPlateNumber.text = item.plateNumber
                 binding.txtRemainSeat.text = remainSeatText(item.remainSeat)
-                binding.imgBus.visibility = View.VISIBLE
             } else {
                 binding.txtPlateNumber.visibility = View.GONE
                 binding.txtRemainSeat.visibility = View.GONE
@@ -54,14 +56,14 @@ class RouteStationAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BusRouteStationViewHolder {
-        val binding = ItemBusRouteStationBinding.inflate(
+        val binding = ItemRouteStationBinding.inflate(
             LayoutInflater.from(parent.context), parent, false
         )
         setContentColor(binding, routeType)
         return BusRouteStationViewHolder(binding)
     }
 
-    private fun setContentColor(binding: ItemBusRouteStationBinding, type: RouteType) {
+    private fun setContentColor(binding: ItemRouteStationBinding, type: RouteType) {
         binding.imgBus.setImageResource(
             Utils.getBusImageResourceByRouteType(type)
         )

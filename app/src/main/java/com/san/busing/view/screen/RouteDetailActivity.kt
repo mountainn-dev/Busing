@@ -13,7 +13,7 @@ import com.san.busing.BuildConfig
 import com.san.busing.data.repositoryimpl.BusLocationRepositoryImpl
 import com.san.busing.data.repositoryimpl.RouteRepositoryImpl
 import com.san.busing.data.vo.Id
-import com.san.busing.databinding.ActivityBusRouteDetailBinding
+import com.san.busing.databinding.ActivityRouteDetailBinding
 import com.san.busing.domain.enums.RouteType
 import com.san.busing.domain.model.RouteStationModel
 import com.san.busing.domain.utils.Const
@@ -26,12 +26,12 @@ import com.san.busing.view.listener.ItemClickEventListener
 import java.util.LinkedList
 
 class RouteDetailActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityBusRouteDetailBinding
+    private lateinit var binding: ActivityRouteDetailBinding
     private lateinit var viewModel: RouteDetailViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityBusRouteDetailBinding.inflate(layoutInflater)
+        binding = ActivityRouteDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         val busRouteRepository = RouteRepositoryImpl(Utils.getRetrofit(BuildConfig.ROUTES_URL), this.applicationContext)

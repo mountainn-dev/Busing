@@ -12,7 +12,7 @@
     <dimen name="radius_small_rounded">4dp</dimen>
     <dimen name="radius_extremely_small_rounded">2dp</dimen>
 
-    <!-- Bus Route -->
+    <!-- Route -->
     <dimen name="height_search_layout">128dp</dimen>
 
         <!-- Recent Search -->
@@ -25,12 +25,13 @@
         <dimen name="stroke_width_background_route_tag">1dp</dimen>
         <dimen name="text_size_route_type_tag">12sp</dimen>
 
-    <!-- Bus Route Detail -->
-    <dimen name="height_detail_layout">200dp</dimen>
-    <dimen name="margin_icon_range">40dp</dimen>
+            <!-- Detail -->
+            <dimen name="height_detail_layout">200dp</dimen>
+            <dimen name="margin_icon_range">40dp</dimen>
 
-        <!-- Route Station -->
-        <dimen name="height_item_route_station">60dp</dimen>
-        <dimen name="padding_top_loading_indicator">200dp</dimen>
-        <dimen name="thickness_loading_indicator">4dp</dimen>
+                <!-- Station -->
+                <dimen name="height_item_route_station">60dp</dimen>
+                <dimen name="padding_top_loading_indicator">200dp</dimen>
+                <dimen name="thickness_loading_indicator">4dp</dimen>
+                <dimen name="text_size_route_station_number">10sp</dimen>
 </resources>
