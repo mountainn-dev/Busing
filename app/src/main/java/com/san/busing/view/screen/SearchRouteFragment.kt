@@ -8,28 +8,31 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.san.busing.BuildConfig
-import com.san.busing.data.repositoryimpl.BusRouteRepositoryImpl
+import com.san.busing.data.repositoryimpl.RouteRepositoryImpl
 import com.san.busing.databinding.FragmentSearchRouteBinding
-import com.san.busing.domain.model.BusRouteRecentSearchModel
-import com.san.busing.domain.model.BusRouteSearchResultModel
+import com.san.busing.domain.model.RouteRecentSearchModel
+import com.san.busing.domain.model.RouteSummaryModel
 import com.san.busing.domain.utils.Const
 import com.san.busing.domain.utils.Utils
-import com.san.busing.domain.viewmodel.SearchBusRouteViewModel
-import com.san.busing.domain.viewmodelfactory.SearchBusRouteViewModelFactory
-import com.san.busing.domain.viewmodelimpl.SearchBusRouteViewModelImpl
-import com.san.busing.view.adapter.BusRouteRecentSearchAdapter
-import com.san.busing.view.adapter.BusRouteSearchResultAdapter
+import com.san.busing.domain.viewmodel.SearchRouteViewModel
+import com.san.busing.domain.viewmodelfactory.SearchRouteViewModelFactory
+import com.san.busing.domain.viewmodelimpl.SearchRouteViewModelImpl
+import com.san.busing.view.adapter.RouteRecentSearchAdapter
+import com.san.busing.view.adapter.RouteSearchResultAdapter
 import com.san.busing.view.listener.ItemClickEventListener
 import com.san.busing.view.listener.RecyclerViewScrollListener
+import com.san.busing.view.widget.ErrorToast
 
 class SearchRouteFragment : Fragment() {
     private lateinit var binding: FragmentSearchRouteBinding
-    private lateinit var viewModel: SearchBusRouteViewModel
+    private lateinit var viewModel: SearchRouteViewModel
+    private lateinit var toast: ErrorToast
 
     /**
      * override fun onCreate(): void
@@ -40,9 +43,9 @@ class SearchRouteFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val repository = BusRouteRepositoryImpl(Utils.getRetrofit(BuildConfig.ROUTES_URL), requireActivity().applicationContext)
-        viewModel = ViewModelProvider(requireActivity(), SearchBusRouteViewModelFactory(repository)).get(
-            SearchBusRouteViewModelImpl::class.java
+        val repository = RouteRepositoryImpl(Utils.getRetrofit(BuildConfig.ROUTES_URL), requireActivity().applicationContext)
+        viewModel = ViewModelProvider(requireActivity(), SearchRouteViewModelFactory(repository)).get(
+            SearchRouteViewModelImpl::class.java
         )
     }
 
@@ -58,14 +61,18 @@ class SearchRouteFragment : Fragment() {
     ): View {
         binding = FragmentSearchRouteBinding.inflate(layoutInflater)
 
-        initObserver(viewModel, requireActivity())
+        initToast(requireActivity())
+        initObserver(viewModel, toast, requireActivity())
         initListener(viewModel, requireActivity())
 
         return binding.root
     }
 
+    private fun initToast(context: Activity) { toast = ErrorToast(context) }
+
     private fun initObserver(
-        viewModel: SearchBusRouteViewModel,
+        viewModel: SearchRouteViewModel,
+        toast: ErrorToast,
         context: Activity
     ) {
         viewModel.searchResultContentReady.observe(
@@ -76,20 +83,24 @@ class SearchRouteFragment : Fragment() {
             viewLifecycleOwner,
             recentSearchContentReadyObserver(viewModel, context)
         )
+        viewModel.serviceErrorState.observe(
+            viewLifecycleOwner,
+            serviceErrorStateObserver(toast)
+        )
     }
 
     private fun searchResultContentReadyObserver(
-        viewModel: SearchBusRouteViewModel,
+        viewModel: SearchRouteViewModel,
         context: Activity
     ) = Observer<Boolean> {
         if (it) { whenSearchResultReady(viewModel, context) }
         else { whenSearchResultNotReady() }
     }
 
-    private fun whenSearchResultReady(viewModel: SearchBusRouteViewModel, context: Activity) {
-        binding.rvSearchResult.adapter = BusRouteSearchResultAdapter(
-            viewModel.searchResultContent,
-            searchResultItemClickEventListener(viewModel.searchResultContent, context),
+    private fun whenSearchResultReady(viewModel: SearchRouteViewModel, context: Activity) {
+        binding.rvSearchResult.adapter = RouteSearchResultAdapter(
+            viewModel.routeSummaries,
+            searchResultItemClickEventListener(viewModel.routeSummaries, context),
             context
         )
         binding.rvSearchResult.layoutManager = LinearLayoutManager(context)
@@ -97,18 +108,18 @@ class SearchRouteFragment : Fragment() {
     }
 
     private fun searchResultItemClickEventListener(
-        items: List<BusRouteSearchResultModel>,
+        items: List<RouteSummaryModel>,
         context: Activity
     ) = object : ItemClickEventListener {
         override fun onItemClickListener(position: Int) {
-            val intent = Intent(context, BusRouteDetailActivity::class.java)
+            val intent = Intent(context, RouteDetailActivity::class.java)
             intent.putExtra(Const.TAG_ROUTE_ID, items[position].id)
             intent.putExtra(Const.TAG_ROUTE_NAME, items[position].name)
             intent.putExtra(Const.TAG_ROUTE_TYPE, items[position].type)
 
             // 최근 검색 추가
             viewModel.insert(
-                BusRouteRecentSearchModel(
+                RouteRecentSearchModel(
                     items[position].id, items[position].name, items[position].type,
                     viewModel.recentSearchIndex(context)
                 )
@@ -125,17 +136,17 @@ class SearchRouteFragment : Fragment() {
     }
 
     private fun recentSearchContentReadyObserver(
-        viewModel: SearchBusRouteViewModel,
+        viewModel: SearchRouteViewModel,
         context: Activity
     ) = Observer<Boolean> {
         if (it) { whenRecentSearchReady(viewModel, context) }
         else { whenRecentSearchNotReady() }
     }
 
-    private fun whenRecentSearchReady(viewModel: SearchBusRouteViewModel, context: Activity) {
-        binding.rvRecentSearch.adapter = BusRouteRecentSearchAdapter(
-            viewModel.recentSearchContent,
-            recentSearchItemClickEventListener(viewModel.recentSearchContent, context),
+    private fun whenRecentSearchReady(viewModel: SearchRouteViewModel, context: Activity) {
+        binding.rvRecentSearch.adapter = RouteRecentSearchAdapter(
+            viewModel.routeRecentSearches,
+            recentSearchItemClickEventListener(viewModel.routeRecentSearches, context),
             context
         )
         binding.rvRecentSearch.layoutManager = LinearLayoutManager(
@@ -149,18 +160,18 @@ class SearchRouteFragment : Fragment() {
     }
 
     private fun recentSearchItemClickEventListener(
-        items: List<BusRouteRecentSearchModel>,
+        items: List<RouteRecentSearchModel>,
         context: Activity
     ) = object : ItemClickEventListener {
         override fun onItemClickListener(position: Int) {
-            val intent = Intent(context, BusRouteDetailActivity::class.java)
+            val intent = Intent(context, RouteDetailActivity::class.java)
             intent.putExtra(Const.TAG_ROUTE_ID, items[position].id)
             intent.putExtra(Const.TAG_ROUTE_NAME, items[position].name)
             intent.putExtra(Const.TAG_ROUTE_TYPE, items[position].type)
 
             // 최근 검색 갱신
             viewModel.update(
-                BusRouteRecentSearchModel(
+                RouteRecentSearchModel(
                     items[position].id, items[position].name, items[position].type,
                     viewModel.recentSearchIndex(context)
                 )
@@ -174,14 +185,20 @@ class SearchRouteFragment : Fragment() {
         }
     }
 
-    private fun initListener(viewModel: SearchBusRouteViewModel, context: Activity) {
+    private fun serviceErrorStateObserver(toast: ErrorToast) = Observer<Boolean> {
+        if (it) {
+            if (toast.previousFinished()) toast.show()
+        }
+    }
+
+    private fun initListener(viewModel: SearchRouteViewModel, context: Activity) {
         setEdRouteActionListener(viewModel)
         setBtnDeleteSearchKeywordListener(viewModel, context)
-        setBtnDeleteAllRecentSearchListener(viewModel)
+        setBtnDeleteAllRecentSearchListener(viewModel, context)
         setRvBusRouteScrollListener(context)
     }
 
-    private fun setEdRouteActionListener(viewModel: SearchBusRouteViewModel) {
+    private fun setEdRouteActionListener(viewModel: SearchRouteViewModel) {
         binding.edRoute.setOnEditorActionListener { textView, i, keyEvent ->
             if (i == EditorInfo.IME_ACTION_SEARCH) {
                 viewModel.search(binding.edRoute.text.toString())
@@ -192,9 +209,9 @@ class SearchRouteFragment : Fragment() {
         }
     }
 
-    private fun setBtnDeleteSearchKeywordListener(viewModel: SearchBusRouteViewModel, context: Activity) {
+    private fun setBtnDeleteSearchKeywordListener(viewModel: SearchRouteViewModel, context: Activity) {
         binding.btnDeleteSearchKeyword.setOnClickListener {
-            viewModel.clear()
+            viewModel.clearKeyword()
             binding.edRoute.setText(viewModel.keyword)
             showSoftInput(binding.edRoute, context)
         }
@@ -207,9 +224,12 @@ class SearchRouteFragment : Fragment() {
         }
     }
 
-    private fun setBtnDeleteAllRecentSearchListener(viewModel: SearchBusRouteViewModel) {
+    private fun setBtnDeleteAllRecentSearchListener(
+        viewModel: SearchRouteViewModel,
+        context: Activity
+    ) {
         binding.btnDeleteAllRecentSearch.setOnClickListener {
-            viewModel.deleteAll()
+            viewModel.deleteAll(context)
         }
     }
 
@@ -222,7 +242,7 @@ class SearchRouteFragment : Fragment() {
         restore(viewModel)
     }
 
-    private fun restore(viewModel: SearchBusRouteViewModel) {
+    private fun restore(viewModel: SearchRouteViewModel) {
         binding.edRoute.setText(viewModel.keyword)
         viewModel.restore()
     }

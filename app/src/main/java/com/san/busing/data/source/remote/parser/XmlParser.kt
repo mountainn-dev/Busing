@@ -27,6 +27,7 @@ class XmlParser {
         }
     }
 
+    @Throws(XmlPullParserException::class, IOException::class)
     private fun readFeed(parser: XmlPullParser): String {
         parser.require(XmlPullParser.START_TAG, ns, "response")
 
@@ -39,6 +40,7 @@ class XmlParser {
         throw IOException()
     }
 
+    @Throws(XmlPullParserException::class, IOException::class)
     private fun readResultCode(parser: XmlPullParser): String {
         parser.require(XmlPullParser.START_TAG, ns, "msgHeader")
 

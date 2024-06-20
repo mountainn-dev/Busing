@@ -23,7 +23,7 @@ class HomeActivity : AppCompatActivity() {
         binding.btmNav.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.navRoute -> replaceTo(SearchRouteFragment())
-                R.id.navTest -> replaceTo(TestFragment())
+                R.id.navStation -> replaceTo(SearchStationFragment())
             }
 
             return@setOnItemSelectedListener true

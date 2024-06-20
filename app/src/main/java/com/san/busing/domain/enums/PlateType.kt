@@ -5,7 +5,7 @@ import com.san.busing.domain.utils.Const
 /**
  * PlateType
  *
- * 경기도 공공 데이터 포털에서 제공하는 버스 차량 유형
+ * 경기도 버스 정보에서 제공하는 버스 차량 유형
  */
 enum class PlateType(val code: Int, val typeName: String, val tag: String) {
     NONE(0, "정보없음", Const.TAG_NONE),

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".view.screen.SearchRouteFragment">
+    tools:context=".view.screen.SearchStationFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -24,12 +24,12 @@
             android:background="@drawable/bg_rectangle_white_rounded">
 
             <EditText
-                android:id="@+id/edRoute"
+                android:id="@+id/edStation"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:layout_marginStart="@dimen/margin_padding_default"
-                android:hint="@string/route_input_hint"
+                android:hint="@string/station_input_hint"
                 android:textColorHint="@color/grey"
                 android:background="@drawable/bg_rectangle_white_rounded"
                 android:inputType="text"
@@ -66,7 +66,7 @@
                     android:layout_height="match_parent"
                     android:visibility="visible"
                     android:gravity="center"
-                    android:text="@string/route_no_recent_search"
+                    android:text="@string/station_no_recent_search"
                     android:textColor="@color/grey"/>
 
                 <androidx.recyclerview.widget.RecyclerView

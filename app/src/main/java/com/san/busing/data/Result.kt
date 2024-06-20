@@ -1,6 +1,7 @@
 package com.san.busing.data
 
 import com.san.busing.data.exception.ExceptionMessage
+import com.san.busing.data.exception.ServiceException
 import kotlin.Exception
 
 abstract class Result<T> {
@@ -29,4 +30,6 @@ class Error <T> (private val error: Exception) : Result<T>() {
             error.message!!
         }
     }
+
+    fun isSystemError() = error is ServiceException.SystemException
 }

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/clRouteStationItem"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/height_item_route_station"
+    android:paddingHorizontal="@dimen/margin_padding_default"
+    android:gravity="center"
+    android:background="@drawable/bg_item_downside_bordered">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:weightSum="1">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:gravity="end|center_vertical"
+            android:orientation="horizontal"
+            android:layout_weight="0.15">
+
+            <LinearLayout
+                android:id="@+id/llBusInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="end|center_vertical">
+
+                <TextView
+                    android:id="@+id/txtPlateNumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:textSize="@dimen/text_size_bus_info"/>
+
+                <TextView
+                    android:id="@+id/txtRemainSeat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:textSize="@dimen/text_size_bus_info"
+                    android:textColor="@color/blue"/>
+
+            </LinearLayout>
+
+            <com.google.android.material.divider.MaterialDivider
+                android:id="@+id/lineBusInfo"
+                android:layout_width="8dp"
+                android:layout_height="@dimen/line_default"
+                android:layout_marginStart="@dimen/margin_padding_small"
+                android:visibility="gone"
+                app:dividerColor="@color/grey"/>
+
+        </LinearLayout>
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.1">
+
+            <com.google.android.material.divider.MaterialDivider
+                android:layout_width="@dimen/line_thick"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                app:dividerColor="@color/grey"/>
+
+            <ImageView
+                android:id="@+id/imgWay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_down_arrow"/>
+
+            <ImageView
+                android:id="@+id/imgBus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="gone"/>
+
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.75"
+            android:orientation="vertical"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/txtRouteStationName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/txtRouteStationNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_size_station_number"
+                android:textColor="@color/grey"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
