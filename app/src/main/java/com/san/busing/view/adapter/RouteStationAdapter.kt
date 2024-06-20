@@ -42,7 +42,6 @@ class RouteStationAdapter(
         }
 
         private fun loadBusInfo(item: BusModel) {
-            Log.d("busItem", item.sequenceNumber.toString())
             binding.llBusInfo.visibility = View.VISIBLE
             binding.lineBusInfo.visibility = View.VISIBLE
             binding.imgBus.visibility = View.VISIBLE

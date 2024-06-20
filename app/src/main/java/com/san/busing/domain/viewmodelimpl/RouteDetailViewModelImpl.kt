@@ -44,6 +44,9 @@ class RouteDetailViewModelImpl(
     override lateinit var routeInfo: RouteInfoModel
     override lateinit var routeStations: List<RouteStationModel>
     override lateinit var routeBuses: List<BusModel>
+    override val serviceErrorState: LiveData<Boolean>
+        get() = isSystemError
+    private val isSystemError = MutableLiveData<Boolean>()
 
     init {
         load(routeId)
@@ -77,6 +80,7 @@ class RouteDetailViewModelImpl(
             error = (result as Error).message()
             Log.e(ExceptionMessage.TAG_BUS_ROUTE_INFO_EXCEPTION, error)
             routeInfoLoaded.postValue(false)
+            isSystemError.postValue(result.isSystemError())
         }
     }
 
@@ -90,6 +94,7 @@ class RouteDetailViewModelImpl(
             error = (result as Error).message()
             Log.e(ExceptionMessage.TAG_BUS_ROUTE_STATIONS_EXCEPTION, error)
             routeStationLoaded.postValue(false)
+            isSystemError.postValue(result.isSystemError())
         }
     }
 
@@ -103,17 +108,22 @@ class RouteDetailViewModelImpl(
             error = (result as Error).message()
             Log.e(ExceptionMessage.TAG_BUS_ROUTE_BUS_EXCEPTION, error)
             routeBusLoaded.postValue(false)
+            isSystemError.postValue(result.isSystemError())
         }
     }
 
+    /**
+     * private fun merge(parent, child1, child2)
+     *
+     * Data Load State 를 확인하기 위한 LiveData merge()
+     */
     private fun merge(
         parent: MediatorLiveData<Boolean>,
         child1: MutableLiveData<Boolean>, child2: MutableLiveData<Boolean>
     ) {
-        parent.addSource(child1) { parent.value = it && isContentReady(child2) }
-        parent.addSource(child2) { parent.value = it && isContentReady(child1) }
+        parent.addSource(child1) { parent.value = it && dataState(child2) }
+        parent.addSource(child2) { parent.value = it && dataState(child1) }
     }
 
-    private fun isContentReady(contentLoaded: MutableLiveData<Boolean>) =
-        contentLoaded.isInitialized && contentLoaded.value!!
+    private fun dataState(data: MutableLiveData<Boolean>) = data.isInitialized && data.value!!
 }

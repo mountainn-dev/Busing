@@ -3,6 +3,7 @@ package com.san.busing.view.screen
 import android.app.Activity
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
@@ -23,11 +24,13 @@ import com.san.busing.domain.viewmodelfactory.RouteDetailViewModelFactory
 import com.san.busing.domain.viewmodelimpl.RouteDetailViewModelImpl
 import com.san.busing.view.adapter.RouteStationAdapter
 import com.san.busing.view.listener.ItemClickEventListener
+import com.san.busing.view.widget.ErrorToast
 import java.util.LinkedList
 
 class RouteDetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRouteDetailBinding
     private lateinit var viewModel: RouteDetailViewModel
+    private lateinit var toast: ErrorToast
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,7 +47,8 @@ class RouteDetailActivity : AppCompatActivity() {
         ).get(RouteDetailViewModelImpl::class.java)
 
         initToolbar(routeName, routeType, this)
-        initObserver(viewModel, routeType, this)
+        initToast(this)
+        initObserver(viewModel, routeType, toast, this)
         initListener(viewModel, routeId)
     }
 
@@ -64,9 +68,12 @@ class RouteDetailActivity : AppCompatActivity() {
         binding.ctbRouteDetail.setBackgroundColor(color)
     }
 
+    private fun initToast(context: Activity) { toast = ErrorToast(context) }
+
     private fun initObserver(
         viewModel: RouteDetailViewModel,
         routeType: RouteType,
+        toast: ErrorToast,
         context: Activity
     ) {
         viewModel.routeInfoContentReady.observe(
@@ -76,6 +83,10 @@ class RouteDetailActivity : AppCompatActivity() {
         viewModel.routeStationContentReady.observe(
             context as LifecycleOwner,
             routeStationBusReadyObserver(viewModel, routeType, context)
+        )
+        viewModel.serviceErrorState.observe(
+            context as LifecycleOwner,
+            serviceErrorStateObserver(toast)
         )
     }
 
@@ -131,6 +142,12 @@ class RouteDetailActivity : AppCompatActivity() {
     private fun whenRouteStationAndBusNotReady() {
         binding.pgbBusRouteStation.visibility = View.VISIBLE
         binding.rvBusRouteStationList.visibility = View.GONE
+    }
+
+    private fun serviceErrorStateObserver(toast: ErrorToast) = Observer<Boolean> {
+        if (it) {
+            if (toast.previousFinished()) toast.show()
+        }
     }
 
     private fun initListener(viewModel: RouteDetailViewModel, routeId: Id) {

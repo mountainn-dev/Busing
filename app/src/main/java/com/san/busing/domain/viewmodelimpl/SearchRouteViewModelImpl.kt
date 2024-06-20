@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.san.busing.data.Error
 import com.san.busing.data.exception.ExceptionMessage
 import com.san.busing.data.Success
+import com.san.busing.data.exception.ServiceException
 import com.san.busing.data.repository.RouteRepository
 import com.san.busing.domain.model.RouteRecentSearchModel
 import com.san.busing.domain.model.RouteSummaryModel
@@ -34,6 +35,9 @@ class SearchRouteViewModelImpl(
     override lateinit var routeSummaries: List<RouteSummaryModel>
     override lateinit var routeRecentSearches: List<RouteRecentSearchModel>
     override var keyword = Const.EMPTY_TEXT
+    override val serviceErrorState: LiveData<Boolean>
+        get() = isSystemError
+    private val isSystemError = MutableLiveData<Boolean>()
 
     override fun search(keyword: String) {
         if (!isSearching) {
@@ -60,6 +64,7 @@ class SearchRouteViewModelImpl(
             error = (result as Error).message()
             Log.e(ExceptionMessage.TAG_BUS_ROUTE_EXCEPTION, error)
             searchResultContentLoaded.postValue(false)
+            isSystemError.postValue(result.isSystemError())
         }
     }
 

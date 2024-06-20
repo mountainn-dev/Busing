@@ -6,6 +6,7 @@ import com.san.busing.data.source.remote.parser.XmlParser
 import com.san.busing.data.source.remote.retrofit.ServiceResult.*
 import okhttp3.Interceptor
 import okhttp3.Response
+import org.xmlpull.v1.XmlPullParserException
 import java.io.IOException
 import java.io.InputStream
 
@@ -15,7 +16,6 @@ import java.io.InputStream
  * 서비스 API 로부터 응답을 받았을 때, 특정 상황의 경우 응답을 그대로 반환하지 않고 Exception 을 throw 하기 위한 클래스
  */
 class ErrorInterceptor : Interceptor {
-    @Throws(IOException::class)
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
         val response = chain.proceed(request)
@@ -31,14 +31,15 @@ class ErrorInterceptor : Interceptor {
      * 서비스 API 통신 결과에 따른 분기
      * 성공한 경우를 제외하고 ServiceResult 에 따라 Exception throw
      */
-    @Throws(IOException::class)
     private fun parseApiResult(inputStream: InputStream) {
         val resultCode: Int
 
         try {
             resultCode = XmlParser().parse(inputStream).toInt()
+        } catch (e: XmlPullParserException) {
+            throw ServiceException.SystemException(e.message)
         } catch (e: IOException) {
-            throw IOException(e.message)
+            throw ServiceException.SystemException(e.message)
         }
 
         when (resultCode) {
