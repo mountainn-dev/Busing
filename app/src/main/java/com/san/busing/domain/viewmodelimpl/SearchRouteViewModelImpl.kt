@@ -41,8 +41,10 @@ class SearchRouteViewModelImpl(
             this.keyword = keyword
 
             viewModelScope.launch {
-                searchBusRoutes(keyword)
-                isSearching = false
+                withContext(Dispatchers.IO) {
+                    searchBusRoutes(keyword)
+                    isSearching = false
+                }
             }
         }
     }

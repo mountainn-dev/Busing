@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.san.busing.R
 import com.san.busing.databinding.ItemRouteStationBinding
 import com.san.busing.domain.enums.RouteType
 import com.san.busing.domain.model.BusModel
@@ -24,29 +25,39 @@ class RouteStationAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(position: Int) {
             loadContent(position)
+            setTurnaroundIcon(position)
             setItemClickEventListener(position)
         }
 
         private fun loadContent(position: Int) {
             binding.txtRouteStationName.text = stationItems[position].name
             binding.txtRouteStationNumber.text = stationItems[position].number
-
             if (busItems.peek()?.sequenceNumber == (position+1)) {   // 버스 위치와 정류소 순번이 일치하는 경우
-                val item = busItems.poll()!!
+                loadBusInfo(busItems.poll()!!)
+            } else { unloadBusInfo() }
+        }
+
+        private fun loadBusInfo(item: BusModel) {
                 binding.llBusInfo.visibility = View.VISIBLE
                 binding.lineBusInfo.visibility = View.VISIBLE
                 binding.imgBus.visibility = View.VISIBLE
                 binding.txtPlateNumber.text = item.plateNumber
                 binding.txtRemainSeat.text = remainSeatText(item.remainSeat)
-            } else {
-                binding.llBusInfo.visibility = View.GONE
-                binding.lineBusInfo.visibility = View.GONE
-            }
         }
 
         private fun remainSeatText(count: Int): String {
             if (count == Const.NO_DATA) return Const.NO_REMAIN_SEAT_COUNT
             else return String.format(Const.REMAIN_SEAT_COUNT, count)
+        }
+
+        private fun unloadBusInfo() {
+            binding.llBusInfo.visibility = View.GONE
+            binding.lineBusInfo.visibility = View.GONE
+        }
+
+        private fun setTurnaroundIcon(position: Int) {
+            if (stationItems[position].isTurnaround)   // 회차지인 경우
+                binding.imgWay.setImageResource(R.drawable.ic_turnaround)
         }
 
         private fun setItemClickEventListener(position: Int) {

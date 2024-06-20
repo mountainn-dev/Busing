@@ -29,6 +29,7 @@
             <!-- Detail -->
             <dimen name="height_detail_layout">200dp</dimen>
             <dimen name="margin_icon_range">40dp</dimen>
+            <dimen name="text_size_detail_title">20sp</dimen>
 
                 <!-- Station -->
                 <dimen name="height_item_route_station">60dp</dimen>

@@ -31,11 +31,11 @@ class ErrorInterceptor : Interceptor {
      * 성공한 경우를 제외하고 ServiceResult 에 따라 Exception throw
      */
     private fun parseApiResult(inputStream: InputStream) {
-        var resultCode = -1
+        val resultCode: Int
 
         try {
             resultCode = XmlParser().parse(inputStream).toInt()
-        } catch (e: Exception) {
+        } catch (e: IOException) {
             throw IOException(e.message)
         }
 

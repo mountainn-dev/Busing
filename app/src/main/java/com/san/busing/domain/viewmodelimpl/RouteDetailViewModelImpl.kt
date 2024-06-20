@@ -17,9 +17,11 @@ import com.san.busing.domain.model.RouteInfoModel
 import com.san.busing.domain.model.RouteStationModel
 import com.san.busing.domain.utils.Const
 import com.san.busing.domain.viewmodel.RouteDetailViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class RouteDetailViewModelImpl(
     private val routeRepository: RouteRepository,
@@ -53,11 +55,13 @@ class RouteDetailViewModelImpl(
             isLoading = true
 
             viewModelScope.launch {
-                awaitAll(
-                    async { loadRouteInfoContent(routeId) },
-                    async { loadRouteStationContent(routeId) },
-                    async { loadRouteBusContent(routeId) }
-                )
+                withContext(Dispatchers.IO) {
+                    awaitAll(
+                        async { loadRouteInfoContent(routeId) },
+                        async { loadRouteStationContent(routeId) },
+                        async { loadRouteBusContent(routeId) }
+                    )
+                }
                 isLoading = false
             }
         }
