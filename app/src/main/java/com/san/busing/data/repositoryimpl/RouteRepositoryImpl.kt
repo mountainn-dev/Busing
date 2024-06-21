@@ -2,6 +2,7 @@ package com.san.busing.data.repositoryimpl
 
 import android.app.Activity
 import android.content.Context
+import android.util.Log
 import androidx.room.Room
 import com.san.busing.BuildConfig
 import com.san.busing.data.Result
@@ -32,6 +33,7 @@ class RouteRepositoryImpl(
             val response = service.getBusRouteInfoItem(BuildConfig.API_KEY, id.get())
             return Result.success(response.body()!!.get())
         } catch (e: Exception) {
+            Log.e(ExceptionMessage.TAG_ROUTE_INFO_EXCEPTION, e.message ?: e.toString())
             return Result.error(e)
         }
     }
@@ -41,6 +43,7 @@ class RouteRepositoryImpl(
             val response = service.getBusRouteList(BuildConfig.API_KEY, keyword)
             return Result.success(response.body()!!.get())
         } catch (e: Exception) {
+            Log.e(ExceptionMessage.TAG_ROUTE_SUMMARY_EXCEPTION, e.message ?: e.toString())
             return Result.error(e)
         }
     }
@@ -50,6 +53,7 @@ class RouteRepositoryImpl(
             val response = service.getBusStationList(BuildConfig.API_KEY, id.get())
             return Result.success(response.body()!!.get())
         } catch (e: Exception) {
+            Log.e(ExceptionMessage.TAG_ROUTE_STATION_EXCEPTION,e.message ?: e.toString())
             return Result.error(e)
         }
     }
@@ -58,6 +62,7 @@ class RouteRepositoryImpl(
         try {
             return Result.success(db.recentSearchDao().getAll().map { it.toRouteRecentSearchModel() })
         } catch (e: Exception) {
+            Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.message ?: e.toString())
             return Result.error(e)
         }
     }
@@ -68,6 +73,7 @@ class RouteRepositoryImpl(
                 recentSearchModel.toBusRouteRecentSearchEntity())
             return Result.success(true)
         } catch (e: Exception) {
+            Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.message ?: e.toString())
             return Result.error(e)
         }
     }
@@ -78,6 +84,7 @@ class RouteRepositoryImpl(
                 recentSearchModel.toBusRouteRecentSearchEntity())
             return Result.success(true)
         } catch (e: Exception) {
+            Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.message ?: e.toString())
             return Result.error(e)
         }
     }
@@ -88,6 +95,7 @@ class RouteRepositoryImpl(
                 recentSearchModel.toBusRouteRecentSearchEntity())
             return Result.success(true)
         } catch (e: Exception) {
+            Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.message ?: e.toString())
             return Result.error(e)
         }
     }
@@ -98,6 +106,7 @@ class RouteRepositoryImpl(
                 recentSearchModels.map { it.toBusRouteRecentSearchEntity() }.toList())
             return Result.success(true)
         } catch (e: Exception) {
+            Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.message ?: e.toString())
             return Result.error(e)
         }
     }
@@ -120,6 +129,7 @@ class RouteRepositoryImpl(
             preference.edit().putLong(BuildConfig.BUS_ROUTE_PREFERENCE_KEY, newIdx).apply()
             return Result.success(true)
         } catch (e: Exception) {
+            Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.message ?: e.toString())
             return Result.error(e)
         }
     }

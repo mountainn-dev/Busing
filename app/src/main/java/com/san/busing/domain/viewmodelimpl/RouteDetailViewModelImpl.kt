@@ -1,6 +1,5 @@
 package com.san.busing.domain.viewmodelimpl
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
@@ -8,7 +7,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.san.busing.data.Error
 import com.san.busing.data.Success
-import com.san.busing.data.exception.ExceptionMessage
 import com.san.busing.data.repository.BusLocationRepository
 import com.san.busing.data.repository.RouteRepository
 import com.san.busing.data.vo.Id
@@ -77,7 +75,6 @@ class RouteDetailViewModelImpl(
             routeInfoLoaded.postValue(true)
         } else {
             error = (result as Error).message()
-            Log.e(ExceptionMessage.TAG_BUS_ROUTE_INFO_EXCEPTION, error)
             routeInfoLoaded.postValue(false)
             isCriticalError.postValue(result.isCritical())
         }
@@ -91,7 +88,6 @@ class RouteDetailViewModelImpl(
             routeStationLoaded.postValue(true)
         } else {
             error = (result as Error).message()
-            Log.e(ExceptionMessage.TAG_BUS_ROUTE_STATIONS_EXCEPTION, error)
             routeStationLoaded.postValue(false)
             isCriticalError.postValue(result.isCritical())
         }
@@ -105,7 +101,6 @@ class RouteDetailViewModelImpl(
             routeBusLoaded.postValue(true)
         } else {
             error = (result as Error).message()
-            Log.e(ExceptionMessage.TAG_BUS_ROUTE_BUS_EXCEPTION, error)
             routeBusLoaded.postValue(false)
             isCriticalError.postValue(result.isCritical())
         }

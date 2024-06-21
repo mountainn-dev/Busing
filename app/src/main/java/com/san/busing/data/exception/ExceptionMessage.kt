@@ -1,11 +1,11 @@
 package com.san.busing.data.exception
 
 object ExceptionMessage {
-    const val TAG_BUS_ROUTE_EXCEPTION = "Bus route Exception"
-    const val TAG_BUS_ROUTE_INFO_EXCEPTION = "Bus route Info Exception"
-    const val TAG_BUS_ROUTE_STATIONS_EXCEPTION = "Bus route Stations Exception"
-    const val TAG_BUS_ROUTE_BUS_EXCEPTION = "Bus route Buses Exception"
-    const val TAG_RECENT_SEARCH_EXCEPTION = "Recent search Exception"
+    const val TAG_ROUTE_INFO_EXCEPTION = "Route Info Exception"
+    const val TAG_ROUTE_SUMMARY_EXCEPTION = "Route Summary Exception"
+    const val TAG_ROUTE_STATION_EXCEPTION = "Route Station Exception"
+    const val TAG_ROUTE_RECENT_SEARCH_EXCEPTION = "Route Recent Search Exception"
+    const val TAG_BUS_EXCEPTION = "Bus Exception"
 
     const val UNSTABLE_SERVICE_EXCEPTION = "현재 서버 상태가 불안정합니다."
     const val UNSTABLE_INTERNET_CONNECTION = "인터넷 연결 상태가 불안정합니다."
