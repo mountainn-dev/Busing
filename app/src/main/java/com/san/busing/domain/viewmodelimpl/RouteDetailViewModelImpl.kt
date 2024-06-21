@@ -43,8 +43,8 @@ class RouteDetailViewModelImpl(
     override lateinit var routeStations: List<RouteStationModel>
     override lateinit var routeBuses: List<BusModel>
     override val serviceErrorState: LiveData<Boolean>
-        get() = isSystemError
-    private val isSystemError = MutableLiveData<Boolean>()
+        get() = isCriticalError
+    private val isCriticalError = MutableLiveData<Boolean>()
     override lateinit var error: String
 
     init {
@@ -79,7 +79,7 @@ class RouteDetailViewModelImpl(
             error = (result as Error).message()
             Log.e(ExceptionMessage.TAG_BUS_ROUTE_INFO_EXCEPTION, error)
             routeInfoLoaded.postValue(false)
-            isSystemError.postValue(result.isCritical())
+            isCriticalError.postValue(result.isCritical())
         }
     }
 
@@ -93,7 +93,7 @@ class RouteDetailViewModelImpl(
             error = (result as Error).message()
             Log.e(ExceptionMessage.TAG_BUS_ROUTE_STATIONS_EXCEPTION, error)
             routeStationLoaded.postValue(false)
-            isSystemError.postValue(result.isCritical())
+            isCriticalError.postValue(result.isCritical())
         }
     }
 
@@ -107,7 +107,7 @@ class RouteDetailViewModelImpl(
             error = (result as Error).message()
             Log.e(ExceptionMessage.TAG_BUS_ROUTE_BUS_EXCEPTION, error)
             routeBusLoaded.postValue(false)
-            isSystemError.postValue(result.isCritical())
+            isCriticalError.postValue(result.isCritical())
         }
     }
 

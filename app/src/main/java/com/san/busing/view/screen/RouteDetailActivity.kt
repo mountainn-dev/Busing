@@ -2,6 +2,7 @@ package com.san.busing.view.screen
 
 import android.app.Activity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -142,7 +143,10 @@ class RouteDetailActivity : AppCompatActivity() {
     ) = Observer<Boolean> {
         if (it) {
             val toast = ErrorToast(context, viewModel.error)
-            if (toast.previousFinished()) toast.show()
+            if (toast.previousFinished()) {
+                Log.d("toast", "finished")
+                toast.show()
+            }
         }
     }
 

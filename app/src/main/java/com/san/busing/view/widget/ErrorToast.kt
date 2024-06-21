@@ -15,14 +15,15 @@ class ErrorToast(context: Context, message: CharSequence) : Toast(context) {
     }
 
     override fun show() {
-        toastedTime = System.currentTimeMillis()
+        toastedTime = System.currentTimeMillis() / MILLIS_DIVIDER
         super.show()
     }
 
-    fun previousFinished() = (System.currentTimeMillis() - toastedTime) > TOAST_SHORT
+    fun previousFinished() = (System.currentTimeMillis() / MILLIS_DIVIDER) - toastedTime > TOAST_SHORT
 
     companion object {
-        private const val TOAST_SHORT: Long = 2
+        private const val TOAST_SHORT = 2
+        private const val MILLIS_DIVIDER = 1000
         private var toastedTime: Long = 0
     }
 }
