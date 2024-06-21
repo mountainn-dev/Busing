@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -32,7 +31,6 @@ import com.san.busing.view.widget.ErrorToast
 class SearchRouteFragment : Fragment() {
     private lateinit var binding: FragmentSearchRouteBinding
     private lateinit var viewModel: SearchRouteViewModel
-    private lateinit var toast: ErrorToast
 
     /**
      * override fun onCreate(): void
@@ -61,18 +59,14 @@ class SearchRouteFragment : Fragment() {
     ): View {
         binding = FragmentSearchRouteBinding.inflate(layoutInflater)
 
-        initToast(requireActivity())
-        initObserver(viewModel, toast, requireActivity())
+        initObserver(viewModel, requireActivity())
         initListener(viewModel, requireActivity())
 
         return binding.root
     }
 
-    private fun initToast(context: Activity) { toast = ErrorToast(context) }
-
     private fun initObserver(
         viewModel: SearchRouteViewModel,
-        toast: ErrorToast,
         context: Activity
     ) {
         viewModel.searchResultContentReady.observe(
@@ -85,7 +79,7 @@ class SearchRouteFragment : Fragment() {
         )
         viewModel.serviceErrorState.observe(
             viewLifecycleOwner,
-            serviceErrorStateObserver(toast)
+            serviceErrorStateObserver(viewModel, context)
         )
     }
 
@@ -185,8 +179,9 @@ class SearchRouteFragment : Fragment() {
         }
     }
 
-    private fun serviceErrorStateObserver(toast: ErrorToast) = Observer<Boolean> {
+    private fun serviceErrorStateObserver(viewModel: SearchRouteViewModel, context: Activity) = Observer<Boolean> {
         if (it) {
+            val toast = ErrorToast(context, viewModel.error)
             if (toast.previousFinished()) toast.show()
         }
     }

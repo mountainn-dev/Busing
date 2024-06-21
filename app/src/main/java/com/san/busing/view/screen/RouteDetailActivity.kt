@@ -3,7 +3,6 @@ package com.san.busing.view.screen
 import android.app.Activity
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
@@ -30,7 +29,6 @@ import java.util.LinkedList
 class RouteDetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRouteDetailBinding
     private lateinit var viewModel: RouteDetailViewModel
-    private lateinit var toast: ErrorToast
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,8 +45,7 @@ class RouteDetailActivity : AppCompatActivity() {
         ).get(RouteDetailViewModelImpl::class.java)
 
         initToolbar(routeName, routeType, this)
-        initToast(this)
-        initObserver(viewModel, routeType, toast, this)
+        initObserver(viewModel, routeType, this)
         initListener(viewModel, routeId)
     }
 
@@ -68,12 +65,9 @@ class RouteDetailActivity : AppCompatActivity() {
         binding.ctbRouteDetail.setBackgroundColor(color)
     }
 
-    private fun initToast(context: Activity) { toast = ErrorToast(context) }
-
     private fun initObserver(
         viewModel: RouteDetailViewModel,
         routeType: RouteType,
-        toast: ErrorToast,
         context: Activity
     ) {
         viewModel.routeInfoContentReady.observe(
@@ -86,7 +80,7 @@ class RouteDetailActivity : AppCompatActivity() {
         )
         viewModel.serviceErrorState.observe(
             context as LifecycleOwner,
-            serviceErrorStateObserver(toast)
+            serviceErrorStateObserver(viewModel, context)
         )
     }
 
@@ -144,8 +138,10 @@ class RouteDetailActivity : AppCompatActivity() {
         binding.rvBusRouteStationList.visibility = View.GONE
     }
 
-    private fun serviceErrorStateObserver(toast: ErrorToast) = Observer<Boolean> {
+    private fun serviceErrorStateObserver(viewModel: RouteDetailViewModel, context: Activity
+    ) = Observer<Boolean> {
         if (it) {
+            val toast = ErrorToast(context, viewModel.error)
             if (toast.previousFinished()) toast.show()
         }
     }

@@ -13,6 +13,7 @@ interface RouteDetailViewModel {
     val routeStations: List<RouteStationModel>
     val routeBuses: List<BusModel>
     val serviceErrorState: LiveData<Boolean>
+    var error: String
 
     fun load(routeId: Id)
 }

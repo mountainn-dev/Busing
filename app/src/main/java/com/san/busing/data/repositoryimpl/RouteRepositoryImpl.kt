@@ -5,16 +5,19 @@ import android.content.Context
 import androidx.room.Room
 import com.san.busing.BuildConfig
 import com.san.busing.data.Result
+import com.san.busing.data.exception.ExceptionMessage
+import com.san.busing.data.exception.ServiceException
 import com.san.busing.data.repository.RouteRepository
 import com.san.busing.data.source.local.database.RecentSearchDatabase
 import com.san.busing.data.source.remote.retrofit.RouteService
 import com.san.busing.data.vo.Id
 import com.san.busing.domain.model.RouteInfoModel
 import com.san.busing.domain.model.RouteRecentSearchModel
-import com.san.busing.domain.model.RouteSummaryModel
 import com.san.busing.domain.model.RouteStationModel
+import com.san.busing.domain.model.RouteSummaryModel
 import com.san.busing.domain.utils.Const
 import retrofit2.Retrofit
+import java.net.UnknownHostException
 
 class RouteRepositoryImpl(
     private val retrofit: Retrofit,
@@ -28,7 +31,11 @@ class RouteRepositoryImpl(
         try {
             val response = service.getBusRouteInfoItem(BuildConfig.API_KEY, id.get())
             return Result.success(response.body()!!.get())
-        } catch (e: Exception) {
+        } catch (e: UnknownHostException) {
+            return Result.error(UnknownHostException(ExceptionMessage.UNSTABLE_INTERNET_CONNECTION))
+        } catch (e: ServiceException.SystemException) {
+            return Result.error(ServiceException.SystemException(ExceptionMessage.UNSTABLE_SERVICE_EXCEPTION))
+        }  catch (e: Exception) {
             return Result.error(e)
         }
     }
@@ -37,7 +44,11 @@ class RouteRepositoryImpl(
         try {
             val response = service.getBusRouteList(BuildConfig.API_KEY, keyword)
             return Result.success(response.body()!!.get())
-        } catch (e: Exception) {
+        } catch (e: UnknownHostException) {
+            return Result.error(UnknownHostException(ExceptionMessage.UNSTABLE_INTERNET_CONNECTION))
+        } catch (e: ServiceException.SystemException) {
+            return Result.error(ServiceException.SystemException(ExceptionMessage.UNSTABLE_SERVICE_EXCEPTION))
+        }  catch (e: Exception) {
             return Result.error(e)
         }
     }
@@ -46,7 +57,11 @@ class RouteRepositoryImpl(
         try {
             val response = service.getBusStationList(BuildConfig.API_KEY, id.get())
             return Result.success(response.body()!!.get())
-        } catch (e: Exception) {
+        } catch (e: UnknownHostException) {
+            return Result.error(UnknownHostException(ExceptionMessage.UNSTABLE_INTERNET_CONNECTION))
+        } catch (e: ServiceException.SystemException) {
+            return Result.error(ServiceException.SystemException(ExceptionMessage.UNSTABLE_SERVICE_EXCEPTION))
+        }  catch (e: Exception) {
             return Result.error(e)
         }
     }

@@ -23,7 +23,6 @@ class SearchRouteViewModelImpl(
     private val routeRepository: RouteRepository
 ) : SearchRouteViewModel, ViewModel() {
     private var isSearching = false
-    private var error = Const.EMPTY_TEXT
 
     override val searchResultContentReady: LiveData<Boolean>
         get() = searchResultContentLoaded
@@ -38,6 +37,7 @@ class SearchRouteViewModelImpl(
     override val serviceErrorState: LiveData<Boolean>
         get() = isSystemError
     private val isSystemError = MutableLiveData<Boolean>()
+    override lateinit var error: String
 
     override fun search(keyword: String) {
         if (!isSearching) {
@@ -58,13 +58,13 @@ class SearchRouteViewModelImpl(
 
         if (result is Success) {
             // 검색 결과 출력 시 노선 번호, 운행 지역 순으로 출력
-            routeSummaries = result.data().sortedWith(compareBy({it.name}, {it.region}))
+            routeSummaries = result.data.sortedWith(compareBy({it.name}, {it.region}))
             searchResultContentLoaded.postValue(true)
         } else {
             error = (result as Error).message()
             Log.e(ExceptionMessage.TAG_BUS_ROUTE_EXCEPTION, error)
             searchResultContentLoaded.postValue(false)
-            isSystemError.postValue(result.isSystemError())
+            isSystemError.postValue(result.isCritical())
         }
     }
 
@@ -147,9 +147,9 @@ class SearchRouteViewModelImpl(
         val result = routeRepository.getRecentSearch()
 
         if (result is Success) {
-            if (result.data().isEmpty()) recentSearchContentLoaded.postValue(false)
+            if (result.data.isEmpty()) recentSearchContentLoaded.postValue(false)
             else {
-                routeRecentSearches = result.data().sortedByDescending { it.index }
+                routeRecentSearches = result.data.sortedByDescending { it.index }
                 recentSearchContentLoaded.postValue(true)
             }
         } else {
@@ -173,7 +173,7 @@ class SearchRouteViewModelImpl(
     private fun getRecentSearchIndex(context: Activity): Long {
         val result = routeRepository.getRecentSearchIndex(context)
 
-        return (result as Success).data() + 1
+        return (result as Success).data + 1
     }
 
     private fun updateRecentSearchIndex(context: Activity, newIdx: Long) {
