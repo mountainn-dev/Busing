@@ -10,6 +10,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.san.busing.BuildConfig
+import com.san.busing.R
 import com.san.busing.data.repositoryimpl.BusLocationRepositoryImpl
 import com.san.busing.data.repositoryimpl.RouteRepositoryImpl
 import com.san.busing.data.vo.Id
@@ -78,6 +79,10 @@ class RouteDetailActivity : AppCompatActivity() {
             context as LifecycleOwner,
             routeStationBusReadyObserver(viewModel, routeType, context)
         )
+        viewModel.loadableRemainTime.observe(
+            context as LifecycleOwner,
+            loadableRemainTimeObserver(viewModel)
+        )
         viewModel.serviceErrorState.observe(
             context as LifecycleOwner,
             serviceErrorStateObserver(viewModel, context)
@@ -138,6 +143,21 @@ class RouteDetailActivity : AppCompatActivity() {
         binding.rvBusRouteStationList.visibility = View.GONE
     }
 
+    private fun loadableRemainTimeObserver(
+        viewModel: RouteDetailViewModel
+    ) = Observer<Int> {
+        if (it == 0) {
+            binding.fabRefresh.setImageResource(R.drawable.ic_refresh)
+            binding.fabTime.visibility = View.GONE
+        } else {
+            if (binding.fabTime.visibility == View.GONE) {
+                binding.fabTime.visibility = View.VISIBLE
+                binding.fabRefresh.setImageResource(android.R.color.transparent)
+            }
+            binding.fabTime.text = it.toString()
+        }
+    }
+
     private fun serviceErrorStateObserver(viewModel: RouteDetailViewModel, context: Activity
     ) = Observer<Boolean> {
         if (it) {
@@ -156,6 +176,6 @@ class RouteDetailActivity : AppCompatActivity() {
     }
 
     private fun setFabRefreshListener(viewModel: RouteDetailViewModel, routeId: Id) {
-        binding.fabRefresh.setOnClickListener { viewModel.load(routeId) }
+        binding.fabRefresh.setOnClickListener { viewModel.reload(routeId) }
     }
 }

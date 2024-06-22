@@ -1,5 +1,6 @@
 package com.san.busing.domain.viewmodelimpl
 
+import android.os.CountDownTimer
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
@@ -37,6 +38,19 @@ class RouteDetailViewModelImpl(
     private val routeStationLoaded = MutableLiveData<Boolean>()
     private val routeBusLoaded = MutableLiveData<Boolean>()
 
+    override val loadableRemainTime: LiveData<Int>
+        get() = remainTime
+    private val remainTime = MutableLiveData<Int>()
+    private val timer = object: CountDownTimer(10000, 1000) {
+        override fun onTick(time: Long) {
+            if (!isLoading) isLoading = true
+            remainTime.postValue((time/1000).toInt())
+        }
+        override fun onFinish() {
+            isLoading = false
+        }
+    }
+
     override lateinit var routeInfo: RouteInfoModel
     override lateinit var routeStations: List<RouteStationModel>
     override lateinit var routeBuses: List<BusModel>
@@ -51,18 +65,13 @@ class RouteDetailViewModelImpl(
     }
 
     override fun load(routeId: Id) {
-        if (!isLoading) {
-            isLoading = true
-
-            viewModelScope.launch {
-                withContext(Dispatchers.IO) {
-                    awaitAll(
-                        async { loadRouteInfoContent(routeId) },
-                        async { loadRouteStationContent(routeId) },
-                        async { loadRouteBusContent(routeId) }
-                    )
-                }
-                isLoading = false
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                awaitAll(
+                    async { loadRouteInfoContent(routeId) },
+                    async { loadRouteStationContent(routeId) },
+                    async { loadRouteBusContent(routeId) }
+                )
             }
         }
     }
@@ -103,6 +112,13 @@ class RouteDetailViewModelImpl(
             error = (result as Error).message()
             routeBusLoaded.postValue(false)
             isCriticalError.postValue(result.isCritical())
+        }
+    }
+
+    override fun reload(routeId: Id) {
+        if (!isLoading) {
+            timer.start()
+            load(routeId)
         }
     }
 

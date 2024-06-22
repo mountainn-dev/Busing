@@ -161,15 +161,32 @@
 
     </androidx.core.widget.NestedScrollView>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fabRefresh"
+    <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
-        android:layout_margin="@dimen/margin_floating_action_button"
-        android:src="@drawable/ic_refresh"
-        app:shapeAppearance="@style/fab_rounded"
-        app:backgroundTint="@color/dark_grey"
-        app:tint="@color/white" />
+        android:layout_margin="@dimen/margin_floating_action_button">
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fabRefresh"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_refresh"
+            app:shapeAppearance="@style/fab_rounded"
+            app:backgroundTint="@color/dark_grey"
+            app:tint="@color/white"/>
+
+        <TextView
+            android:id="@+id/fabTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textSize="32sp"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:elevation="16dp"
+            android:visibility="gone"/>
+
+    </FrameLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
