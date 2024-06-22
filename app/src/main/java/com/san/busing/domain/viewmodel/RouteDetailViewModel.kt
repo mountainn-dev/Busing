@@ -18,6 +18,6 @@ interface RouteDetailViewModel {
     val serviceErrorState: LiveData<Boolean>
     var error: String
 
-    fun load(routeId: Id)
-    fun reload(routeId: Id)
+    fun load()
+    fun reload()
 }

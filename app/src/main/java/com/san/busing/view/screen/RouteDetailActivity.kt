@@ -47,7 +47,7 @@ class RouteDetailActivity : AppCompatActivity() {
 
         initToolbar(routeName, routeType, this)
         initObserver(viewModel, routeType, this)
-        initListener(viewModel, routeId)
+        initListener(viewModel)
     }
 
     private fun initToolbar(routeName: String, routeType: RouteType, context: Activity) {
@@ -81,7 +81,7 @@ class RouteDetailActivity : AppCompatActivity() {
         )
         viewModel.loadableRemainTime.observe(
             context as LifecycleOwner,
-            loadableRemainTimeObserver(viewModel)
+            loadableRemainTimeObserver()
         )
         viewModel.serviceErrorState.observe(
             context as LifecycleOwner,
@@ -143,10 +143,8 @@ class RouteDetailActivity : AppCompatActivity() {
         binding.rvBusRouteStationList.visibility = View.GONE
     }
 
-    private fun loadableRemainTimeObserver(
-        viewModel: RouteDetailViewModel
-    ) = Observer<Int> {
-        if (it == 0) {
+    private fun loadableRemainTimeObserver() = Observer<Int> {
+        if (it == Const.ZERO) {
             binding.fabRefresh.setImageResource(R.drawable.ic_refresh)
             binding.fabTime.visibility = View.GONE
         } else {
@@ -166,16 +164,16 @@ class RouteDetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun initListener(viewModel: RouteDetailViewModel, routeId: Id) {
+    private fun initListener(viewModel: RouteDetailViewModel) {
         setBtnBackListener()
-        setFabRefreshListener(viewModel, routeId)
+        setFabRefreshListener(viewModel)
     }
 
     private fun setBtnBackListener() {
         binding.btnBack.setOnClickListener { finish() }
     }
 
-    private fun setFabRefreshListener(viewModel: RouteDetailViewModel, routeId: Id) {
-        binding.fabRefresh.setOnClickListener { viewModel.reload(routeId) }
+    private fun setFabRefreshListener(viewModel: RouteDetailViewModel) {
+        binding.fabRefresh.setOnClickListener { viewModel.reload() }
     }
 }

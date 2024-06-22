@@ -43,14 +43,14 @@ class SearchRouteViewModelImpl(
 
             viewModelScope.launch {
                 withContext(Dispatchers.IO) {
-                    searchBusRoutes(keyword)
+                    searchBusRoutes()
                     isSearching = false
                 }
             }
         }
     }
 
-    private suspend fun searchBusRoutes(keyword: String) {
+    private suspend fun searchBusRoutes() {
         val result = routeRepository.getRoutes(keyword)
 
         if (result is Success) {
@@ -104,19 +104,19 @@ class SearchRouteViewModelImpl(
     }
 
     override fun deleteAll(context: Activity) {
-        if (isContentReady(recentSearchContentLoaded)) {
+        if (dataState(recentSearchContentLoaded)) {
             updateRecentSearchIndex(context, Const.ZERO.toLong())   // 최근 검색 인덱스 초기화
             viewModelScope.launch {
                 withContext(Dispatchers.IO) {
-                    deleteAllRecentSearch(routeRecentSearches)
+                    deleteAllRecentSearch()
                     loadRecentSearchContent()
                 }
             }
         }
     }
 
-    private fun deleteAllRecentSearch(recentSearchModels: List<RouteRecentSearchModel>) {
-        val result = routeRepository.deleteAllRecentSearch(recentSearchModels)
+    private fun deleteAllRecentSearch() {
+        val result = routeRepository.deleteAllRecentSearch(routeRecentSearches)
 
         if (result is Error) error = result.message()
     }
@@ -165,6 +165,5 @@ class SearchRouteViewModelImpl(
         if (result is Error) error = result.message()
     }
 
-    private fun isContentReady(contentLoaded: MutableLiveData<Boolean>) =
-        contentLoaded.isInitialized && contentLoaded.value!!
+    private fun dataState(data: MutableLiveData<Boolean>) = data.isInitialized && data.value!!
 }

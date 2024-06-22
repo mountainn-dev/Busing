@@ -1,6 +1,7 @@
 package com.san.busing.domain.viewmodelimpl
 
 import android.os.CountDownTimer
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
@@ -41,10 +42,10 @@ class RouteDetailViewModelImpl(
     override val loadableRemainTime: LiveData<Int>
         get() = remainTime
     private val remainTime = MutableLiveData<Int>()
-    private val timer = object: CountDownTimer(10000, 1000) {
+    private val timer = object: CountDownTimer(TOTAL_MILLIS, INTERVAL_MILLIS) {
         override fun onTick(time: Long) {
             if (!isLoading) isLoading = true
-            remainTime.postValue((time/1000).toInt())
+            remainTime.postValue((time/ INTERVAL_MILLIS).toInt())
         }
         override fun onFinish() {
             isLoading = false
@@ -60,23 +61,23 @@ class RouteDetailViewModelImpl(
     override lateinit var error: String
 
     init {
-        load(routeId)
+        load()
         merge(routeStationAndBusLoaded, routeStationLoaded, routeBusLoaded)
     }
 
-    override fun load(routeId: Id) {
+    override fun load() {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 awaitAll(
-                    async { loadRouteInfoContent(routeId) },
-                    async { loadRouteStationContent(routeId) },
-                    async { loadRouteBusContent(routeId) }
+                    async { loadRouteInfoContent() },
+                    async { loadRouteStationContent() },
+                    async { loadRouteBusContent() }
                 )
             }
         }
     }
 
-    private suspend fun loadRouteInfoContent(routeId: Id) {
+    private suspend fun loadRouteInfoContent() {
         val result = routeRepository.getRouteInfo(routeId)
 
         if (result is Success) {
@@ -89,7 +90,7 @@ class RouteDetailViewModelImpl(
         }
     }
 
-    private suspend fun loadRouteStationContent(routeId: Id) {
+    private suspend fun loadRouteStationContent() {
         val result = routeRepository.getRouteStations(routeId)
 
         if (result is Success) {
@@ -102,7 +103,7 @@ class RouteDetailViewModelImpl(
         }
     }
 
-    private suspend fun loadRouteBusContent(routeId: Id) {
+    private suspend fun loadRouteBusContent() {
         val result = busLocationRepository.getBusLocations(routeId)
 
         if (result is Success) {
@@ -115,10 +116,10 @@ class RouteDetailViewModelImpl(
         }
     }
 
-    override fun reload(routeId: Id) {
+    override fun reload() {
         if (!isLoading) {
             timer.start()
-            load(routeId)
+            load()
         }
     }
 
@@ -136,4 +137,9 @@ class RouteDetailViewModelImpl(
     }
 
     private fun dataState(data: MutableLiveData<Boolean>) = data.isInitialized && data.value!!
+
+    companion object {
+        private const val TOTAL_MILLIS: Long = 10000
+        private const val INTERVAL_MILLIS: Long = 1000
+    }
 }
