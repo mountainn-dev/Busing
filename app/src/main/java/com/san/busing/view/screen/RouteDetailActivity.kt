@@ -118,7 +118,7 @@ class RouteDetailActivity : AppCompatActivity() {
         binding.rvBusRouteStationList.adapter = RouteStationAdapter(
             routeType,
             viewModel.routeStations,
-            LinkedList(viewModel.routeBuses),
+            viewModel.routeBuses,
             routeStationClickEventListener(viewModel.routeStations),
             context
         )

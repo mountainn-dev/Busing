@@ -128,38 +128,31 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.core.widget.NestedScrollView
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <FrameLayout
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/pgbBusRouteStation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:paddingTop="@dimen/padding_top_loading_indicator"
+            app:indicatorColor="@color/grey"
+            app:trackColor="@color/light_grey"
+            app:trackThickness="@dimen/thickness_loading_indicator"
+            android:indeterminate="true"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvBusRouteStationList"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
 
-            <com.google.android.material.progressindicator.CircularProgressIndicator
-                android:id="@+id/pgbBusRouteStation"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:paddingTop="@dimen/padding_top_loading_indicator"
-                app:indicatorColor="@color/grey"
-                app:trackColor="@color/light_grey"
-                app:trackThickness="@dimen/thickness_loading_indicator"
-                android:indeterminate="true"/>
+            android:background="@color/white"
+            android:visibility="gone" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvBusRouteStationList"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-
-                android:background="@color/white"
-                android:visibility="gone"
-                android:nestedScrollingEnabled="false"/>
-
-        </FrameLayout>
-
-    </androidx.core.widget.NestedScrollView>
+    </FrameLayout>
 
     <FrameLayout
         android:layout_width="wrap_content"
