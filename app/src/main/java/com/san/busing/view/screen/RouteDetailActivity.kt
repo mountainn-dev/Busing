@@ -179,4 +179,9 @@ class RouteDetailActivity : AppCompatActivity() {
     private fun setFabRefreshListener(viewModel: RouteDetailViewModel) {
         binding.fabRefresh.setOnClickListener { viewModel.reload() }
     }
+
+    override fun onResume() {
+        viewModel.load()
+        super.onResume()
+    }
 }
