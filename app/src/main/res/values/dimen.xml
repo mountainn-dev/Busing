@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Common -->
-    <dimen name="margin_padding_default">12dp</dimen>
-    <dimen name="margin_padding_large">24dp</dimen>
-    <dimen name="margin_padding_small">8dp</dimen>
-    <dimen name="margin_padding_extremely_small">4dp</dimen>
     <dimen name="margin_padding_smallest">2dp</dimen>
-    <dimen name="margin_floating_action_button">24dp</dimen>
+    <dimen name="margin_padding_extremely_small">4dp</dimen>
+    <dimen name="margin_padding_small">8dp</dimen>
+    <dimen name="margin_padding_default">12dp</dimen>
+    <dimen name="margin_padding_large">16dp</dimen>
+    <dimen name="margin_padding_extremely_large">20dp</dimen>
+
     <dimen name="line_default">2dp</dimen>
     <dimen name="line_thin">1dp</dimen>
     <dimen name="line_thick">4dp</dimen>

@@ -191,6 +191,7 @@ class RouteDetailActivity : AppCompatActivity() {
     private fun initListener(viewModel: RouteDetailViewModel) {
         setBtnBackListener()
         setBtnScrollToStartStation()
+        setFabScrollUp()
         setFabRefreshListener(viewModel)
     }
 
@@ -201,6 +202,13 @@ class RouteDetailActivity : AppCompatActivity() {
     private fun setBtnScrollToStartStation() {
         binding.btnScrollToStartStation.setOnClickListener {
             binding.rvBusRouteStationList.smoothScrollToPosition(Const.ZERO)
+        }
+    }
+
+    private fun setFabScrollUp() {
+        binding.fabScrollUp.setOnClickListener {
+            binding.rvBusRouteStationList.scrollToPosition(Const.ZERO)
+            binding.abRouteDetail.setExpanded(true)
         }
     }
 
@@ -216,6 +224,6 @@ class RouteDetailActivity : AppCompatActivity() {
     companion object {
         private const val ROUTE_BUS_COUNT = "%d대"
         private const val POSITION_VALUE_WHEN_LIFTED = - 1
-        private const val POSITION_VALUE_WHEN_NOT_LIFTED = + 2
+        private const val POSITION_VALUE_WHEN_NOT_LIFTED = + 4
     }
 }

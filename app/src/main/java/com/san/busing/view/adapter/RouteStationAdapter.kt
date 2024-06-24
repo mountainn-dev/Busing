@@ -4,7 +4,6 @@ import android.app.Activity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.san.busing.R
 import com.san.busing.databinding.ItemRouteStationBinding
@@ -84,7 +83,7 @@ class RouteStationAdapter(
         }
 
         private fun unloadTurnaround() {
-            binding.imgWay.setImageResource(R.drawable.ic_down_arrow)
+            binding.imgWay.setImageResource(R.drawable.ic_down_way)
         }
 
         private fun setItemClickEventListener(position: Int) {

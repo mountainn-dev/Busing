@@ -190,32 +190,54 @@
 
     </FrameLayout>
 
-    <FrameLayout
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
-        android:layout_margin="@dimen/margin_floating_action_button">
+        android:layout_margin="@dimen/margin_padding_large"
+        android:orientation="vertical">
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fabRefresh"
+            android:id="@+id/fabScrollUp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_refresh"
+            android:src="@drawable/ic_up_arrow"
             app:shapeAppearance="@style/fab_rounded"
             app:backgroundTint="@color/dark_grey"
-            app:elevation="0dp"
-            app:tint="@color/white"/>
+            app:tint="@color/white"
+            app:elevation="0dp" />
 
-        <TextView
-            android:id="@+id/fabTime"
+        <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:textSize="@dimen/text_size_fab_time"
-            android:textColor="@color/white"
-            android:textStyle="bold"
-            android:visibility="gone"/>
+            android:layout_marginTop="@dimen/margin_padding_small">
 
-    </FrameLayout>
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fabRefresh"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_refresh"
+                app:shapeAppearance="@style/fab_rounded"
+                app:backgroundTint="@color/dark_grey"
+                app:tint="@color/white"
+                app:elevation="0dp" />
+
+            <TextView
+                android:id="@+id/fabTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:textSize="@dimen/text_size_fab_time"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:visibility="gone"/>
+
+        </FrameLayout>
+
+    </LinearLayout>
+
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
