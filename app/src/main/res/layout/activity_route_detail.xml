@@ -135,10 +135,10 @@
 
         <com.google.android.material.progressindicator.CircularProgressIndicator
             android:id="@+id/pgbBusRouteStation"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:paddingTop="@dimen/padding_top_loading_indicator"
+            android:paddingBottom="@dimen/padding_bottom_loading_indicator"
             app:indicatorColor="@color/grey"
             app:trackColor="@color/light_grey"
             app:trackThickness="@dimen/thickness_loading_indicator"

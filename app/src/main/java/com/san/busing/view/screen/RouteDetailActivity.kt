@@ -25,7 +25,6 @@ import com.san.busing.domain.viewmodelimpl.RouteDetailViewModelImpl
 import com.san.busing.view.adapter.RouteStationAdapter
 import com.san.busing.view.listener.ItemClickEventListener
 import com.san.busing.view.widget.ErrorToast
-import java.util.LinkedList
 
 class RouteDetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRouteDetailBinding
@@ -114,7 +113,9 @@ class RouteDetailActivity : AppCompatActivity() {
     }
 
     private fun whenRouteStationAndBusReady(
-        viewModel: RouteDetailViewModel, routeType: RouteType, context: Activity) {
+        viewModel: RouteDetailViewModel, routeType: RouteType, context: Activity
+    ) {
+        val state = binding.rvBusRouteStationList.layoutManager?.onSaveInstanceState()
         binding.rvBusRouteStationList.adapter = RouteStationAdapter(
             routeType,
             viewModel.routeStations,
@@ -122,8 +123,10 @@ class RouteDetailActivity : AppCompatActivity() {
             routeStationClickEventListener(viewModel.routeStations),
             context
         )
-        binding.rvBusRouteStationList.layoutManager = LinearLayoutManager(context)
+        if (binding.rvBusRouteStationList.layoutManager == null)
+            binding.rvBusRouteStationList.layoutManager = LinearLayoutManager(context)
         binding.txtRouteBusCount.text = String.format(Const.ROUTE_BUS_COUNT, viewModel.routeBuses.size)
+        binding.rvBusRouteStationList.layoutManager?.onRestoreInstanceState(state)
         binding.rvBusRouteStationList.visibility = View.VISIBLE
         binding.pgbBusRouteStation.visibility = View.GONE
     }

@@ -34,7 +34,7 @@
 
                 <!-- Station -->
                 <dimen name="height_item_route_station">60dp</dimen>
-                <dimen name="padding_top_loading_indicator">200dp</dimen>
+                <dimen name="padding_bottom_loading_indicator">200dp</dimen>
                 <dimen name="thickness_loading_indicator">4dp</dimen>
                 <dimen name="text_size_bus_info">12sp</dimen>
                 <dimen name="text_size_station_number">12sp</dimen>
