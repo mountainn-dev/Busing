@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="@dimen/height_item_search_result"
     android:padding="@dimen/margin_padding_default"
-    android:background="@drawable/bg_item_downside_bordered">
+    android:background="@drawable/bg_rectangle_downside_bordered">
 
     <TextView
         android:id="@+id/txtRouteName"

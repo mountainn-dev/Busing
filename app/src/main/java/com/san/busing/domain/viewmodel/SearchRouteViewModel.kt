@@ -12,6 +12,7 @@ interface SearchRouteViewModel {
     var routeRecentSearches: List<RouteRecentSearchModel>
     var keyword: String
     val serviceErrorState: LiveData<Boolean>
+    var error: String
 
     fun search(keyword: String)
     fun insert(recentSearchModel: RouteRecentSearchModel)

@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Common -->
-    <dimen name="margin_padding_default">12dp</dimen>
-    <dimen name="margin_padding_large">24dp</dimen>
-    <dimen name="margin_padding_small">8dp</dimen>
-    <dimen name="margin_padding_extremely_small">4dp</dimen>
     <dimen name="margin_padding_smallest">2dp</dimen>
-    <dimen name="margin_floating_action_button">24dp</dimen>
+    <dimen name="margin_padding_extremely_small">4dp</dimen>
+    <dimen name="margin_padding_small">8dp</dimen>
+    <dimen name="margin_padding_default">12dp</dimen>
+    <dimen name="margin_padding_large">16dp</dimen>
+    <dimen name="margin_padding_extremely_large">20dp</dimen>
+
     <dimen name="line_default">2dp</dimen>
     <dimen name="line_thin">1dp</dimen>
     <dimen name="line_thick">4dp</dimen>
@@ -30,10 +31,11 @@
             <dimen name="height_detail_layout">200dp</dimen>
             <dimen name="margin_icon_range">40dp</dimen>
             <dimen name="text_size_detail_title">20sp</dimen>
+            <dimen name="text_size_fab_time">24sp</dimen>
 
                 <!-- Station -->
-                <dimen name="height_item_route_station">60dp</dimen>
-                <dimen name="padding_top_loading_indicator">200dp</dimen>
+                <dimen name="height_item_route_station">68dp</dimen>
+                <dimen name="padding_bottom_loading_indicator">200dp</dimen>
                 <dimen name="thickness_loading_indicator">4dp</dimen>
                 <dimen name="text_size_bus_info">12sp</dimen>
                 <dimen name="text_size_station_number">12sp</dimen>

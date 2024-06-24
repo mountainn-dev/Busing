@@ -7,6 +7,7 @@
     tools:context=".view.screen.RouteDetailActivity">
     
     <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/abRouteDetail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -126,50 +127,117 @@
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:weightSum="1"
+            app:layout_collapseMode="pin"
+            android:background="@color/light_grey">
+
+            <TextView
+                android:id="@+id/btnScrollToStartStation"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5"
+                android:layout_marginVertical="@dimen/margin_padding_extremely_small"
+                android:layout_marginStart="@dimen/margin_padding_extremely_small"
+                android:layout_marginEnd="@dimen/margin_padding_smallest"
+                android:padding="@dimen/margin_padding_extremely_small"
+                android:gravity="center"
+                android:clickable="true"
+                android:background="@drawable/bg_rectangle_grey_bordered"/>
+
+            <TextView
+                android:id="@+id/btnScrollToEndStation"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5"
+                android:layout_marginVertical="@dimen/margin_padding_extremely_small"
+                android:layout_marginStart="@dimen/margin_padding_smallest"
+                android:layout_marginEnd="@dimen/margin_padding_extremely_small"
+                android:padding="@dimen/margin_padding_extremely_small"
+                android:gravity="center"
+                android:clickable="true"
+                android:background="@drawable/bg_rectangle_grey_bordered"/>
+
+        </LinearLayout>
+
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.core.widget.NestedScrollView
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <FrameLayout
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/pgbBusRouteStation"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:paddingBottom="@dimen/padding_bottom_loading_indicator"
+            app:indicatorColor="@color/grey"
+            app:trackColor="@color/light_grey"
+            app:trackThickness="@dimen/thickness_loading_indicator"
+            android:indeterminate="true"/>
 
-            <com.google.android.material.progressindicator.CircularProgressIndicator
-                android:id="@+id/pgbBusRouteStation"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:paddingTop="@dimen/padding_top_loading_indicator"
-                app:indicatorColor="@color/grey"
-                app:trackColor="@color/light_grey"
-                app:trackThickness="@dimen/thickness_loading_indicator"
-                android:indeterminate="true"/>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvBusRouteStationList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvBusRouteStationList"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+            android:background="@color/white"
+            android:visibility="gone" />
 
-                android:background="@color/white"
-                android:visibility="gone"
-                android:nestedScrollingEnabled="false"/>
+    </FrameLayout>
 
-        </FrameLayout>
-
-    </androidx.core.widget.NestedScrollView>
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fabRefresh"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
-        android:layout_margin="@dimen/margin_floating_action_button"
-        android:src="@drawable/ic_refresh"
-        app:shapeAppearance="@style/fab_rounded"
-        app:backgroundTint="@color/dark_grey"
-        app:tint="@color/white" />
+        android:layout_margin="@dimen/margin_padding_large"
+        android:orientation="vertical">
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fabScrollUp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_up_arrow"
+            app:shapeAppearance="@style/fab_rounded"
+            app:backgroundTint="@color/dark_grey"
+            app:tint="@color/white"
+            app:elevation="0dp" />
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_padding_small">
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fabRefresh"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_refresh"
+                app:shapeAppearance="@style/fab_rounded"
+                app:backgroundTint="@color/dark_grey"
+                app:tint="@color/white"
+                app:elevation="0dp" />
+
+            <TextView
+                android:id="@+id/fabTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:textSize="@dimen/text_size_fab_time"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:visibility="gone"/>
+
+        </FrameLayout>
+
+    </LinearLayout>
+
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

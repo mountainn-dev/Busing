@@ -1,13 +1,12 @@
 package com.san.busing.domain.viewmodelimpl
 
-import android.util.Log
+import android.os.CountDownTimer
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.san.busing.data.Error
-import com.san.busing.data.exception.ExceptionMessage
 import com.san.busing.data.Success
 import com.san.busing.data.repository.BusLocationRepository
 import com.san.busing.data.repository.RouteRepository
@@ -15,7 +14,6 @@ import com.san.busing.data.vo.Id
 import com.san.busing.domain.model.BusModel
 import com.san.busing.domain.model.RouteInfoModel
 import com.san.busing.domain.model.RouteStationModel
-import com.san.busing.domain.utils.Const
 import com.san.busing.domain.viewmodel.RouteDetailViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -29,7 +27,6 @@ class RouteDetailViewModelImpl(
     private val routeId: Id,
 ) : RouteDetailViewModel, ViewModel() {
     private var isLoading = false
-    private var error = Const.EMPTY_TEXT
 
     override val routeInfoContentReady: LiveData<Boolean>
         get() = routeInfoLoaded
@@ -41,74 +38,87 @@ class RouteDetailViewModelImpl(
     private val routeStationLoaded = MutableLiveData<Boolean>()
     private val routeBusLoaded = MutableLiveData<Boolean>()
 
+    override val loadableRemainTime: LiveData<Int>
+        get() = remainTime
+    private val remainTime = MutableLiveData<Int>()
+    private val timer = object: CountDownTimer(TOTAL_MILLIS, INTERVAL_MILLIS) {
+        override fun onTick(time: Long) {
+            if (!isLoading) isLoading = true
+            remainTime.postValue((time/ INTERVAL_MILLIS).toInt())
+        }
+        override fun onFinish() {
+            isLoading = false
+        }
+    }
+
     override lateinit var routeInfo: RouteInfoModel
     override lateinit var routeStations: List<RouteStationModel>
     override lateinit var routeBuses: List<BusModel>
     override val serviceErrorState: LiveData<Boolean>
-        get() = isSystemError
-    private val isSystemError = MutableLiveData<Boolean>()
+        get() = isCriticalError
+    private val isCriticalError = MutableLiveData<Boolean>()
+    override lateinit var error: String
 
     init {
-        load(routeId)
+        load()
         merge(routeStationAndBusLoaded, routeStationLoaded, routeBusLoaded)
     }
 
-    override fun load(routeId: Id) {
-        if (!isLoading) {
-            isLoading = true
-
-            viewModelScope.launch {
-                withContext(Dispatchers.IO) {
-                    awaitAll(
-                        async { loadRouteInfoContent(routeId) },
-                        async { loadRouteStationContent(routeId) },
-                        async { loadRouteBusContent(routeId) }
-                    )
-                }
-                isLoading = false
+    override fun load() {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                awaitAll(
+                    async { loadRouteInfoContent() },
+                    async { loadRouteStationContent() },
+                    async { loadRouteBusContent() }
+                )
             }
         }
     }
 
-    private suspend fun loadRouteInfoContent(routeId: Id) {
+    private suspend fun loadRouteInfoContent() {
         val result = routeRepository.getRouteInfo(routeId)
 
         if (result is Success) {
-            routeInfo = result.data()
+            routeInfo = result.data
             routeInfoLoaded.postValue(true)
         } else {
             error = (result as Error).message()
-            Log.e(ExceptionMessage.TAG_BUS_ROUTE_INFO_EXCEPTION, error)
             routeInfoLoaded.postValue(false)
-            isSystemError.postValue(result.isSystemError())
+            isCriticalError.postValue(result.isCritical())
         }
     }
 
-    private suspend fun loadRouteStationContent(routeId: Id) {
+    private suspend fun loadRouteStationContent() {
         val result = routeRepository.getRouteStations(routeId)
 
         if (result is Success) {
-            routeStations = result.data()
+            routeStations = result.data
             routeStationLoaded.postValue(true)
         } else {
             error = (result as Error).message()
-            Log.e(ExceptionMessage.TAG_BUS_ROUTE_STATIONS_EXCEPTION, error)
             routeStationLoaded.postValue(false)
-            isSystemError.postValue(result.isSystemError())
+            isCriticalError.postValue(result.isCritical())
         }
     }
 
-    private suspend fun loadRouteBusContent(routeId: Id) {
+    private suspend fun loadRouteBusContent() {
         val result = busLocationRepository.getBusLocations(routeId)
 
         if (result is Success) {
-            routeBuses = result.data().sortedBy { it.sequenceNumber }
+            routeBuses = result.data.sortedBy { it.sequenceNumber }
             routeBusLoaded.postValue(true)
         } else {
             error = (result as Error).message()
-            Log.e(ExceptionMessage.TAG_BUS_ROUTE_BUS_EXCEPTION, error)
             routeBusLoaded.postValue(false)
-            isSystemError.postValue(result.isSystemError())
+            isCriticalError.postValue(result.isCritical())
+        }
+    }
+
+    override fun reload() {
+        if (!isLoading) {
+            timer.start()
+            load()
         }
     }
 
@@ -122,8 +132,12 @@ class RouteDetailViewModelImpl(
         child1: MutableLiveData<Boolean>, child2: MutableLiveData<Boolean>
     ) {
         parent.addSource(child1) { parent.value = it && dataState(child2) }
-        parent.addSource(child2) { parent.value = it && dataState(child1) }
     }
 
     private fun dataState(data: MutableLiveData<Boolean>) = data.isInitialized && data.value!!
+
+    companion object {
+        private const val TOTAL_MILLIS: Long = 10000
+        private const val INTERVAL_MILLIS: Long = 1000
+    }
 }
