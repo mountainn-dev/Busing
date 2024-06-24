@@ -96,11 +96,15 @@ class RouteDetailActivity : AppCompatActivity() {
     private fun whenRouteInfoReady(viewModel: RouteDetailViewModel) {
         binding.txtRouteStartStation.text = viewModel.routeInfo.startStationName
         binding.txtRouteEndStation.text = viewModel.routeInfo.endStationName
+        binding.btnScrollToStartStation.text = viewModel.routeInfo.startStationName
+        binding.btnScrollToEndStation.text = viewModel.routeInfo.endStationName
     }
 
     private fun whenRouteInfoNotReady() {
         binding.txtRouteStartStation.text = Const.EMPTY_TEXT
         binding.txtRouteEndStation.text = Const.EMPTY_TEXT
+        binding.btnScrollToStartStation.text = Const.EMPTY_TEXT
+        binding.btnScrollToEndStation.text = Const.EMPTY_TEXT
     }
 
     private fun routeStationBusReadyObserver(
@@ -128,6 +132,7 @@ class RouteDetailActivity : AppCompatActivity() {
         binding.rvBusRouteStationList.layoutManager?.onRestoreInstanceState(state)
         binding.rvBusRouteStationList.visibility = View.VISIBLE
         binding.pgbBusRouteStation.visibility = View.GONE
+        setBtnScrollToEndStation(viewModel)
     }
 
     private fun routeStationClickEventListener(
@@ -141,6 +146,20 @@ class RouteDetailActivity : AppCompatActivity() {
 
         }
     }
+
+    private fun setBtnScrollToEndStation(viewModel: RouteDetailViewModel) {
+        val idx = turnaroundIndex(viewModel)
+
+        binding.btnScrollToEndStation.setOnClickListener {
+            if (binding.abRouteDetail.isLifted)
+                binding.rvBusRouteStationList.smoothScrollToPosition(idx + POSITION_VALUE_WHEN_LIFTED)
+            else binding.rvBusRouteStationList.smoothScrollToPosition(idx + POSITION_VALUE_WHEN_NOT_LIFTED)
+        }
+    }
+
+    private fun turnaroundIndex(
+        viewModel: RouteDetailViewModel
+    ) = viewModel.routeStations.find { it.isTurnaround }?.sequenceNumber ?: 1
 
     private fun whenRouteStationAndBusNotReady() {
         binding.pgbBusRouteStation.visibility = View.VISIBLE
@@ -171,11 +190,18 @@ class RouteDetailActivity : AppCompatActivity() {
 
     private fun initListener(viewModel: RouteDetailViewModel) {
         setBtnBackListener()
+        setBtnScrollToStartStation()
         setFabRefreshListener(viewModel)
     }
 
     private fun setBtnBackListener() {
         binding.btnBack.setOnClickListener { finish() }
+    }
+
+    private fun setBtnScrollToStartStation() {
+        binding.btnScrollToStartStation.setOnClickListener {
+            binding.rvBusRouteStationList.smoothScrollToPosition(Const.ZERO)
+        }
     }
 
     private fun setFabRefreshListener(viewModel: RouteDetailViewModel) {
@@ -189,5 +215,7 @@ class RouteDetailActivity : AppCompatActivity() {
 
     companion object {
         private const val ROUTE_BUS_COUNT = "%d대"
+        private const val POSITION_VALUE_WHEN_LIFTED = - 1
+        private const val POSITION_VALUE_WHEN_NOT_LIFTED = + 2
     }
 }
