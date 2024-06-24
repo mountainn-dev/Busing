@@ -123,15 +123,16 @@ class RouteDetailActivity : AppCompatActivity() {
             routeStationClickEventListener(viewModel.routeStations),
             context
         )
-        if (binding.rvBusRouteStationList.layoutManager == null)
-            binding.rvBusRouteStationList.layoutManager = LinearLayoutManager(context)
-        binding.txtRouteBusCount.text = String.format(Const.ROUTE_BUS_COUNT, viewModel.routeBuses.size)
+        binding.rvBusRouteStationList.layoutManager = LinearLayoutManager(context)
+        binding.txtRouteBusCount.text = String.format(ROUTE_BUS_COUNT, viewModel.routeBuses.size)
         binding.rvBusRouteStationList.layoutManager?.onRestoreInstanceState(state)
         binding.rvBusRouteStationList.visibility = View.VISIBLE
         binding.pgbBusRouteStation.visibility = View.GONE
     }
 
-    private fun routeStationClickEventListener(items: List<RouteStationModel>) = object: ItemClickEventListener {
+    private fun routeStationClickEventListener(
+        items: List<RouteStationModel>
+    ) = object: ItemClickEventListener {
         override fun onItemClickListener(position: Int) {
 
         }
@@ -159,7 +160,8 @@ class RouteDetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun serviceErrorStateObserver(viewModel: RouteDetailViewModel, context: Activity
+    private fun serviceErrorStateObserver(
+        viewModel: RouteDetailViewModel, context: Activity
     ) = Observer<Boolean> {
         if (it) {
             val toast = ErrorToast(context, viewModel.error)
@@ -183,5 +185,9 @@ class RouteDetailActivity : AppCompatActivity() {
     override fun onResume() {
         viewModel.load()
         super.onResume()
+    }
+
+    companion object {
+        private const val ROUTE_BUS_COUNT = "%d대"
     }
 }

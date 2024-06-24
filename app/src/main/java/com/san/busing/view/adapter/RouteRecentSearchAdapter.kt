@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.san.busing.R
-import com.san.busing.databinding.ItemRecentSearchRouteBinding
+import com.san.busing.databinding.ItemRouteRecentSearchBinding
 import com.san.busing.domain.enums.RouteType.AIRPORT_LIMO
 import com.san.busing.domain.enums.RouteType.AIRPORT_NORMAL
 import com.san.busing.domain.enums.RouteType.AIRPORT_SEAT
@@ -32,7 +32,7 @@ class RouteRecentSearchAdapter(
 ) : RecyclerView.Adapter<RouteRecentSearchAdapter.BusRouteRecentSearchViewHolder>() {
 
     inner class BusRouteRecentSearchViewHolder(
-        private val binding: ItemRecentSearchRouteBinding
+        private val binding: ItemRouteRecentSearchBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(position: Int) {
@@ -72,7 +72,7 @@ class RouteRecentSearchAdapter(
         parent: ViewGroup,
         viewType: Int
     ): BusRouteRecentSearchViewHolder {
-        val binding = ItemRecentSearchRouteBinding.inflate(
+        val binding = ItemRouteRecentSearchBinding.inflate(
             LayoutInflater.from(parent.context), parent, false
         )
 

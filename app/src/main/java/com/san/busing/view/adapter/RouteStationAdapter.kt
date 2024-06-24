@@ -64,8 +64,8 @@ class RouteStationAdapter(
         }
 
         private fun remainSeatText(count: Int): String {
-            if (count == Const.NO_DATA) return Const.NO_REMAIN_SEAT_COUNT
-            else return String.format(Const.REMAIN_SEAT_COUNT, count)
+            if (count == Const.NO_DATA) return NO_REMAIN_SEAT_COUNT
+            else return String.format(REMAIN_SEAT_COUNT, count)
         }
 
         private fun unloadBusInfo() {
@@ -80,14 +80,10 @@ class RouteStationAdapter(
         }
 
         private fun loadTurnaround() {
-            binding.clRouteStationItem.setBackgroundColor(
-                ContextCompat.getColor(context, R.color.semi_light_grey))
             binding.imgWay.setImageResource(R.drawable.ic_turnaround)
         }
 
         private fun unloadTurnaround() {
-            binding.clRouteStationItem.setBackgroundColor(
-                ContextCompat.getColor(context, R.color.white))
             binding.imgWay.setImageResource(R.drawable.ic_down_arrow)
         }
 
@@ -120,5 +116,7 @@ class RouteStationAdapter(
 
     companion object {
         private const val NO_MATCH_BUS = -1
+        private const val REMAIN_SEAT_COUNT = "%d석"
+        private const val NO_REMAIN_SEAT_COUNT = "-석"
     }
 }
