@@ -7,6 +7,7 @@ import androidx.room.Room
 import com.san.busing.BuildConfig
 import com.san.busing.data.Result
 import com.san.busing.data.exception.ExceptionMessage
+import com.san.busing.data.exception.ServiceException
 import com.san.busing.data.repository.RouteRepository
 import com.san.busing.data.source.local.database.RecentSearchDatabase
 import com.san.busing.data.source.remote.retrofit.RouteService
@@ -41,6 +42,10 @@ class RouteRepositoryImpl(
         try {
             val response = service.getBusRouteList(BuildConfig.API_KEY, keyword)
             return Result.success(response.body()!!.get())
+        } catch (e: ServiceException.ResultException) {   // 검색 결과 없음
+            return Result.success(listOf())
+        } catch (e: ServiceException.ParameterException) {   // 키워드 조건 충족 x
+            return Result.success(listOf())
         } catch (e: Exception) {
             Log.e(ExceptionMessage.TAG_ROUTE_SUMMARY_EXCEPTION, e.message ?: e.toString())
             return Result.error(e)

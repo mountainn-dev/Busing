@@ -17,6 +17,7 @@ import com.san.busing.data.vo.Id
 import com.san.busing.databinding.ActivityRouteDetailBinding
 import com.san.busing.domain.enums.RouteType
 import com.san.busing.domain.model.RouteStationModel
+import com.san.busing.domain.state.UiState
 import com.san.busing.domain.utils.Const
 import com.san.busing.domain.utils.Utils
 import com.san.busing.domain.viewmodel.RouteDetailViewModel
@@ -70,53 +71,49 @@ class RouteDetailActivity : AppCompatActivity() {
         routeType: RouteType,
         context: Activity
     ) {
-        viewModel.routeInfoContentReady.observe(
+        viewModel.state.observe(
             context as LifecycleOwner,
-            routeInfoReadyObserver(viewModel)
-        )
-        viewModel.routeStationContentReady.observe(
-            context as LifecycleOwner,
-            routeStationBusReadyObserver(viewModel, routeType, context)
+            uiStateObserver(viewModel, routeType, context)
         )
         viewModel.loadableRemainTime.observe(
             context as LifecycleOwner,
             loadableRemainTimeObserver()
         )
-        viewModel.serviceErrorState.observe(
-            context as LifecycleOwner,
-            serviceErrorStateObserver(viewModel, context)
-        )
     }
 
-    private fun routeInfoReadyObserver(viewModel: RouteDetailViewModel) = Observer<Boolean> {
-        if (it) { whenRouteInfoReady(viewModel) }
-        else { whenRouteInfoNotReady() }
+    private fun uiStateObserver(
+        viewModel: RouteDetailViewModel,
+        routeType: RouteType,
+        context: Activity
+    ) = Observer<UiState> {
+        when (it) {
+            UiState.Success -> {
+                loadRouteInfo(viewModel)
+                loadRouteStation(viewModel, routeType, context)
+            }
+            UiState.Loading -> {
+                unloadRouteInfo()
+                loadingView()
+            }
+            UiState.Timeout -> {
+                unloadRouteInfo()
+                timeoutView()
+            }
+            UiState.Error -> {
+                unloadRouteInfo()
+                errorView(viewModel, context)
+            }
+        }
     }
 
-    private fun whenRouteInfoReady(viewModel: RouteDetailViewModel) {
+    private fun loadRouteInfo(viewModel: RouteDetailViewModel) {
         binding.txtRouteStartStation.text = viewModel.routeInfo.startStationName
         binding.txtRouteEndStation.text = viewModel.routeInfo.endStationName
         binding.btnScrollToStartStation.text = viewModel.routeInfo.startStationName
         binding.btnScrollToEndStation.text = viewModel.routeInfo.endStationName
     }
 
-    private fun whenRouteInfoNotReady() {
-        binding.txtRouteStartStation.text = Const.EMPTY_TEXT
-        binding.txtRouteEndStation.text = Const.EMPTY_TEXT
-        binding.btnScrollToStartStation.text = Const.EMPTY_TEXT
-        binding.btnScrollToEndStation.text = Const.EMPTY_TEXT
-    }
-
-    private fun routeStationBusReadyObserver(
-        viewModel: RouteDetailViewModel,
-        routeType: RouteType,
-        context: Activity
-    ) = Observer<Boolean> {
-        if (it) { whenRouteStationAndBusReady(viewModel, routeType, context) }
-        else { whenRouteStationAndBusNotReady() }
-    }
-
-    private fun whenRouteStationAndBusReady(
+    private fun loadRouteStation(
         viewModel: RouteDetailViewModel, routeType: RouteType, context: Activity
     ) {
         val state = binding.rvBusRouteStationList.layoutManager?.onSaveInstanceState()
@@ -132,6 +129,8 @@ class RouteDetailActivity : AppCompatActivity() {
         binding.rvBusRouteStationList.layoutManager?.onRestoreInstanceState(state)
         binding.rvBusRouteStationList.visibility = View.VISIBLE
         binding.pgbBusRouteStation.visibility = View.GONE
+        binding.txtTimeout.visibility = View.GONE
+        binding.txtServiceError.visibility = View.GONE
         setBtnScrollToEndStation(viewModel)
     }
 
@@ -161,9 +160,35 @@ class RouteDetailActivity : AppCompatActivity() {
         viewModel: RouteDetailViewModel
     ) = viewModel.routeStations.find { it.isTurnaround }?.sequenceNumber ?: 1
 
-    private fun whenRouteStationAndBusNotReady() {
+    private fun unloadRouteInfo() {
+        binding.txtRouteStartStation.text = Const.EMPTY_TEXT
+        binding.txtRouteEndStation.text = Const.EMPTY_TEXT
+        binding.btnScrollToStartStation.text = Const.EMPTY_TEXT
+        binding.btnScrollToEndStation.text = Const.EMPTY_TEXT
+    }
+
+    private fun loadingView() {
         binding.pgbBusRouteStation.visibility = View.VISIBLE
         binding.rvBusRouteStationList.visibility = View.GONE
+        binding.txtTimeout.visibility = View.GONE
+        binding.txtServiceError.visibility = View.GONE
+        binding.txtRouteBusCount.text = Const.EMPTY_TEXT
+    }
+
+    private fun timeoutView() {
+        binding.txtTimeout.visibility = View.VISIBLE
+        binding.rvBusRouteStationList.visibility = View.GONE
+        binding.pgbBusRouteStation.visibility = View.GONE
+        binding.txtServiceError.visibility = View.GONE
+    }
+
+    private fun errorView(viewModel: RouteDetailViewModel, context: Activity) {
+        binding.txtServiceError.visibility = View.VISIBLE
+        binding.rvBusRouteStationList.visibility = View.GONE
+        binding.pgbBusRouteStation.visibility = View.GONE
+        binding.txtTimeout.visibility = View.GONE
+        val toast = ErrorToast(context, viewModel.error)
+        if (toast.previousFinished()) toast.show()
     }
 
     private fun loadableRemainTimeObserver() = Observer<Int> {
@@ -176,15 +201,6 @@ class RouteDetailActivity : AppCompatActivity() {
                 binding.fabRefresh.setImageResource(android.R.color.transparent)
             }
             binding.fabTime.text = it.toString()
-        }
-    }
-
-    private fun serviceErrorStateObserver(
-        viewModel: RouteDetailViewModel, context: Activity
-    ) = Observer<Boolean> {
-        if (it) {
-            val toast = ErrorToast(context, viewModel.error)
-            if (toast.previousFinished()) toast.show()
         }
     }
 

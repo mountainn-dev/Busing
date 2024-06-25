@@ -10,6 +10,7 @@ import com.san.busing.data.Success
 import com.san.busing.data.repository.RouteRepository
 import com.san.busing.domain.model.RouteRecentSearchModel
 import com.san.busing.domain.model.RouteSummaryModel
+import com.san.busing.domain.state.UiState
 import com.san.busing.domain.utils.Const
 import com.san.busing.domain.viewmodel.SearchRouteViewModel
 import kotlinx.coroutines.Dispatchers
@@ -19,22 +20,19 @@ import kotlinx.coroutines.withContext
 class SearchRouteViewModelImpl(
     private val routeRepository: RouteRepository
 ) : SearchRouteViewModel, ViewModel() {
-    private var isSearching = false
+    override val state: LiveData<UiState>
+        get() = searchResultState
+    private val searchResultState = MutableLiveData<UiState>()
+    override lateinit var routeSummaries: List<RouteSummaryModel>
 
-    override val searchResultContentReady: LiveData<Boolean>
-        get() = searchResultContentLoaded
-    private val searchResultContentLoaded = MutableLiveData<Boolean>()
     override val recentSearchContentReady: LiveData<Boolean>
         get() = recentSearchContentLoaded
     private val recentSearchContentLoaded = MutableLiveData<Boolean>()
-
-    override lateinit var routeSummaries: List<RouteSummaryModel>
     override lateinit var routeRecentSearches: List<RouteRecentSearchModel>
+
     override var keyword = Const.EMPTY_TEXT
-    override val serviceErrorState: LiveData<Boolean>
-        get() = isSystemError
-    private val isSystemError = MutableLiveData<Boolean>()
     override lateinit var error: String
+    private var isSearching = false
 
     override fun search(keyword: String) {
         if (!isSearching) {
@@ -51,16 +49,17 @@ class SearchRouteViewModelImpl(
     }
 
     private suspend fun searchBusRoutes() {
+        searchResultState.postValue(UiState.Loading)
         val result = routeRepository.getRoutes(keyword)
 
         if (result is Success) {
             // 검색 결과 출력 시 노선 번호, 운행 지역 순으로 출력
             routeSummaries = result.data.sortedWith(compareBy({it.name}, {it.region}))
-            searchResultContentLoaded.postValue(true)
+            searchResultState.postValue(UiState.Success)
         } else {
             error = (result as Error).message()
-            searchResultContentLoaded.postValue(false)
-            isSystemError.postValue(result.isCritical())
+            if (result.isTimeOut()) searchResultState.postValue(UiState.Timeout)
+            if (result.isCritical()) searchResultState.postValue(UiState.Error)
         }
     }
 

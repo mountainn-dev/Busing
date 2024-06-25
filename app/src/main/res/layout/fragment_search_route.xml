@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -97,21 +98,51 @@
         android:layout_height="0dp"
         android:layout_weight="1">
 
-        <TextView
-            android:id="@+id/txtNoResult"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:visibility="visible"
-            android:text="@string/route_no_result"
-            android:textColor="@color/grey"/>
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvSearchResult"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/white"
             android:visibility="gone"/>
+
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/pgbSearchRoute"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            app:indicatorColor="@color/grey"
+            app:trackColor="@color/light_grey"
+            app:trackThickness="@dimen/thickness_loading_indicator"
+            android:indeterminate="true"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/txtNoResult"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="@string/route_no_result"
+            android:textColor="@color/grey"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/txtTimeout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="@string/timeout"
+            android:textColor="@color/grey"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/txtServiceError"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="@string/service_error"
+            android:textColor="@color/grey"
+            android:visibility="gone"/>
+
     </FrameLayout>
 
 </LinearLayout>

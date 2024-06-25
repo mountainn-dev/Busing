@@ -204,6 +204,13 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvBusRouteStationList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:visibility="gone" />
+
         <com.google.android.material.progressindicator.CircularProgressIndicator
             android:id="@+id/pgbBusRouteStation"
             android:layout_width="match_parent"
@@ -213,15 +220,28 @@
             app:indicatorColor="@color/grey"
             app:trackColor="@color/light_grey"
             app:trackThickness="@dimen/thickness_loading_indicator"
-            android:indeterminate="true"/>
+            android:indeterminate="true"
+            android:visibility="gone"/>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvBusRouteStationList"
+        <TextView
+            android:id="@+id/txtTimeout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:gravity="center"
+            android:paddingBottom="@dimen/padding_bottom_loading_indicator"
+            android:text="@string/timeout"
+            android:textColor="@color/grey"
+            android:visibility="gone"/>
 
-            android:background="@color/white"
-            android:visibility="gone" />
+        <TextView
+            android:id="@+id/txtServiceError"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:paddingBottom="@dimen/padding_bottom_loading_indicator"
+            android:text="@string/service_error"
+            android:textColor="@color/grey"
+            android:visibility="gone"/>
 
     </FrameLayout>
 
