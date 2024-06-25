@@ -131,6 +131,7 @@ class RouteDetailViewModelImpl(
         child1: MutableLiveData<Boolean>, child2: MutableLiveData<Boolean>
     ) {
         parent.addSource(child1) { parent.value = it && dataState(child2) }
+        parent.addSource(child2) { parent.value = it && dataState(child1) }
     }
 
     private fun dataState(data: MutableLiveData<Boolean>) = data.isInitialized && data.value!!
