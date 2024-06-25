@@ -11,8 +11,10 @@
     <dimen name="line_default">2dp</dimen>
     <dimen name="line_thin">1dp</dimen>
     <dimen name="line_thick">4dp</dimen>
+    <dimen name="radius_default">8dp</dimen>
     <dimen name="radius_small_rounded">4dp</dimen>
     <dimen name="radius_extremely_small_rounded">2dp</dimen>
+    <dimen name="radius_btn_info">32dp</dimen>
 
     <!-- Route -->
     <dimen name="height_search_layout">128dp</dimen>

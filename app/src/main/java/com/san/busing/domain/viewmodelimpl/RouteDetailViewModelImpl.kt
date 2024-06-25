@@ -60,7 +60,6 @@ class RouteDetailViewModelImpl(
     override lateinit var error: String
 
     init {
-        load()
         merge(routeStationAndBusLoaded, routeStationLoaded, routeBusLoaded)
     }
 
