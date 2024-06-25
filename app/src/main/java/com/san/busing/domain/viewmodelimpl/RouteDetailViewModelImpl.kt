@@ -41,10 +41,10 @@ class RouteDetailViewModelImpl(
     override val loadableRemainTime: LiveData<Int>
         get() = remainTime
     private val remainTime = MutableLiveData<Int>()
-    private val timer = object: CountDownTimer(TOTAL_MILLIS, INTERVAL_MILLIS) {
+    private val timer = object: CountDownTimer(REMAIN_TOTAL_MILLIS, REMAIN_INTERVAL_MILLIS) {
         override fun onTick(time: Long) {
             if (!isLoading) isLoading = true
-            remainTime.postValue((time/ INTERVAL_MILLIS).toInt())
+            remainTime.postValue((time/ REMAIN_INTERVAL_MILLIS).toInt())
         }
         override fun onFinish() {
             isLoading = false
@@ -54,9 +54,14 @@ class RouteDetailViewModelImpl(
     override lateinit var routeInfo: RouteInfoModel
     override lateinit var routeStations: List<RouteStationModel>
     override lateinit var routeBuses: List<BusModel>
+
     override val serviceErrorState: LiveData<Boolean>
         get() = isCriticalError
     private val isCriticalError = MutableLiveData<Boolean>()
+
+    override val timeout: LiveData<Boolean>
+        get() = isTimeout
+    private val isTimeout = MutableLiveData<Boolean>()
     override lateinit var error: String
 
     init {
@@ -137,7 +142,7 @@ class RouteDetailViewModelImpl(
     private fun dataState(data: MutableLiveData<Boolean>) = data.isInitialized && data.value!!
 
     companion object {
-        private const val TOTAL_MILLIS: Long = 10000
-        private const val INTERVAL_MILLIS: Long = 1000
+        private const val REMAIN_TOTAL_MILLIS: Long = 10000
+        private const val REMAIN_INTERVAL_MILLIS: Long = 1000
     }
 }

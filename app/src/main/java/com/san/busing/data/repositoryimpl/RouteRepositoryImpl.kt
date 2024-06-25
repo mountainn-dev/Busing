@@ -17,6 +17,7 @@ import com.san.busing.domain.model.RouteStationModel
 import com.san.busing.domain.model.RouteSummaryModel
 import com.san.busing.domain.utils.Const
 import retrofit2.Retrofit
+import java.net.SocketTimeoutException
 
 class RouteRepositoryImpl(
     private val retrofit: Retrofit,

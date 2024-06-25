@@ -16,6 +16,7 @@ interface RouteDetailViewModel {
     val routeStations: List<RouteStationModel>
     val routeBuses: List<BusModel>
     val serviceErrorState: LiveData<Boolean>
+    val timeout: LiveData<Boolean>
     var error: String
 
     fun load()

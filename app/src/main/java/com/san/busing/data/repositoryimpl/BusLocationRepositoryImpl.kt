@@ -10,6 +10,7 @@ import com.san.busing.data.source.remote.retrofit.BusLocationService
 import com.san.busing.data.vo.Id
 import com.san.busing.domain.model.BusModel
 import retrofit2.Retrofit
+import java.net.SocketTimeoutException
 
 class BusLocationRepositoryImpl(
     private val retrofit: Retrofit
