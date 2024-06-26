@@ -223,25 +223,55 @@
             android:indeterminate="true"
             android:visibility="gone"/>
 
-        <TextView
-            android:id="@+id/txtTimeout"
+        <LinearLayout
+            android:id="@+id/llTimeout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center"
             android:paddingBottom="@dimen/padding_bottom_loading_indicator"
-            android:text="@string/timeout"
-            android:textColor="@color/grey"
-            android:visibility="gone"/>
+            android:orientation="vertical"
+            android:gravity="center"
+            android:visibility="gone">
 
-        <TextView
-            android:id="@+id/txtServiceError"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/timeout"
+                android:textColor="@color/grey"/>
+
+            <ImageButton
+                android:id="@+id/btnTimeoutRequest"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_padding_default"
+                android:src="@drawable/ic_request"
+                android:background="@color/white"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llServiceError"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center"
             android:paddingBottom="@dimen/padding_bottom_loading_indicator"
-            android:text="@string/service_error"
-            android:textColor="@color/grey"
-            android:visibility="gone"/>
+            android:orientation="vertical"
+            android:gravity="center"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/service_error"
+                android:textColor="@color/grey" />
+
+            <ImageButton
+                android:id="@+id/btnServiceErrorRequest"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_padding_default"
+                android:src="@drawable/ic_request"
+                android:background="@color/white"/>
+
+        </LinearLayout>
 
     </FrameLayout>
 

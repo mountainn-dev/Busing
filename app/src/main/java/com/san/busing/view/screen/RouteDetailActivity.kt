@@ -129,8 +129,8 @@ class RouteDetailActivity : AppCompatActivity() {
         binding.rvBusRouteStationList.layoutManager?.onRestoreInstanceState(state)
         binding.rvBusRouteStationList.visibility = View.VISIBLE
         binding.pgbBusRouteStation.visibility = View.GONE
-        binding.txtTimeout.visibility = View.GONE
-        binding.txtServiceError.visibility = View.GONE
+        binding.llTimeout.visibility = View.GONE
+        binding.llServiceError.visibility = View.GONE
         setBtnScrollToEndStation(viewModel)
     }
 
@@ -170,23 +170,23 @@ class RouteDetailActivity : AppCompatActivity() {
     private fun loadingView() {
         binding.pgbBusRouteStation.visibility = View.VISIBLE
         binding.rvBusRouteStationList.visibility = View.GONE
-        binding.txtTimeout.visibility = View.GONE
-        binding.txtServiceError.visibility = View.GONE
+        binding.llTimeout.visibility = View.GONE
+        binding.llServiceError.visibility = View.GONE
         binding.txtRouteBusCount.text = Const.EMPTY_TEXT
     }
 
     private fun timeoutView() {
-        binding.txtTimeout.visibility = View.VISIBLE
+        binding.llTimeout.visibility = View.VISIBLE
         binding.rvBusRouteStationList.visibility = View.GONE
         binding.pgbBusRouteStation.visibility = View.GONE
-        binding.txtServiceError.visibility = View.GONE
+        binding.llServiceError.visibility = View.GONE
     }
 
     private fun errorView(viewModel: RouteDetailViewModel, context: Activity) {
-        binding.txtServiceError.visibility = View.VISIBLE
+        binding.llServiceError.visibility = View.VISIBLE
         binding.rvBusRouteStationList.visibility = View.GONE
         binding.pgbBusRouteStation.visibility = View.GONE
-        binding.txtTimeout.visibility = View.GONE
+        binding.llTimeout.visibility = View.GONE
         val toast = ErrorToast(context, viewModel.error)
         if (toast.previousFinished()) toast.show()
     }
@@ -206,8 +206,9 @@ class RouteDetailActivity : AppCompatActivity() {
 
     private fun initListener(viewModel: RouteDetailViewModel) {
         setBtnBackListener()
-        setBtnScrollToStartStation()
-        setFabScrollUp()
+        setBtnScrollToStartStationListener()
+        setBtnRequestListener(viewModel)
+        setFabScrollUpListener()
         setFabRefreshListener(viewModel)
     }
 
@@ -215,13 +216,18 @@ class RouteDetailActivity : AppCompatActivity() {
         binding.btnBack.setOnClickListener { finish() }
     }
 
-    private fun setBtnScrollToStartStation() {
+    private fun setBtnScrollToStartStationListener() {
         binding.btnScrollToStartStation.setOnClickListener {
             binding.rvBusRouteStationList.smoothScrollToPosition(Const.ZERO)
         }
     }
 
-    private fun setFabScrollUp() {
+    private fun setBtnRequestListener(viewModel: RouteDetailViewModel) {
+        binding.btnTimeoutRequest.setOnClickListener { viewModel.load() }
+        binding.btnServiceErrorRequest.setOnClickListener { viewModel.load() }
+    }
+
+    private fun setFabScrollUpListener() {
         binding.fabScrollUp.setOnClickListener {
             binding.rvBusRouteStationList.scrollToPosition(Const.ZERO)
             binding.abRouteDetail.setExpanded(true)

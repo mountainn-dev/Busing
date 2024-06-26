@@ -105,8 +105,8 @@ class SearchRouteFragment : Fragment() {
         binding.txtNoResult.visibility = View.VISIBLE
         binding.rvSearchResult.visibility = View.GONE
         binding.pgbSearchRoute.visibility = View.GONE
-        binding.txtTimeout.visibility = View.GONE
-        binding.txtServiceError.visibility = View.GONE
+        binding.llTimeout.visibility = View.GONE
+        binding.llServiceError.visibility = View.GONE
     }
 
     private fun loadSearchResult(viewModel: SearchRouteViewModel, context: Activity) {
@@ -119,8 +119,8 @@ class SearchRouteFragment : Fragment() {
         binding.rvSearchResult.visibility = View.VISIBLE
         binding.pgbSearchRoute.visibility = View.GONE
         binding.txtNoResult.visibility = View.GONE
-        binding.txtTimeout.visibility = View.GONE
-        binding.txtServiceError.visibility = View.GONE
+        binding.llTimeout.visibility = View.GONE
+        binding.llServiceError.visibility = View.GONE
     }
 
     private fun searchResultItemClickEventListener(
@@ -151,25 +151,25 @@ class SearchRouteFragment : Fragment() {
         binding.pgbSearchRoute.visibility = View.VISIBLE
         binding.rvSearchResult.visibility = View.GONE
         binding.txtNoResult.visibility = View.GONE
-        binding.txtTimeout.visibility = View.GONE
-        binding.txtServiceError.visibility = View.GONE
+        binding.llTimeout.visibility = View.GONE
+        binding.llServiceError.visibility = View.GONE
 
     }
 
     private fun timeoutView() {
-        binding.txtTimeout.visibility = View.VISIBLE
+        binding.llTimeout.visibility = View.VISIBLE
         binding.rvSearchResult.visibility = View.GONE
         binding.pgbSearchRoute.visibility = View.GONE
         binding.txtNoResult.visibility = View.GONE
-        binding.txtServiceError.visibility = View.GONE
+        binding.llServiceError.visibility = View.GONE
     }
 
     private fun errorView(viewModel: SearchRouteViewModel, context: Activity) {
-        binding.txtServiceError.visibility = View.VISIBLE
+        binding.llServiceError.visibility = View.VISIBLE
         binding.rvSearchResult.visibility = View.GONE
         binding.pgbSearchRoute.visibility = View.GONE
         binding.txtNoResult.visibility = View.GONE
-        binding.txtTimeout.visibility = View.GONE
+        binding.llTimeout.visibility = View.GONE
     }
 
     private fun recentSearchContentReadyObserver(
@@ -227,6 +227,7 @@ class SearchRouteFragment : Fragment() {
         setBtnDeleteSearchKeywordListener(viewModel, context)
         setBtnDeleteAllRecentSearchListener(viewModel, context)
         setRvBusRouteScrollListener(context)
+        setBtnRequestListener(viewModel)
     }
 
     private fun setEdRouteActionListener(viewModel: SearchRouteViewModel) {
@@ -266,6 +267,15 @@ class SearchRouteFragment : Fragment() {
 
     private fun setRvBusRouteScrollListener(context: Activity) {
         binding.rvSearchResult.addOnScrollListener(RecyclerViewScrollListener(context))
+    }
+
+    private fun setBtnRequestListener(viewModel: SearchRouteViewModel) {
+        binding.btnTimeoutRequest.setOnClickListener {
+            viewModel.search(viewModel.keyword)
+        }
+        binding.btnServiceErrorRequest.setOnClickListener {
+            viewModel.search(viewModel.keyword)
+        }
     }
 
     override fun onStart() {
