@@ -4,7 +4,7 @@
     <!-- common -->
     <string name="delete_all">All</string>
     <string name="timeout">요청 시간이 초과되었습니다.</string>
-    <string name="service_error">데이터 요청에 실패하였습니다. 관리자에게 문의해주세요</string>
+    <string name="service_error">데이터 요청에 실패하였습니다.</string>
 
     <!-- Search -->
     <string name="route_no_result">검색 결과가 없습니다.</string>

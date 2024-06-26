@@ -232,6 +232,11 @@ class RouteDetailActivity : AppCompatActivity() {
         binding.fabRefresh.setOnClickListener { viewModel.reload() }
     }
 
+    /**
+     * fun onResume()
+     *
+     * 액티비티 전환 혹은 포커스가 다시 잡힐 때 호출
+     */
     override fun onResume() {
         viewModel.load()
         super.onResume()

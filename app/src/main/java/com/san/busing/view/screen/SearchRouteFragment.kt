@@ -170,8 +170,6 @@ class SearchRouteFragment : Fragment() {
         binding.pgbSearchRoute.visibility = View.GONE
         binding.txtNoResult.visibility = View.GONE
         binding.txtTimeout.visibility = View.GONE
-        val toast = ErrorToast(context, viewModel.error)
-        if (toast.previousFinished()) toast.show()
     }
 
     private fun recentSearchContentReadyObserver(
