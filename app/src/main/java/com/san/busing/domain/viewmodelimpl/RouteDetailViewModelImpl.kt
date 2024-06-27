@@ -160,7 +160,7 @@ class RouteDetailViewModelImpl(
     ) = state1 is UiState.Error || state2 is UiState.Error || state3 is UiState.Error
 
     companion object {
-        private const val REMAIN_TOTAL_MILLIS: Long = 10000
+        private const val REMAIN_TOTAL_MILLIS: Long = 9999
         private const val REMAIN_INTERVAL_MILLIS: Long = 1000
     }
 }
