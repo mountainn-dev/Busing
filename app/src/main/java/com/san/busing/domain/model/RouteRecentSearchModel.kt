@@ -14,12 +14,14 @@ data class RouteRecentSearchModel(
     val id: Id,
     val name: String,
     val type: RouteType,
-    val index: Long
+    val index: Long,
+    val bookMark: Boolean
 ) {
     fun toBusRouteRecentSearchEntity() = RouteRecentSearch(
         id.get(),
         name,
         type.code,
-        index
+        index,
+        bookMark
     )
 }

@@ -42,9 +42,11 @@ class RouteDetailActivity : AppCompatActivity() {
         val routeName = intent.getStringExtra(Const.TAG_ROUTE_NAME) ?: Const.EMPTY_TEXT
         val routeType = intent.getSerializableExtra(Const.TAG_ROUTE_TYPE) as RouteType
         viewModel = ViewModelProvider(
-            this, RouteDetailViewModelFactory(busRouteRepository, busLocationRepository, routeId)
-        ).get(RouteDetailViewModelImpl::class.java)
+            this, RouteDetailViewModelFactory(
+                busRouteRepository, busLocationRepository, routeId, routeName, routeType
+            )).get(RouteDetailViewModelImpl::class.java)
 
+        viewModel.update(this)
         initToolbar(routeName, routeType, this)
         initObserver(viewModel, routeType, this)
         initListener(viewModel)
@@ -78,6 +80,10 @@ class RouteDetailActivity : AppCompatActivity() {
         viewModel.loadableRemainTime.observe(
             context as LifecycleOwner,
             loadableRemainTimeObserver()
+        )
+        viewModel.bookMark.observe(
+            context as LifecycleOwner,
+            bookMarkObserver()
         )
     }
 
@@ -204,8 +210,14 @@ class RouteDetailActivity : AppCompatActivity() {
         }
     }
 
+    private fun bookMarkObserver() = Observer<Boolean> {
+        if (it) binding.btnBookMark.setImageResource(R.drawable.ic_on_book_mark)
+        else binding.btnBookMark.setImageResource(R.drawable.ic_off_book_mark)
+    }
+
     private fun initListener(viewModel: RouteDetailViewModel) {
         setBtnBackListener()
+        setBtnBookMarkListener(viewModel)
         setBtnScrollToStartStationListener()
         setBtnRequestListener(viewModel)
         setFabScrollUpListener()
@@ -214,6 +226,10 @@ class RouteDetailActivity : AppCompatActivity() {
 
     private fun setBtnBackListener() {
         binding.btnBack.setOnClickListener { finish() }
+    }
+
+    private fun setBtnBookMarkListener(viewModel: RouteDetailViewModel) {
+        binding.btnBookMark.setOnClickListener { viewModel.toggleBookMark() }
     }
 
     private fun setBtnScrollToStartStationListener() {

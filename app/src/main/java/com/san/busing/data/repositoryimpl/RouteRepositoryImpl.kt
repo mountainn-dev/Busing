@@ -62,7 +62,19 @@ class RouteRepositoryImpl(
         }
     }
 
-    override fun getRecentSearch(): Result<List<RouteRecentSearchModel>> {
+    override suspend fun getRecentSearch(id: Id): Result<RouteRecentSearchModel> {
+        try {
+            db.recentSearchDao().get(id.get())?.let {
+                return Result.success(it.toRouteRecentSearchModel())
+            }
+            return Result.error(NoSuchElementException(""))
+        } catch (e: Exception) {
+            Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.message ?: e.toString())
+            return Result.error(e)
+        }
+    }
+
+    override suspend fun getRecentSearches(): Result<List<RouteRecentSearchModel>> {
         try {
             return Result.success(db.recentSearchDao().getAll().map { it.toRouteRecentSearchModel() })
         } catch (e: Exception) {
@@ -71,7 +83,7 @@ class RouteRepositoryImpl(
         }
     }
 
-    override fun insertRecentSearch(recentSearchModel: RouteRecentSearchModel): Result<Boolean> {
+    override suspend fun insertRecentSearch(recentSearchModel: RouteRecentSearchModel): Result<Boolean> {
         try {
             db.recentSearchDao().insert(
                 recentSearchModel.toBusRouteRecentSearchEntity())
@@ -82,7 +94,7 @@ class RouteRepositoryImpl(
         }
     }
 
-    override fun updateRecentSearch(recentSearchModel: RouteRecentSearchModel): Result<Boolean> {
+    override suspend fun updateRecentSearch(recentSearchModel: RouteRecentSearchModel): Result<Boolean> {
         try {
             db.recentSearchDao().update(
                 recentSearchModel.toBusRouteRecentSearchEntity())
@@ -93,7 +105,7 @@ class RouteRepositoryImpl(
         }
     }
 
-    override fun deleteRecentSearch(recentSearchModel: RouteRecentSearchModel): Result<Boolean> {
+    override suspend fun deleteRecentSearch(recentSearchModel: RouteRecentSearchModel): Result<Boolean> {
         try {
             db.recentSearchDao().delete(
                 recentSearchModel.toBusRouteRecentSearchEntity())
@@ -104,7 +116,7 @@ class RouteRepositoryImpl(
         }
     }
 
-    override fun deleteAllRecentSearch(recentSearchModels: List<RouteRecentSearchModel>): Result<Boolean> {
+    override suspend fun deleteAllRecentSearch(recentSearchModels: List<RouteRecentSearchModel>): Result<Boolean> {
         try {
             db.recentSearchDao().deleteAll(
                 recentSearchModels.map { it.toBusRouteRecentSearchEntity() }.toList())
@@ -116,19 +128,20 @@ class RouteRepositoryImpl(
     }
 
     /**
-     * fun getRecentSearchIndex(context: Activty): Result<Int>
+     * fun getRecentSearchIndex(context: Activity): Result<Int>
      *
      * 최근 검색 노선의 생성 고유 인덱스 호출 함수
-     * preference.getInt() 에서 디폴트값을 설정하기 때문에 별도 예외처리를 진행하지 않는다.
+     * preference.getLong() 에서 디폴트값을 설정하기 때문에 별도 예외처리를 진행하지 않는다.
      */
     override fun getRecentSearchIndex(context: Activity): Result<Long> {
-        val preference = context.getPreferences(Context.MODE_PRIVATE)
+        val preference = context.getSharedPreferences(BuildConfig.APPLICATION_ID, Context.MODE_PRIVATE)
         return Result.success(
-            preference.getLong(BuildConfig.BUS_ROUTE_PREFERENCE_KEY, Const.ZERO.toLong()))
+            preference.getLong(BuildConfig.BUS_ROUTE_PREFERENCE_KEY, DEFAULT_INDEX)
+        )
     }
 
     override fun updateRecentSearchIndex(context: Activity, newIdx: Long): Result<Boolean> {
-        val preference = context.getPreferences(Context.MODE_PRIVATE)
+        val preference = context.getSharedPreferences(BuildConfig.APPLICATION_ID, Context.MODE_PRIVATE)
         try {
             preference.edit().putLong(BuildConfig.BUS_ROUTE_PREFERENCE_KEY, newIdx).apply()
             return Result.success(true)
@@ -136,5 +149,9 @@ class RouteRepositoryImpl(
             Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.message ?: e.toString())
             return Result.error(e)
         }
+    }
+
+    companion object {
+        private const val DEFAULT_INDEX: Long = 0
     }
 }

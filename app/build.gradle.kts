@@ -69,6 +69,7 @@ dependencies {
     implementation("com.tickaroo.tikxml:core:0.8.13")
     implementation("com.squareup.okhttp3:logging-interceptor:3.12.1")
     implementation("androidx.room:room-runtime:$roomVersion")
+    implementation("androidx.room:room-ktx:$roomVersion")
     annotationProcessor("androidx.room:room-compiler:$roomVersion")
 
     kapt("com.tickaroo.tikxml:processor:0.8.13")

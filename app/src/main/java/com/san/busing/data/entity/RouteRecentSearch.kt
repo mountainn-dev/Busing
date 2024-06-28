@@ -18,11 +18,13 @@ data class RouteRecentSearch(
     val routeName: String,
     val routeTypeCd: Int,
     val index: Long,
+    val bookMark: Boolean
 ) {
     fun toRouteRecentSearchModel() = RouteRecentSearchModel(
         Id(id),
         routeName,
         Utils.getRouteType(routeTypeCd),
-        index
+        index,
+        bookMark
     )
 }

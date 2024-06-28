@@ -102,6 +102,17 @@
 
                     </LinearLayout>
 
+                    <ImageButton
+                        android:id="@+id/btnBookMark"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_padding_default"
+                        android:src="@drawable/ic_off_book_mark"
+                        android:background="@drawable/bg_circle_white_bordered"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/btnRouteInfo"/>
+
                     <LinearLayout
                         android:id="@+id/linearLayout"
                         android:layout_width="wrap_content"

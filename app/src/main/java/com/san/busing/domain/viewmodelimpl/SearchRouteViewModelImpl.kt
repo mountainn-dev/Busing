@@ -63,30 +63,6 @@ class SearchRouteViewModelImpl(
         }
     }
 
-    override fun insert(recentSearchModel: RouteRecentSearchModel) {
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) { insertRecentSearch(recentSearchModel) }
-        }
-    }
-
-    private fun insertRecentSearch(recentSearchModel: RouteRecentSearchModel) {
-        val result = routeRepository.insertRecentSearch(recentSearchModel)
-
-        if (result is Error) error = result.message()
-    }
-
-    override fun update(recentSearchModel: RouteRecentSearchModel) {
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) { updateRecentSearch(recentSearchModel) }
-        }
-    }
-
-    private fun updateRecentSearch(recentSearchModel: RouteRecentSearchModel) {
-        val result = routeRepository.updateRecentSearch(recentSearchModel)
-
-        if (result is Error) error = result.message()
-    }
-
     override fun delete(recentSearchModel: RouteRecentSearchModel) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
@@ -96,7 +72,7 @@ class SearchRouteViewModelImpl(
         }
     }
 
-    private fun deleteRecentSearch(recentSearchModel: RouteRecentSearchModel) {
+    private suspend fun deleteRecentSearch(recentSearchModel: RouteRecentSearchModel) {
         val result = routeRepository.deleteRecentSearch(recentSearchModel)
 
         if (result is Error) error = result.message()
@@ -104,7 +80,7 @@ class SearchRouteViewModelImpl(
 
     override fun deleteAll(context: Activity) {
         if (dataState(recentSearchContentLoaded)) {
-            updateRecentSearchIndex(context, Const.ZERO.toLong())   // 최근 검색 인덱스 초기화
+            resetRecentSearchIndex(context)   // 최근 검색 인덱스 초기화
             viewModelScope.launch {
                 withContext(Dispatchers.IO) {
                     deleteAllRecentSearch()
@@ -114,10 +90,20 @@ class SearchRouteViewModelImpl(
         }
     }
 
-    private fun deleteAllRecentSearch() {
+    private fun resetRecentSearchIndex(context: Activity) {
+        val result = routeRepository.updateRecentSearchIndex(context, DEFAULT_RECENT_SEARCH_INDEX)
+
+        if (result is Error) error = result.message()
+    }
+
+    private suspend fun deleteAllRecentSearch() {
         val result = routeRepository.deleteAllRecentSearch(routeRecentSearches)
 
         if (result is Error) error = result.message()
+    }
+
+    override fun clearKeyword() {
+        this.keyword = Const.EMPTY_TEXT
     }
 
     override fun restore() {
@@ -126,8 +112,8 @@ class SearchRouteViewModelImpl(
         }
     }
 
-    private fun loadRecentSearchContent() {
-        val result = routeRepository.getRecentSearch()
+    private suspend fun loadRecentSearchContent() {
+        val result = routeRepository.getRecentSearches()
 
         if (result is Success) {
             if (result.data.isEmpty()) recentSearchContentLoaded.postValue(false)
@@ -141,28 +127,9 @@ class SearchRouteViewModelImpl(
         }
     }
 
-    override fun clearKeyword() {
-        this.keyword = Const.EMPTY_TEXT
-    }
-
-    override fun recentSearchIndex(context: Activity): Long {
-        val newIndex = getRecentSearchIndex(context)
-        updateRecentSearchIndex(context, newIndex)
-
-        return newIndex
-    }
-
-    private fun getRecentSearchIndex(context: Activity): Long {
-        val result = routeRepository.getRecentSearchIndex(context)
-
-        return (result as Success).data + 1
-    }
-
-    private fun updateRecentSearchIndex(context: Activity, newIdx: Long) {
-        val result = routeRepository.updateRecentSearchIndex(context, newIdx)
-
-        if (result is Error) error = result.message()
-    }
-
     private fun dataState(data: MutableLiveData<Boolean>) = data.isInitialized && data.value!!
+
+    companion object {
+        private const val DEFAULT_RECENT_SEARCH_INDEX: Long = 0
+    }
 }

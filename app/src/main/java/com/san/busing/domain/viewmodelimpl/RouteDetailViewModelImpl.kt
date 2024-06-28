@@ -1,5 +1,6 @@
 package com.san.busing.domain.viewmodelimpl
 
+import android.app.Activity
 import android.os.CountDownTimer
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
@@ -11,8 +12,10 @@ import com.san.busing.data.Success
 import com.san.busing.data.repository.BusLocationRepository
 import com.san.busing.data.repository.RouteRepository
 import com.san.busing.data.vo.Id
+import com.san.busing.domain.enums.RouteType
 import com.san.busing.domain.model.BusModel
 import com.san.busing.domain.model.RouteInfoModel
+import com.san.busing.domain.model.RouteRecentSearchModel
 import com.san.busing.domain.model.RouteStationModel
 import com.san.busing.domain.state.UiState
 import com.san.busing.domain.viewmodel.RouteDetailViewModel
@@ -26,9 +29,9 @@ class RouteDetailViewModelImpl(
     private val routeRepository: RouteRepository,
     private val busLocationRepository: BusLocationRepository,
     private val routeId: Id,
+    private val routeName: String,
+    private val routeType: RouteType,
 ) : RouteDetailViewModel, ViewModel() {
-    private var isLoadable = false
-
     override val state: LiveData<UiState>
         get() = uiState
     private val uiState = MediatorLiveData<UiState>()
@@ -42,6 +45,7 @@ class RouteDetailViewModelImpl(
     override val loadableRemainTime: LiveData<Int>
         get() = remainTime
     private val remainTime = MutableLiveData<Int>()
+    private var isLoadable = false
     private val timer = object: CountDownTimer(REMAIN_TOTAL_MILLIS, REMAIN_INTERVAL_MILLIS) {
         override fun onTick(time: Long) {
             if (!isLoadable) isLoadable = true
@@ -51,6 +55,11 @@ class RouteDetailViewModelImpl(
             isLoadable = false
         }
     }
+
+    override val bookMark: LiveData<Boolean>
+        get() = isBookMark
+    private val isBookMark = MutableLiveData<Boolean>()
+    private lateinit var recentSearch: RouteRecentSearchModel
 
     override lateinit var error: String
 
@@ -114,6 +123,88 @@ class RouteDetailViewModelImpl(
             timer.start()
             load()
         }
+    }
+
+    // 최근검색 목록 갱신
+    override fun update(context: Activity) {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                loadRecentSearch(context)
+                loadBookMarkContent()
+                insertRecentSearch()
+                updateRecentSearch()
+            }
+        }
+    }
+
+    private suspend fun loadRecentSearch(context: Activity) {
+        val result = routeRepository.getRecentSearch(routeId)
+
+        if (result is Success) {
+            val model = result.data
+            recentSearch = RouteRecentSearchModel(
+                model.id, model.name, model.type,
+                nextRecentSearchIndex(context), model.bookMark)
+        }
+        else {
+            recentSearch = RouteRecentSearchModel(
+                routeId, routeName, routeType,
+                nextRecentSearchIndex(context), false)
+            isBookMark.postValue(false)
+            error = (result as Error).message()
+        }
+    }
+
+    private fun nextRecentSearchIndex(context: Activity): Long {
+        val newIndex = previousRecentSearchIndex(context) + 1
+        updateRecentSearchIndex(context, newIndex)
+
+        return newIndex
+    }
+
+    private fun previousRecentSearchIndex(context: Activity): Long {
+        val result = routeRepository.getRecentSearchIndex(context)
+
+        return (result as Success).data
+    }
+
+    private fun updateRecentSearchIndex(context: Activity, newIdx: Long) {
+        val result = routeRepository.updateRecentSearchIndex(context, newIdx)
+
+        if (result is Error) error = result.message()
+    }
+
+    private suspend fun insertRecentSearch() {
+        val result = routeRepository.insertRecentSearch(recentSearch)
+
+        if (result is Error) error = result.message()
+    }
+
+    private suspend fun updateRecentSearch() {
+        val result = routeRepository.updateRecentSearch(recentSearch)
+
+        if (result is Error) error = result.message()
+    }
+
+    override fun toggleBookMark() {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                changeBookMark()
+                updateRecentSearch()
+                loadBookMarkContent()
+            }
+        }
+    }
+
+    private fun changeBookMark() {
+        recentSearch = RouteRecentSearchModel(
+            recentSearch.id, recentSearch.name, recentSearch.type,
+            recentSearch.index, !recentSearch.bookMark
+        )
+    }
+
+    private fun loadBookMarkContent() {
+        isBookMark.postValue(recentSearch.bookMark)
     }
 
     /**
