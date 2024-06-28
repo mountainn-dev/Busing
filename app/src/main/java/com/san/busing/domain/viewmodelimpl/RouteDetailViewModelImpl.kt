@@ -189,14 +189,14 @@ class RouteDetailViewModelImpl(
     override fun toggleBookMark() {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                changeBookMark()
+                changeBookMarkStatus()
                 updateRecentSearch()
                 loadBookMarkContent()
             }
         }
     }
 
-    private fun changeBookMark() {
+    private fun changeBookMarkStatus() {
         recentSearch = RouteRecentSearchModel(
             recentSearch.id, recentSearch.name, recentSearch.type,
             recentSearch.index, !recentSearch.bookMark
