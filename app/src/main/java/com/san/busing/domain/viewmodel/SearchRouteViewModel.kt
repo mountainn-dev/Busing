@@ -2,7 +2,6 @@ package com.san.busing.domain.viewmodel
 
 import android.app.Activity
 import androidx.lifecycle.LiveData
-import com.san.busing.data.vo.Id
 import com.san.busing.domain.model.RouteRecentSearchModel
 import com.san.busing.domain.model.RouteSummaryModel
 import com.san.busing.domain.state.UiState

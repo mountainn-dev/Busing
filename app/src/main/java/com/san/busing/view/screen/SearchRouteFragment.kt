@@ -27,7 +27,6 @@ import com.san.busing.view.adapter.RouteRecentSearchAdapter
 import com.san.busing.view.adapter.RouteSearchResultAdapter
 import com.san.busing.view.listener.ItemClickEventListener
 import com.san.busing.view.listener.RecyclerViewScrollListener
-import com.san.busing.view.widget.ErrorToast
 
 class SearchRouteFragment : Fragment() {
     private lateinit var binding: FragmentSearchRouteBinding

@@ -5,24 +5,9 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.san.busing.R
 import com.san.busing.databinding.ItemRouteRecentSearchBinding
-import com.san.busing.domain.enums.RouteType.AIRPORT_LIMO
-import com.san.busing.domain.enums.RouteType.AIRPORT_NORMAL
-import com.san.busing.domain.enums.RouteType.AIRPORT_SEAT
-import com.san.busing.domain.enums.RouteType.AREA_DIRECT
-import com.san.busing.domain.enums.RouteType.AREA_EXPRESS
-import com.san.busing.domain.enums.RouteType.CIRCULAR
-import com.san.busing.domain.enums.RouteType.NORMAL
-import com.san.busing.domain.enums.RouteType.NORMAL_SEAT
-import com.san.busing.domain.enums.RouteType.OUT_TOWN_EXPRESS
-import com.san.busing.domain.enums.RouteType.OUT_TOWN_NORMAL
-import com.san.busing.domain.enums.RouteType.OUT_TOWN_SEAT
-import com.san.busing.domain.enums.RouteType.RURAL_DIRECT
-import com.san.busing.domain.enums.RouteType.RURAL_NORMAL
-import com.san.busing.domain.enums.RouteType.RURAL_SEAT
-import com.san.busing.domain.enums.RouteType.VILLAGE
 import com.san.busing.domain.model.RouteRecentSearchModel
+import com.san.busing.domain.utils.Utils
 import com.san.busing.view.listener.ItemClickEventListener
 
 class RouteRecentSearchAdapter(
@@ -37,6 +22,7 @@ class RouteRecentSearchAdapter(
 
         fun bind(position: Int) {
             loadContent(position)
+            setBackground(position)
             setContentColor(position)
             setItemClickEventListener(position)
         }
@@ -45,19 +31,16 @@ class RouteRecentSearchAdapter(
             binding.txtBusRouteRecentSearchName.text = items[position].name
         }
 
-        private fun setContentColor(position: Int) {
-            val color = ContextCompat.getColor(context, colorIdByRouteType(position))
+        private fun setBackground(position: Int) {
+            val background = ContextCompat.getDrawable(context, Utils.getBackgroundByBookMarkStatus(items[position].bookMark))
 
-            binding.txtBusRouteRecentSearchName.setTextColor(color)
+            binding.clRouteRecentSearchItem.background = background
         }
 
-        private fun colorIdByRouteType(position: Int): Int {
-            return when (items[position].type) {
-                AIRPORT_NORMAL, AIRPORT_LIMO, AIRPORT_SEAT, CIRCULAR -> R.color.deep_blue
-                NORMAL, NORMAL_SEAT, OUT_TOWN_NORMAL, OUT_TOWN_EXPRESS, OUT_TOWN_SEAT -> R.color.blue
-                AREA_EXPRESS, AREA_DIRECT -> R.color.red
-                RURAL_NORMAL, RURAL_DIRECT, RURAL_SEAT, VILLAGE -> R.color.green
-            }
+        private fun setContentColor(position: Int) {
+            val color = ContextCompat.getColor(context, Utils.getColorByRouteType(items[position].type))
+
+            binding.txtBusRouteRecentSearchName.setTextColor(color)
         }
 
         private fun setItemClickEventListener(position: Int) {

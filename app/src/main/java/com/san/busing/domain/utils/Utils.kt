@@ -76,4 +76,9 @@ object Utils {
         AREA_EXPRESS, AREA_DIRECT -> R.drawable.ic_bus_red
         RURAL_NORMAL, RURAL_DIRECT, RURAL_SEAT, VILLAGE -> R.drawable.ic_bus_green
     }
+
+    fun getBackgroundByBookMarkStatus(bookMark: Boolean) = when(bookMark) {
+        true -> R.drawable.bg_rectangle_light_yellow_rounded
+        false -> R.drawable.bg_rectangle_white_rounded
+    }
 }

@@ -3,8 +3,8 @@
     <item>
         <shape android:shape="oval">
             <size
-                android:width="28dp"
-                android:height="28dp"
+                android:width="@dimen/size_btn_book_mark"
+                android:height="@dimen/size_btn_book_mark"
                 />
             <stroke
                 android:width="@dimen/line_thin"

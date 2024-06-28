@@ -32,6 +32,7 @@
             <!-- Detail -->
             <dimen name="height_detail_layout">200dp</dimen>
             <dimen name="margin_icon_range">40dp</dimen>
+            <dimen name="size_btn_book_mark">28dp</dimen>
             <dimen name="text_size_detail_title">20sp</dimen>
             <dimen name="text_size_fab_time">20sp</dimen>
 

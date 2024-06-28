@@ -118,7 +118,8 @@ class SearchRouteViewModelImpl(
         if (result is Success) {
             if (result.data.isEmpty()) recentSearchContentLoaded.postValue(false)
             else {
-                routeRecentSearches = result.data.sortedByDescending { it.index }
+                routeRecentSearches = result.data.sortedWith(
+                    compareByDescending<RouteRecentSearchModel> { it.bookMark }.thenByDescending { it.index })
                 recentSearchContentLoaded.postValue(true)
             }
         } else {

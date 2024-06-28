@@ -108,7 +108,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/margin_padding_default"
                         android:src="@drawable/ic_off_book_mark"
-                        android:background="@drawable/bg_circle_white_bordered"
+                        android:background="@drawable/bg_book_mark"
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/btnRouteInfo"/>
