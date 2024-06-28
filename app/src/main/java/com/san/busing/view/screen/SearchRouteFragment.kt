@@ -133,7 +133,14 @@ class SearchRouteFragment : Fragment() {
             intent.putExtra(Const.TAG_ROUTE_NAME, items[position].name)
             intent.putExtra(Const.TAG_ROUTE_TYPE, items[position].type)
 
-            // 최근 검색 추가
+            // 최근 검색 갱신 혹은 추가
+            viewModel.update(
+                RouteRecentSearchModel(
+                    items[position].id, items[position].name, items[position].type,
+                    viewModel.recentSearchIndex(context)
+                )
+            )
+
             viewModel.insert(
                 RouteRecentSearchModel(
                     items[position].id, items[position].name, items[position].type,
