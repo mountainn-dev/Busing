@@ -12,11 +12,12 @@ interface RouteRepository {
     suspend fun getRouteInfo(id: Id): Result<RouteInfoModel>
     suspend fun getRoutes(keyword: String): Result<List<RouteSummaryModel>>
     suspend fun getRouteStations(id: Id): Result<List<RouteStationModel>>
-    fun getRecentSearch(): Result<List<RouteRecentSearchModel>>
-    fun insertRecentSearch(recentSearchModel: RouteRecentSearchModel): Result<Boolean>
-    fun updateRecentSearch(recentSearchModel: RouteRecentSearchModel): Result<Boolean>
-    fun deleteRecentSearch(recentSearchModel: RouteRecentSearchModel): Result<Boolean>
-    fun deleteAllRecentSearch(recentSearchModels: List<RouteRecentSearchModel>): Result<Boolean>
+    suspend fun getRecentSearch(id: Id): Result<RouteRecentSearchModel>
+    suspend fun getRecentSearches(): Result<List<RouteRecentSearchModel>>
+    suspend fun insertRecentSearch(recentSearchModel: RouteRecentSearchModel): Result<Boolean>
+    suspend fun updateRecentSearch(recentSearchModel: RouteRecentSearchModel): Result<Boolean>
+    suspend fun deleteRecentSearch(recentSearchModel: RouteRecentSearchModel): Result<Boolean>
+    suspend fun deleteAllRecentSearch(recentSearchModels: List<RouteRecentSearchModel>): Result<Boolean>
     fun getRecentSearchIndex(context: Activity): Result<Long>
     fun updateRecentSearchIndex(context: Activity, newIdx: Long): Result<Boolean>
 }

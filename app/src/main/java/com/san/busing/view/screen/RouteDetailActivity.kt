@@ -17,6 +17,7 @@ import com.san.busing.data.vo.Id
 import com.san.busing.databinding.ActivityRouteDetailBinding
 import com.san.busing.domain.enums.RouteType
 import com.san.busing.domain.model.RouteStationModel
+import com.san.busing.domain.state.UiState
 import com.san.busing.domain.utils.Const
 import com.san.busing.domain.utils.Utils
 import com.san.busing.domain.viewmodel.RouteDetailViewModel
@@ -41,9 +42,11 @@ class RouteDetailActivity : AppCompatActivity() {
         val routeName = intent.getStringExtra(Const.TAG_ROUTE_NAME) ?: Const.EMPTY_TEXT
         val routeType = intent.getSerializableExtra(Const.TAG_ROUTE_TYPE) as RouteType
         viewModel = ViewModelProvider(
-            this, RouteDetailViewModelFactory(busRouteRepository, busLocationRepository, routeId)
-        ).get(RouteDetailViewModelImpl::class.java)
+            this, RouteDetailViewModelFactory(
+                busRouteRepository, busLocationRepository, routeId, routeName, routeType
+            )).get(RouteDetailViewModelImpl::class.java)
 
+        viewModel.update(this)
         initToolbar(routeName, routeType, this)
         initObserver(viewModel, routeType, this)
         initListener(viewModel)
@@ -70,53 +73,53 @@ class RouteDetailActivity : AppCompatActivity() {
         routeType: RouteType,
         context: Activity
     ) {
-        viewModel.routeInfoContentReady.observe(
+        viewModel.state.observe(
             context as LifecycleOwner,
-            routeInfoReadyObserver(viewModel)
-        )
-        viewModel.routeStationContentReady.observe(
-            context as LifecycleOwner,
-            routeStationBusReadyObserver(viewModel, routeType, context)
+            uiStateObserver(viewModel, routeType, context)
         )
         viewModel.loadableRemainTime.observe(
             context as LifecycleOwner,
             loadableRemainTimeObserver()
         )
-        viewModel.serviceErrorState.observe(
+        viewModel.bookMark.observe(
             context as LifecycleOwner,
-            serviceErrorStateObserver(viewModel, context)
+            bookMarkObserver()
         )
     }
 
-    private fun routeInfoReadyObserver(viewModel: RouteDetailViewModel) = Observer<Boolean> {
-        if (it) { whenRouteInfoReady(viewModel) }
-        else { whenRouteInfoNotReady() }
+    private fun uiStateObserver(
+        viewModel: RouteDetailViewModel,
+        routeType: RouteType,
+        context: Activity
+    ) = Observer<UiState> {
+        when (it) {
+            UiState.Success -> {
+                loadRouteInfo(viewModel)
+                loadRouteStation(viewModel, routeType, context)
+            }
+            UiState.Loading -> {
+                unloadRouteInfo()
+                loadingView()
+            }
+            UiState.Timeout -> {
+                unloadRouteInfo()
+                timeoutView()
+            }
+            UiState.Error -> {
+                unloadRouteInfo()
+                errorView(viewModel, context)
+            }
+        }
     }
 
-    private fun whenRouteInfoReady(viewModel: RouteDetailViewModel) {
+    private fun loadRouteInfo(viewModel: RouteDetailViewModel) {
         binding.txtRouteStartStation.text = viewModel.routeInfo.startStationName
         binding.txtRouteEndStation.text = viewModel.routeInfo.endStationName
         binding.btnScrollToStartStation.text = viewModel.routeInfo.startStationName
         binding.btnScrollToEndStation.text = viewModel.routeInfo.endStationName
     }
 
-    private fun whenRouteInfoNotReady() {
-        binding.txtRouteStartStation.text = Const.EMPTY_TEXT
-        binding.txtRouteEndStation.text = Const.EMPTY_TEXT
-        binding.btnScrollToStartStation.text = Const.EMPTY_TEXT
-        binding.btnScrollToEndStation.text = Const.EMPTY_TEXT
-    }
-
-    private fun routeStationBusReadyObserver(
-        viewModel: RouteDetailViewModel,
-        routeType: RouteType,
-        context: Activity
-    ) = Observer<Boolean> {
-        if (it) { whenRouteStationAndBusReady(viewModel, routeType, context) }
-        else { whenRouteStationAndBusNotReady() }
-    }
-
-    private fun whenRouteStationAndBusReady(
+    private fun loadRouteStation(
         viewModel: RouteDetailViewModel, routeType: RouteType, context: Activity
     ) {
         val state = binding.rvBusRouteStationList.layoutManager?.onSaveInstanceState()
@@ -132,6 +135,8 @@ class RouteDetailActivity : AppCompatActivity() {
         binding.rvBusRouteStationList.layoutManager?.onRestoreInstanceState(state)
         binding.rvBusRouteStationList.visibility = View.VISIBLE
         binding.pgbBusRouteStation.visibility = View.GONE
+        binding.llTimeout.visibility = View.GONE
+        binding.llServiceError.visibility = View.GONE
         setBtnScrollToEndStation(viewModel)
     }
 
@@ -161,9 +166,35 @@ class RouteDetailActivity : AppCompatActivity() {
         viewModel: RouteDetailViewModel
     ) = viewModel.routeStations.find { it.isTurnaround }?.sequenceNumber ?: 1
 
-    private fun whenRouteStationAndBusNotReady() {
+    private fun unloadRouteInfo() {
+        binding.txtRouteStartStation.text = Const.EMPTY_TEXT
+        binding.txtRouteEndStation.text = Const.EMPTY_TEXT
+        binding.btnScrollToStartStation.text = Const.EMPTY_TEXT
+        binding.btnScrollToEndStation.text = Const.EMPTY_TEXT
+    }
+
+    private fun loadingView() {
         binding.pgbBusRouteStation.visibility = View.VISIBLE
         binding.rvBusRouteStationList.visibility = View.GONE
+        binding.llTimeout.visibility = View.GONE
+        binding.llServiceError.visibility = View.GONE
+        binding.txtRouteBusCount.text = Const.EMPTY_TEXT
+    }
+
+    private fun timeoutView() {
+        binding.llTimeout.visibility = View.VISIBLE
+        binding.rvBusRouteStationList.visibility = View.GONE
+        binding.pgbBusRouteStation.visibility = View.GONE
+        binding.llServiceError.visibility = View.GONE
+    }
+
+    private fun errorView(viewModel: RouteDetailViewModel, context: Activity) {
+        binding.llServiceError.visibility = View.VISIBLE
+        binding.rvBusRouteStationList.visibility = View.GONE
+        binding.pgbBusRouteStation.visibility = View.GONE
+        binding.llTimeout.visibility = View.GONE
+        val toast = ErrorToast(context, viewModel.error)
+        if (toast.previousFinished()) toast.show()
     }
 
     private fun loadableRemainTimeObserver() = Observer<Int> {
@@ -179,19 +210,17 @@ class RouteDetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun serviceErrorStateObserver(
-        viewModel: RouteDetailViewModel, context: Activity
-    ) = Observer<Boolean> {
-        if (it) {
-            val toast = ErrorToast(context, viewModel.error)
-            if (toast.previousFinished()) toast.show()
-        }
+    private fun bookMarkObserver() = Observer<Boolean> {
+        if (it) binding.btnBookMark.setImageResource(R.drawable.ic_on_book_mark)
+        else binding.btnBookMark.setImageResource(R.drawable.ic_off_book_mark)
     }
 
     private fun initListener(viewModel: RouteDetailViewModel) {
         setBtnBackListener()
-        setBtnScrollToStartStation()
-        setFabScrollUp()
+        setBtnBookMarkListener(viewModel)
+        setBtnScrollToStartStationListener()
+        setBtnRequestListener(viewModel)
+        setFabScrollUpListener()
         setFabRefreshListener(viewModel)
     }
 
@@ -199,13 +228,22 @@ class RouteDetailActivity : AppCompatActivity() {
         binding.btnBack.setOnClickListener { finish() }
     }
 
-    private fun setBtnScrollToStartStation() {
+    private fun setBtnBookMarkListener(viewModel: RouteDetailViewModel) {
+        binding.btnBookMark.setOnClickListener { viewModel.toggleBookMark() }
+    }
+
+    private fun setBtnScrollToStartStationListener() {
         binding.btnScrollToStartStation.setOnClickListener {
             binding.rvBusRouteStationList.smoothScrollToPosition(Const.ZERO)
         }
     }
 
-    private fun setFabScrollUp() {
+    private fun setBtnRequestListener(viewModel: RouteDetailViewModel) {
+        binding.btnTimeoutRequest.setOnClickListener { viewModel.load() }
+        binding.btnServiceErrorRequest.setOnClickListener { viewModel.load() }
+    }
+
+    private fun setFabScrollUpListener() {
         binding.fabScrollUp.setOnClickListener {
             binding.rvBusRouteStationList.scrollToPosition(Const.ZERO)
             binding.abRouteDetail.setExpanded(true)
@@ -216,6 +254,11 @@ class RouteDetailActivity : AppCompatActivity() {
         binding.fabRefresh.setOnClickListener { viewModel.reload() }
     }
 
+    /**
+     * fun onResume()
+     *
+     * 액티비티 전환 혹은 포커스가 다시 잡힐 때 호출
+     */
     override fun onResume() {
         viewModel.load()
         super.onResume()

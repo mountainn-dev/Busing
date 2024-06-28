@@ -2,8 +2,12 @@
     <string name="app_name">Busing</string>
 
     <!-- common -->
-    <string name="route_no_result">검색 결과가 없습니다.</string>
     <string name="delete_all">All</string>
+    <string name="timeout">요청 시간이 초과되었습니다.</string>
+    <string name="service_error">데이터 요청에 실패하였습니다.</string>
+
+    <!-- Search -->
+    <string name="route_no_result">검색 결과가 없습니다.</string>
 
     <!-- Route -->
     <string name="tab_name_route">버스</string>
@@ -11,6 +15,7 @@
     <string name="route_no_recent_search">최근 조회한 노선이 없습니다.</string>
 
         <!-- Detail -->
+        <string name="btn_info">정보</string>
         <string name="start_tag_route_bus_count">현재</string>
         <string name="end_tag_route_bus_count">운행중</string>
 

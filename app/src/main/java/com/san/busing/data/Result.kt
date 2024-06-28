@@ -2,6 +2,7 @@ package com.san.busing.data
 
 import com.san.busing.data.exception.ExceptionMessage
 import com.san.busing.data.exception.ServiceException
+import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 import kotlin.Exception
 
@@ -24,4 +25,5 @@ class Error <T> (private val error: Exception) : Result<T>() {
     }
 
     fun isCritical() = error is UnknownHostException || error is ServiceException.SystemException
+    fun isTimeOut() = error is SocketTimeoutException
 }

@@ -1,19 +1,17 @@
 package com.san.busing.domain.utils
 
-import android.app.Activity
 import com.san.busing.R
 import com.san.busing.data.exception.ExceptionMessage
 import com.san.busing.data.source.remote.interceptor.ErrorInterceptor
 import com.san.busing.domain.enums.PlateType.*
-import com.san.busing.domain.enums.RouteType.*
-import com.san.busing.data.source.remote.retrofit.ServiceResult.*
 import com.san.busing.domain.enums.RouteType
-import com.san.busing.view.widget.ErrorToast
+import com.san.busing.domain.enums.RouteType.*
 import com.tickaroo.tikxml.TikXml
 import com.tickaroo.tikxml.retrofit.TikXmlConverterFactory
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
+import java.util.concurrent.TimeUnit
 
 object Utils {
     fun getRetrofit(baseUrl: String) = Retrofit.Builder()
@@ -25,6 +23,9 @@ object Utils {
     private fun getClient() = OkHttpClient().newBuilder()
         .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
         .addInterceptor(ErrorInterceptor())
+        .connectTimeout(5, TimeUnit.SECONDS)
+        .readTimeout(5, TimeUnit.SECONDS)
+        .writeTimeout(5, TimeUnit.SECONDS)
         .build()
 
     private fun getXmlParse() = TikXml.Builder().exceptionOnUnreadXml(false).build()
@@ -74,5 +75,10 @@ object Utils {
         NORMAL, NORMAL_SEAT, OUT_TOWN_NORMAL, OUT_TOWN_EXPRESS, OUT_TOWN_SEAT -> R.drawable.ic_bus_blue
         AREA_EXPRESS, AREA_DIRECT -> R.drawable.ic_bus_red
         RURAL_NORMAL, RURAL_DIRECT, RURAL_SEAT, VILLAGE -> R.drawable.ic_bus_green
+    }
+
+    fun getBackgroundByBookMarkStatus(bookMark: Boolean) = when(bookMark) {
+        true -> R.drawable.bg_rectangle_light_yellow_rounded
+        false -> R.drawable.bg_rectangle_white_rounded
     }
 }

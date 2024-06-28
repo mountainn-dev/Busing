@@ -3,7 +3,6 @@ package com.san.busing.view.screen
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,6 +17,7 @@ import com.san.busing.data.repositoryimpl.RouteRepositoryImpl
 import com.san.busing.databinding.FragmentSearchRouteBinding
 import com.san.busing.domain.model.RouteRecentSearchModel
 import com.san.busing.domain.model.RouteSummaryModel
+import com.san.busing.domain.state.UiState
 import com.san.busing.domain.utils.Const
 import com.san.busing.domain.utils.Utils
 import com.san.busing.domain.viewmodel.SearchRouteViewModel
@@ -27,7 +27,6 @@ import com.san.busing.view.adapter.RouteRecentSearchAdapter
 import com.san.busing.view.adapter.RouteSearchResultAdapter
 import com.san.busing.view.listener.ItemClickEventListener
 import com.san.busing.view.listener.RecyclerViewScrollListener
-import com.san.busing.view.widget.ErrorToast
 
 class SearchRouteFragment : Fragment() {
     private lateinit var binding: FragmentSearchRouteBinding
@@ -70,29 +69,46 @@ class SearchRouteFragment : Fragment() {
         viewModel: SearchRouteViewModel,
         context: Activity
     ) {
-        viewModel.searchResultContentReady.observe(
+        viewModel.state.observe(
             viewLifecycleOwner,
-            searchResultContentReadyObserver(viewModel, context)
+            uiStateObserver(viewModel, context)
         )
         viewModel.recentSearchContentReady.observe(
             viewLifecycleOwner,
             recentSearchContentReadyObserver(viewModel, context)
         )
-        viewModel.serviceErrorState.observe(
-            viewLifecycleOwner,
-            serviceErrorStateObserver(viewModel, context)
-        )
     }
 
-    private fun searchResultContentReadyObserver(
+    private fun uiStateObserver(
         viewModel: SearchRouteViewModel,
         context: Activity
-    ) = Observer<Boolean> {
-        if (it) { whenSearchResultReady(viewModel, context) }
-        else { whenSearchResultNotReady() }
+    ) = Observer<UiState> {
+        when (it) {
+            UiState.Success -> {
+                if (viewModel.routeSummaries.isEmpty()) noSearchResultView()
+                else loadSearchResult(viewModel, context)
+            }
+            UiState.Loading -> {
+                loadingView()
+            }
+            UiState.Timeout -> {
+                timeoutView()
+            }
+            UiState.Error -> {
+                errorView(viewModel, context)
+            }
+        }
     }
 
-    private fun whenSearchResultReady(viewModel: SearchRouteViewModel, context: Activity) {
+    private fun noSearchResultView() {
+        binding.txtNoResult.visibility = View.VISIBLE
+        binding.rvSearchResult.visibility = View.GONE
+        binding.pgbSearchRoute.visibility = View.GONE
+        binding.llTimeout.visibility = View.GONE
+        binding.llServiceError.visibility = View.GONE
+    }
+
+    private fun loadSearchResult(viewModel: SearchRouteViewModel, context: Activity) {
         binding.rvSearchResult.adapter = RouteSearchResultAdapter(
             viewModel.routeSummaries,
             searchResultItemClickEventListener(viewModel.routeSummaries, context),
@@ -100,6 +116,10 @@ class SearchRouteFragment : Fragment() {
         )
         binding.rvSearchResult.layoutManager = LinearLayoutManager(context)
         binding.rvSearchResult.visibility = View.VISIBLE
+        binding.pgbSearchRoute.visibility = View.GONE
+        binding.txtNoResult.visibility = View.GONE
+        binding.llTimeout.visibility = View.GONE
+        binding.llServiceError.visibility = View.GONE
     }
 
     private fun searchResultItemClickEventListener(
@@ -112,22 +132,35 @@ class SearchRouteFragment : Fragment() {
             intent.putExtra(Const.TAG_ROUTE_NAME, items[position].name)
             intent.putExtra(Const.TAG_ROUTE_TYPE, items[position].type)
 
-            // 최근 검색 추가
-            viewModel.insert(
-                RouteRecentSearchModel(
-                    items[position].id, items[position].name, items[position].type,
-                    viewModel.recentSearchIndex(context)
-                )
-            )
-
             context.startActivity(intent)
         }
 
         override fun onDeleteButtonClickListener(position: Int) {}
     }
 
-    private fun whenSearchResultNotReady() {
+    private fun loadingView() {
+        binding.pgbSearchRoute.visibility = View.VISIBLE
         binding.rvSearchResult.visibility = View.GONE
+        binding.txtNoResult.visibility = View.GONE
+        binding.llTimeout.visibility = View.GONE
+        binding.llServiceError.visibility = View.GONE
+
+    }
+
+    private fun timeoutView() {
+        binding.llTimeout.visibility = View.VISIBLE
+        binding.rvSearchResult.visibility = View.GONE
+        binding.pgbSearchRoute.visibility = View.GONE
+        binding.txtNoResult.visibility = View.GONE
+        binding.llServiceError.visibility = View.GONE
+    }
+
+    private fun errorView(viewModel: SearchRouteViewModel, context: Activity) {
+        binding.llServiceError.visibility = View.VISIBLE
+        binding.rvSearchResult.visibility = View.GONE
+        binding.pgbSearchRoute.visibility = View.GONE
+        binding.txtNoResult.visibility = View.GONE
+        binding.llTimeout.visibility = View.GONE
     }
 
     private fun recentSearchContentReadyObserver(
@@ -164,14 +197,6 @@ class SearchRouteFragment : Fragment() {
             intent.putExtra(Const.TAG_ROUTE_NAME, items[position].name)
             intent.putExtra(Const.TAG_ROUTE_TYPE, items[position].type)
 
-            // 최근 검색 갱신
-            viewModel.update(
-                RouteRecentSearchModel(
-                    items[position].id, items[position].name, items[position].type,
-                    viewModel.recentSearchIndex(context)
-                )
-            )
-
             context.startActivity(intent)
         }
 
@@ -180,18 +205,12 @@ class SearchRouteFragment : Fragment() {
         }
     }
 
-    private fun serviceErrorStateObserver(viewModel: SearchRouteViewModel, context: Activity) = Observer<Boolean> {
-        if (it) {
-            val toast = ErrorToast(context, viewModel.error)
-            if (toast.previousFinished()) toast.show()
-        }
-    }
-
     private fun initListener(viewModel: SearchRouteViewModel, context: Activity) {
         setEdRouteActionListener(viewModel)
         setBtnDeleteSearchKeywordListener(viewModel, context)
         setBtnDeleteAllRecentSearchListener(viewModel, context)
         setRvBusRouteScrollListener(context)
+        setBtnRequestListener(viewModel)
     }
 
     private fun setEdRouteActionListener(viewModel: SearchRouteViewModel) {
@@ -231,6 +250,15 @@ class SearchRouteFragment : Fragment() {
 
     private fun setRvBusRouteScrollListener(context: Activity) {
         binding.rvSearchResult.addOnScrollListener(RecyclerViewScrollListener(context))
+    }
+
+    private fun setBtnRequestListener(viewModel: SearchRouteViewModel) {
+        binding.btnTimeoutRequest.setOnClickListener {
+            viewModel.search(viewModel.keyword)
+        }
+        binding.btnServiceErrorRequest.setOnClickListener {
+            viewModel.search(viewModel.keyword)
+        }
     }
 
     override fun onStart() {

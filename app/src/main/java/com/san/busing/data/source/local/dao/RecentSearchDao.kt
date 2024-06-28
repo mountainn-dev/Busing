@@ -10,18 +10,21 @@ import com.san.busing.data.entity.RouteRecentSearch
 
 @Dao
 interface RecentSearchDao {
+    @Query("SELECT * FROM routerecentsearch WHERE id = :id")
+    suspend fun get(id: Int): RouteRecentSearch?
+
     @Query("SELECT * FROM routerecentsearch")
-    fun getAll(): List<RouteRecentSearch>
+    suspend fun getAll(): List<RouteRecentSearch>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insert(busRouteRecentSearch: RouteRecentSearch)
+    suspend fun insert(busRouteRecentSearch: RouteRecentSearch)
 
     @Update
-    fun update(busRouteRecentSearch: RouteRecentSearch)
+    suspend fun update(busRouteRecentSearch: RouteRecentSearch)
 
     @Delete
-    fun delete(busRouteRecentSearch: RouteRecentSearch)
+    suspend fun delete(busRouteRecentSearch: RouteRecentSearch)
 
     @Delete
-    fun deleteAll(busRouteRecentSearches: List<RouteRecentSearch>)
+    suspend fun deleteAll(busRouteRecentSearches: List<RouteRecentSearch>)
 }

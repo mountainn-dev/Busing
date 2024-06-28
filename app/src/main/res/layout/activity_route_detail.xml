@@ -39,7 +39,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="0.6"
+                    android:layout_weight="0.4"
                     android:gravity="center"
                     android:orientation="horizontal"
                     android:weightSum="1">
@@ -55,7 +55,7 @@
                     <ImageView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="@dimen/margin_icon_range"
+                        android:layout_marginHorizontal="@dimen/margin_padding_default"
                         android:layout_weight="0.1"
                         android:src="@drawable/ic_range_white" />
 
@@ -69,35 +69,82 @@
 
                 </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="end"
-                    android:layout_margin="@dimen/margin_padding_default"
-                    android:orientation="horizontal">
+                    android:layout_margin="@dimen/margin_padding_large">
 
-                    <TextView
+                    <LinearLayout
+                        android:id="@+id/btnRouteInfo"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="@dimen/margin_padding_small"
-                        android:text="@string/start_tag_route_bus_count"
-                        android:textColor="@color/white"/>
+                        android:paddingHorizontal="@dimen/margin_padding_default"
+                        android:paddingVertical="@dimen/margin_padding_extremely_small"
+                        android:orientation="horizontal"
+                        android:clickable="true"
+                        android:gravity="center"
+                        android:background="@drawable/bg_btn_info"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent">
 
-                    <TextView
-                        android:id="@+id/txtRouteBusCount"
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/margin_padding_smallest"
+                            android:src="@drawable/ic_info"
+                            app:tint="@color/white"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/btn_info"
+                            android:textColor="@color/white"/>
+
+                    </LinearLayout>
+
+                    <ImageButton
+                        android:id="@+id/btnBookMark"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/black"
-                        android:layout_gravity="end"/>
+                        android:layout_marginStart="@dimen/margin_padding_default"
+                        android:src="@drawable/ic_off_book_mark"
+                        android:background="@drawable/bg_book_mark"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/btnRouteInfo"/>
 
-                    <TextView
+                    <LinearLayout
+                        android:id="@+id/linearLayout"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="@dimen/margin_padding_small"
-                        android:text="@string/end_tag_route_bus_count"
-                        android:textColor="@color/white"/>
+                        android:orientation="horizontal"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent">
 
-                </LinearLayout>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="@dimen/margin_padding_small"
+                            android:text="@string/start_tag_route_bus_count"
+                            android:textColor="@color/white" />
+
+                        <TextView
+                            android:id="@+id/txtRouteBusCount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="end"
+                            android:textColor="@color/black" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="@dimen/margin_padding_small"
+                            android:text="@string/end_tag_route_bus_count"
+                            android:textColor="@color/white" />
+
+                    </LinearLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
             </LinearLayout>
 
@@ -105,7 +152,6 @@
                 android:id="@+id/tbRouteDetail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:contentInsetStart="@dimen/margin_padding_default"
                 app:layout_collapseMode="pin">
 
                 <ImageButton
@@ -169,6 +215,13 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvBusRouteStationList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:visibility="gone" />
+
         <com.google.android.material.progressindicator.CircularProgressIndicator
             android:id="@+id/pgbBusRouteStation"
             android:layout_width="match_parent"
@@ -178,15 +231,58 @@
             app:indicatorColor="@color/grey"
             app:trackColor="@color/light_grey"
             app:trackThickness="@dimen/thickness_loading_indicator"
-            android:indeterminate="true"/>
+            android:indeterminate="true"
+            android:visibility="gone"/>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvBusRouteStationList"
+        <LinearLayout
+            android:id="@+id/llTimeout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:paddingBottom="@dimen/padding_bottom_loading_indicator"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:visibility="gone">
 
-            android:background="@color/white"
-            android:visibility="gone" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/timeout"
+                android:textColor="@color/grey"/>
+
+            <ImageButton
+                android:id="@+id/btnTimeoutRequest"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_padding_default"
+                android:src="@drawable/ic_request"
+                android:background="@color/white"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llServiceError"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="@dimen/padding_bottom_loading_indicator"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/service_error"
+                android:textColor="@color/grey" />
+
+            <ImageButton
+                android:id="@+id/btnServiceErrorRequest"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_padding_default"
+                android:src="@drawable/ic_request"
+                android:background="@color/white"/>
+
+        </LinearLayout>
 
     </FrameLayout>
 
