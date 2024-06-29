@@ -144,7 +144,8 @@ class RouteDetailViewModelImpl(
             val model = result.data
             recentSearch = RouteRecentSearchModel(
                 model.id, model.name, model.type,
-                nextRecentSearchIndex(context), model.bookMark)
+                if (model.bookMark) model.index else nextRecentSearchIndex(context),
+                model.bookMark)
         }
         else {
             recentSearch = RouteRecentSearchModel(
