@@ -56,6 +56,7 @@ fun getApiKey(key: String): String {
 }
 
 dependencies {
+    implementation("androidx.activity:activity:1.9.0")
     val roomVersion = "2.6.1"
 
     implementation("androidx.core:core-ktx:1.12.0")
