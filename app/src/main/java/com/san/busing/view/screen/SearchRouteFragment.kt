@@ -95,17 +95,13 @@ class SearchRouteFragment : Fragment() {
                 timeoutView()
             }
             UiState.Error -> {
-                errorView(viewModel, context)
+                errorView()
             }
         }
     }
 
     private fun noSearchResultView() {
-        binding.txtNoResult.visibility = View.VISIBLE
-        binding.rvSearchResult.visibility = View.GONE
-        binding.pgbSearchRoute.visibility = View.GONE
-        binding.llTimeout.visibility = View.GONE
-        binding.llServiceError.visibility = View.GONE
+        toggleView(binding.txtNoResult)
     }
 
     private fun loadSearchResult(viewModel: SearchRouteViewModel, context: Activity) {
@@ -115,11 +111,7 @@ class SearchRouteFragment : Fragment() {
             context
         )
         binding.rvSearchResult.layoutManager = LinearLayoutManager(context)
-        binding.rvSearchResult.visibility = View.VISIBLE
-        binding.pgbSearchRoute.visibility = View.GONE
-        binding.txtNoResult.visibility = View.GONE
-        binding.llTimeout.visibility = View.GONE
-        binding.llServiceError.visibility = View.GONE
+        toggleView(binding.rvSearchResult)
     }
 
     private fun searchResultItemClickEventListener(
@@ -139,28 +131,15 @@ class SearchRouteFragment : Fragment() {
     }
 
     private fun loadingView() {
-        binding.pgbSearchRoute.visibility = View.VISIBLE
-        binding.rvSearchResult.visibility = View.GONE
-        binding.txtNoResult.visibility = View.GONE
-        binding.llTimeout.visibility = View.GONE
-        binding.llServiceError.visibility = View.GONE
-
+        toggleView(binding.pgbSearchRoute)
     }
 
     private fun timeoutView() {
-        binding.llTimeout.visibility = View.VISIBLE
-        binding.rvSearchResult.visibility = View.GONE
-        binding.pgbSearchRoute.visibility = View.GONE
-        binding.txtNoResult.visibility = View.GONE
-        binding.llServiceError.visibility = View.GONE
+        toggleView(binding.llTimeout)
     }
 
-    private fun errorView(viewModel: SearchRouteViewModel, context: Activity) {
-        binding.llServiceError.visibility = View.VISIBLE
-        binding.rvSearchResult.visibility = View.GONE
-        binding.pgbSearchRoute.visibility = View.GONE
-        binding.txtNoResult.visibility = View.GONE
-        binding.llTimeout.visibility = View.GONE
+    private fun errorView() {
+        toggleView(binding.llServiceError)
     }
 
     private fun recentSearchContentReadyObserver(
@@ -269,5 +248,13 @@ class SearchRouteFragment : Fragment() {
     private fun restore(viewModel: SearchRouteViewModel) {
         binding.edRoute.setText(viewModel.keyword)
         viewModel.restore()
+    }
+
+    private fun toggleView(view: View) {
+        binding.llTimeout.visibility = if (view == binding.llTimeout) View.VISIBLE else View.GONE
+        binding.rvSearchResult.visibility = if (view == binding.rvSearchResult) View.VISIBLE else View.GONE
+        binding.pgbSearchRoute.visibility = if (view == binding.pgbSearchRoute) View.VISIBLE else View.GONE
+        binding.txtNoResult.visibility = if (view == binding.txtNoResult) View.VISIBLE else View.GONE
+        binding.llServiceError.visibility = if (view == binding.llServiceError) View.VISIBLE else View.GONE
     }
 }
