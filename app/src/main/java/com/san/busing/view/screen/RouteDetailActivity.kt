@@ -133,10 +133,7 @@ class RouteDetailActivity : AppCompatActivity() {
         binding.rvBusRouteStationList.layoutManager = LinearLayoutManager(context)
         binding.txtRouteBusCount.text = String.format(ROUTE_BUS_COUNT, viewModel.routeBuses.size)
         binding.rvBusRouteStationList.layoutManager?.onRestoreInstanceState(state)
-        binding.rvBusRouteStationList.visibility = View.VISIBLE
-        binding.pgbBusRouteStation.visibility = View.GONE
-        binding.llTimeout.visibility = View.GONE
-        binding.llServiceError.visibility = View.GONE
+        toggleView(binding.rvBusRouteStationList)
         setBtnScrollToEndStation(viewModel)
     }
 
@@ -174,25 +171,16 @@ class RouteDetailActivity : AppCompatActivity() {
     }
 
     private fun loadingView() {
-        binding.pgbBusRouteStation.visibility = View.VISIBLE
-        binding.rvBusRouteStationList.visibility = View.GONE
-        binding.llTimeout.visibility = View.GONE
-        binding.llServiceError.visibility = View.GONE
+        toggleView(binding.pgbBusRouteStation)
         binding.txtRouteBusCount.text = Const.EMPTY_TEXT
     }
 
     private fun timeoutView() {
-        binding.llTimeout.visibility = View.VISIBLE
-        binding.rvBusRouteStationList.visibility = View.GONE
-        binding.pgbBusRouteStation.visibility = View.GONE
-        binding.llServiceError.visibility = View.GONE
+        toggleView(binding.llTimeout)
     }
 
     private fun errorView(viewModel: RouteDetailViewModel, context: Activity) {
-        binding.llServiceError.visibility = View.VISIBLE
-        binding.rvBusRouteStationList.visibility = View.GONE
-        binding.pgbBusRouteStation.visibility = View.GONE
-        binding.llTimeout.visibility = View.GONE
+        toggleView(binding.llServiceError)
         val toast = ErrorToast(context, viewModel.error)
         if (toast.previousFinished()) toast.show()
     }
@@ -262,6 +250,13 @@ class RouteDetailActivity : AppCompatActivity() {
     override fun onResume() {
         viewModel.load()
         super.onResume()
+    }
+
+    private fun toggleView(view: View) {
+        binding.pgbBusRouteStation.visibility = if (view == binding.pgbBusRouteStation) View.VISIBLE else View.GONE
+        binding.rvBusRouteStationList.visibility = if (view == binding.rvBusRouteStationList) View.VISIBLE else View.GONE
+        binding.llTimeout.visibility = if (view == binding.llTimeout) View.VISIBLE else View.GONE
+        binding.llServiceError.visibility = if (view == binding.llServiceError) View.VISIBLE else View.GONE
     }
 
     companion object {
