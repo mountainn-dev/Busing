@@ -13,6 +13,8 @@ import com.san.busing.BuildConfig
 import com.san.busing.R
 import com.san.busing.data.repositoryimpl.BusLocationRepositoryImpl
 import com.san.busing.data.repositoryimpl.RouteRepositoryImpl
+import com.san.busing.data.source.remote.retrofit.BusLocationService
+import com.san.busing.data.source.remote.retrofit.RouteService
 import com.san.busing.data.vo.Id
 import com.san.busing.databinding.ActivityRouteDetailBinding
 import com.san.busing.domain.enums.RouteType
@@ -36,8 +38,13 @@ class RouteDetailActivity : AppCompatActivity() {
         binding = ActivityRouteDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val busRouteRepository = RouteRepositoryImpl(Utils.getRetrofit(BuildConfig.ROUTES_URL), this.applicationContext)
-        val busLocationRepository = BusLocationRepositoryImpl(Utils.getRetrofit(BuildConfig.LOCATION_URL))
+        val busRouteRepository = RouteRepositoryImpl(
+            Utils.getRetrofit(BuildConfig.ROUTES_URL).create(RouteService::class.java),
+            this.applicationContext
+        )
+        val busLocationRepository = BusLocationRepositoryImpl(
+            Utils.getRetrofit(BuildConfig.LOCATION_URL).create(BusLocationService::class.java)
+        )
         val routeId = intent.getSerializableExtra(Const.TAG_ROUTE_ID) as Id
         val routeName = intent.getStringExtra(Const.TAG_ROUTE_NAME) ?: Const.EMPTY_TEXT
         val routeType = intent.getSerializableExtra(Const.TAG_ROUTE_TYPE) as RouteType

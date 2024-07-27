@@ -9,13 +9,10 @@ import com.san.busing.data.repository.BusLocationRepository
 import com.san.busing.data.source.remote.retrofit.BusLocationService
 import com.san.busing.data.vo.Id
 import com.san.busing.domain.model.BusModel
-import retrofit2.Retrofit
-import java.net.SocketTimeoutException
 
 class BusLocationRepositoryImpl(
-    private val retrofit: Retrofit
+    private val service: BusLocationService
 ) : BusLocationRepository {
-    private val service = retrofit.create(BusLocationService::class.java)
     override suspend fun getBusLocations(id: Id): Result<List<BusModel>> {
         try {
             val response = service.getBusLocationList(BuildConfig.API_KEY, id.get())
