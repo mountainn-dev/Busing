@@ -11,7 +11,7 @@ import com.tickaroo.tikxml.annotation.Xml
  * RouteInfo
  *
  * 특정 노선의 상세 정보를 담는 클래스
- * 버스 노선 상세 화면 컨텐츠를 구성한다.
+ * 노선 상세 및 노선 정보 화면 컨텐츠를 구성한다.
  */
 @Xml(name = "busRouteInfoItem")
 data class RouteInfo(
