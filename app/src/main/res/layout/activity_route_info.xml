@@ -32,7 +32,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:padding="@dimen/margin_padding_default"
         android:orientation="vertical">
 
@@ -40,6 +40,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/route_range"
+            android:textColor="@color/grey"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/margin_padding_default"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/route_time"
             android:textColor="@color/grey"/>
 
     </LinearLayout>
