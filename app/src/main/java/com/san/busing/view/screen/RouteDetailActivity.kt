@@ -22,9 +22,9 @@ import com.san.busing.domain.model.RouteStationModel
 import com.san.busing.domain.state.UiState
 import com.san.busing.domain.utils.Const
 import com.san.busing.domain.utils.Utils
-import com.san.busing.domain.viewmodel.RouteDetailViewModel
-import com.san.busing.domain.viewmodelfactory.RouteDetailViewModelFactory
-import com.san.busing.domain.viewmodelimpl.RouteDetailViewModelImpl
+import com.san.busing.view.viewmodel.RouteDetailViewModel
+import com.san.busing.view.viewmodelfactory.RouteDetailViewModelFactory
+import com.san.busing.view.viewmodelimpl.RouteDetailViewModelImpl
 import com.san.busing.view.adapter.RouteStationAdapter
 import com.san.busing.view.listener.ItemClickEventListener
 import com.san.busing.view.widget.ErrorToast
@@ -51,7 +51,8 @@ class RouteDetailActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(
             this, RouteDetailViewModelFactory(
                 busRouteRepository, busLocationRepository, routeId, routeName, routeType
-            )).get(RouteDetailViewModelImpl::class.java)
+            )
+        ).get(RouteDetailViewModelImpl::class.java)
 
         viewModel.update(this)
         initToolbar(routeName, routeType, this)

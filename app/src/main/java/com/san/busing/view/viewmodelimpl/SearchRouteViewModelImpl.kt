@@ -1,4 +1,4 @@
-package com.san.busing.domain.viewmodelimpl
+package com.san.busing.view.viewmodelimpl
 
 import android.app.Activity
 import androidx.lifecycle.LiveData
@@ -12,7 +12,7 @@ import com.san.busing.domain.model.RouteRecentSearchModel
 import com.san.busing.domain.model.RouteSummaryModel
 import com.san.busing.domain.state.UiState
 import com.san.busing.domain.utils.Const
-import com.san.busing.domain.viewmodel.SearchRouteViewModel
+import com.san.busing.view.viewmodel.SearchRouteViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext

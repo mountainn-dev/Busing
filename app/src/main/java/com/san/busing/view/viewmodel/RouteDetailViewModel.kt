@@ -1,4 +1,4 @@
-package com.san.busing.domain.viewmodel
+package com.san.busing.view.viewmodel
 
 import android.app.Activity
 import androidx.lifecycle.LiveData

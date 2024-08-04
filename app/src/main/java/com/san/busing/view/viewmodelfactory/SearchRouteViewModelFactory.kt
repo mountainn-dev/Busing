@@ -1,9 +1,9 @@
-package com.san.busing.domain.viewmodelfactory
+package com.san.busing.view.viewmodelfactory
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.san.busing.data.repository.RouteRepository
-import com.san.busing.domain.viewmodelimpl.SearchRouteViewModelImpl
+import com.san.busing.view.viewmodelimpl.SearchRouteViewModelImpl
 
 class SearchRouteViewModelFactory(
     private val routeRepository: RouteRepository
