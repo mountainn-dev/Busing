@@ -42,4 +42,7 @@
                 <dimen name="thickness_loading_indicator">4dp</dimen>
                 <dimen name="text_size_bus_info">12sp</dimen>
                 <dimen name="text_size_station_number">12sp</dimen>
+
+            <!-- Info -->
+            <dimen name="icon_size_range">20dp</dimen>
 </resources>

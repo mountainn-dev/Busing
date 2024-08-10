@@ -36,39 +36,77 @@
         android:padding="@dimen/margin_padding_default"
         android:orientation="vertical">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/route_range"
-            android:textColor="@color/grey"/>
+            android:layout_marginBottom="@dimen/margin_padding_default"
+            android:orientation="vertical">
 
-    </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_padding_small"
+                android:text="@string/route_range"
+                android:textColor="@color/grey"/>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/margin_padding_default"
-        android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
-        <TextView
-            android:layout_width="wrap_content"
+                <TextView
+                    android:id="@+id/txtRouteStartStation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="StartStation"/>
+
+                <ImageView
+                    android:layout_width="@dimen/icon_size_range"
+                    android:layout_height="@dimen/icon_size_range"
+                    android:layout_marginHorizontal="@dimen/margin_padding_extremely_small"
+                    android:src="@drawable/ic_range"
+                    app:tint="@color/black"/>
+
+                <TextView
+                    android:id="@+id/txtRouteEndStation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="EndStation"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/route_time"
-            android:textColor="@color/grey"/>
+            android:layout_marginBottom="@dimen/margin_padding_default"
+            android:orientation="vertical">
 
-    </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_padding_small"
+                android:text="@string/route_time"
+                android:textColor="@color/grey"/>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/margin_padding_default"
-        android:orientation="vertical">
+        </LinearLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/bus_interval"
-            android:textColor="@color/grey"/>
+            android:layout_marginBottom="@dimen/margin_padding_default"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_padding_small"
+                android:text="@string/bus_interval"
+                android:textColor="@color/grey"/>
+
+        </LinearLayout>
 
     </LinearLayout>
 
