@@ -33,20 +33,20 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/margin_padding_default"
         android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_padding_default"
+            android:padding="@dimen/margin_padding_default"
+            android:background="@drawable/bg_rectangle_downside_grey_bordered"
             android:orientation="vertical">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/margin_padding_small"
-                android:text="@string/route_range"
+                android:text="@string/route_info_content_title_1"
                 android:textColor="@color/grey"/>
 
             <LinearLayout
@@ -81,35 +81,106 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_padding_default"
+            android:padding="@dimen/margin_padding_default"
+            android:background="@drawable/bg_rectangle_downside_grey_bordered"
             android:orientation="vertical">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/margin_padding_small"
-                android:text="@string/route_time"
+                android:text="@string/route_info_content_title_2"
                 android:textColor="@color/grey"/>
 
-            <TextView
-                android:id="@+id/txtRouteTime"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                tools:text="RouteTime"/>
+                android:paddingHorizontal="@dimen/margin_padding_default"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/margin_padding_extremely_small"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/margin_padding_default"
+                        android:text="@string/start_station"
+                        android:textColor="@color/grey"/>
+
+                    <TextView
+                        android:id="@+id/txtStartFirstTime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        tools:text="StartFirstTime"/>
+
+                    <TextView
+                        android:layout_width="@dimen/icon_size_range"
+                        android:layout_height="@dimen/icon_size_range"
+                        android:layout_marginHorizontal="@dimen/margin_padding_extremely_small"
+                        android:gravity="center"
+                        android:text="~"/>
+
+                    <TextView
+                        android:id="@+id/txtStartLastTime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        tools:text="StartLastTime"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/margin_padding_default"
+                        android:text="@string/turnaround_station"
+                        android:textColor="@color/grey"/>
+
+                    <TextView
+                        android:id="@+id/txtFinishFirstTime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        tools:text="FinishFirstTime"/>
+
+                    <TextView
+                        android:layout_width="@dimen/icon_size_range"
+                        android:layout_height="@dimen/icon_size_range"
+                        android:layout_marginHorizontal="@dimen/margin_padding_extremely_small"
+                        android:gravity="center"
+                        android:text="~"/>
+
+                    <TextView
+                        android:id="@+id/txtFinishLastTime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        tools:text="FinishLastTime"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
 
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_padding_default"
+            android:padding="@dimen/margin_padding_default"
+            android:background="@drawable/bg_rectangle_downside_grey_bordered"
             android:orientation="vertical">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/margin_padding_small"
-                android:text="@string/bus_interval"
+                android:text="@string/route_info_content_title_3"
                 android:textColor="@color/grey"/>
 
             <TextView
