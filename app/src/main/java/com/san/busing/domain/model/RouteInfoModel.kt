@@ -1,6 +1,8 @@
 package com.san.busing.domain.model
 
 import com.san.busing.data.vo.Id
+import java.io.Serializable
+import java.time.LocalTime
 
 /**
  * RouteInfoModel
@@ -15,9 +17,9 @@ data class RouteInfoModel(
     val startStationName: String,
     val endStationId: Id,
     val endStationName: String,
-//    val startFirstTime: Time,
-//    val startLastTime: Time,
-//    val finishFirstTime: Time,
-//    val finishLastTime: Time,
-//    val maxPeekAlloc: Time
-)
+    val startFirstTime: LocalTime?,
+    val startLastTime: LocalTime?,
+    val endFirstTime: LocalTime?,
+    val endLastTime: LocalTime?,
+    val maxPeekAlloc: Int?
+) : Serializable

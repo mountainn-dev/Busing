@@ -38,7 +38,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/margin_padding_default"
+            android:padding="@dimen/margin_padding_extremely_large"
             android:background="@drawable/bg_rectangle_downside_grey_bordered"
             android:orientation="vertical">
 
@@ -47,7 +47,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/margin_padding_small"
                 android:text="@string/route_info_content_title_1"
-                android:textColor="@color/grey"/>
+                android:textColor="@color/text_sub_title_1"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -56,7 +56,7 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/txtRouteStartStation"
+                    android:id="@+id/txtStartStation"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     tools:text="StartStation"/>
@@ -69,7 +69,7 @@
                     app:tint="@color/black"/>
 
                 <TextView
-                    android:id="@+id/txtRouteEndStation"
+                    android:id="@+id/txtEndStation"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     tools:text="EndStation"/>
@@ -81,7 +81,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/margin_padding_default"
+            android:padding="@dimen/margin_padding_extremely_large"
             android:background="@drawable/bg_rectangle_downside_grey_bordered"
             android:orientation="vertical">
 
@@ -90,7 +90,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/margin_padding_small"
                 android:text="@string/route_info_content_title_2"
-                android:textColor="@color/grey"/>
+                android:textColor="@color/text_sub_title_1"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -108,8 +108,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="@dimen/margin_padding_default"
-                        android:text="@string/start_station"
-                        android:textColor="@color/grey"/>
+                        android:text="@string/start_station" />
 
                     <TextView
                         android:id="@+id/txtStartFirstTime"
@@ -141,14 +140,13 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="@dimen/margin_padding_default"
-                        android:text="@string/turnaround_station"
-                        android:textColor="@color/grey"/>
+                        android:text="@string/turnaround_station" />
 
                     <TextView
-                        android:id="@+id/txtFinishFirstTime"
+                        android:id="@+id/txtEndFirstTime"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        tools:text="FinishFirstTime"/>
+                        tools:text="EndFirstTime"/>
 
                     <TextView
                         android:layout_width="@dimen/icon_size_range"
@@ -158,10 +156,10 @@
                         android:text="~"/>
 
                     <TextView
-                        android:id="@+id/txtFinishLastTime"
+                        android:id="@+id/txtEndLastTime"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        tools:text="FinishLastTime"/>
+                        tools:text="EndLastTime"/>
 
                 </LinearLayout>
 
@@ -172,7 +170,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/margin_padding_default"
+            android:padding="@dimen/margin_padding_extremely_large"
             android:background="@drawable/bg_rectangle_downside_grey_bordered"
             android:orientation="vertical">
 
@@ -181,10 +179,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/margin_padding_small"
                 android:text="@string/route_info_content_title_3"
-                android:textColor="@color/grey"/>
+                android:textColor="@color/text_sub_title_1"/>
 
             <TextView
-                android:id="@+id/txtRouteInterval"
+                android:id="@+id/txtInterval"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 tools:text="RouteInterval"/>

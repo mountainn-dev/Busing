@@ -1,6 +1,7 @@
 package com.san.busing.view.screen
 
 import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -57,7 +58,7 @@ class RouteDetailActivity : AppCompatActivity() {
         viewModel.update(this)
         initToolbar(routeName, routeType, this)
         initObserver(viewModel, routeType, this)
-        initListener(viewModel)
+        initListener(viewModel, this)
     }
 
     private fun initToolbar(routeName: String, routeType: RouteType, context: Activity) {
@@ -211,8 +212,9 @@ class RouteDetailActivity : AppCompatActivity() {
         else binding.btnBookMark.setImageResource(R.drawable.ic_off_book_mark)
     }
 
-    private fun initListener(viewModel: RouteDetailViewModel) {
+    private fun initListener(viewModel: RouteDetailViewModel, activity: Activity) {
         setBtnBackListener()
+        setBtnRouteInfoListener(activity)
         setBtnBookMarkListener(viewModel)
         setBtnScrollToStartStationListener()
         setBtnRequestListener(viewModel)
@@ -222,6 +224,19 @@ class RouteDetailActivity : AppCompatActivity() {
 
     private fun setBtnBackListener() {
         binding.btnBack.setOnClickListener { finish() }
+    }
+
+    private fun setBtnRouteInfoListener(activity: Activity) {
+        binding.btnRouteInfo.setOnClickListener {
+            sendUserToRouteInfoScreen(activity)
+        }
+    }
+
+    private fun sendUserToRouteInfoScreen(activity: Activity) {
+        val intent = Intent(activity, RouteInfoActivity::class.java)
+        intent.putExtra(Const.TAG_ROUTE_INFO, viewModel.routeInfo)
+
+        startActivity(intent)
     }
 
     private fun setBtnBookMarkListener(viewModel: RouteDetailViewModel) {
