@@ -4,6 +4,7 @@ import android.nfc.FormatException
 import com.san.busing.data.exception.ExceptionMessage
 import com.san.busing.data.vo.Id
 import com.san.busing.domain.model.RouteInfoModel
+import com.san.busing.domain.utils.Const
 import com.tickaroo.tikxml.annotation.Element
 import com.tickaroo.tikxml.annotation.Path
 import com.tickaroo.tikxml.annotation.PropertyElement
@@ -45,7 +46,7 @@ data class RouteInfo(
         localTime(startLastTime),
         localTime(endFirstTime),
         localTime(endLastTime),
-        maxPeekAlloc
+        maxPeekAlloc ?: Const.ZERO
     )
 
     private fun localTime(time: String?): LocalTime? {

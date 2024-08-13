@@ -228,9 +228,11 @@ class RouteDetailActivity : AppCompatActivity() {
 
     private fun setBtnRouteInfoListener(activity: Activity) {
         binding.btnRouteInfo.setOnClickListener {
-            sendUserToRouteInfoScreen(activity)
+            if (routeInfoReady()) sendUserToRouteInfoScreen(activity)
         }
     }
+
+    private fun routeInfoReady() = viewModel.state.value == UiState.Success
 
     private fun sendUserToRouteInfoScreen(activity: Activity) {
         val intent = Intent(activity, RouteInfoActivity::class.java)

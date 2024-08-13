@@ -32,7 +32,6 @@ class RouteInfoActivity : AppCompatActivity() {
     }
 
     private fun load(routeInfo: RouteInfoModel) {
-
         loadRouteRange(routeInfo)
         loadRouteTime(routeInfo)
         loadRouteInterval(routeInfo)
@@ -51,11 +50,15 @@ class RouteInfoActivity : AppCompatActivity() {
     }
 
     private fun loadRouteInterval(routeInfo: RouteInfoModel) {
-        binding.txtInterval.text = String.format(MAX_INTERVAL_MESSAGE, routeInfo.maxPeekAlloc ?: Const.ZERO)
+        val intervalMessage =
+            if (routeInfo.maxPeekAlloc == Const.ZERO) NO_INTERVAL_DATA_MESSAGE
+            else String.format(MAX_INTERVAL_MESSAGE, routeInfo.maxPeekAlloc)
+        binding.txtInterval.text = intervalMessage
     }
 
     companion object {
         private const val NO_TIME_DATA = "-"
+        private const val NO_INTERVAL_DATA_MESSAGE = "최대 %-분"
         private const val MAX_INTERVAL_MESSAGE = "최대 %d분"
     }
 }
