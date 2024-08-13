@@ -1,10 +1,194 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".view.screen.RouteInfoActivity">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.appcompat.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/light_grey">
+
+        <ImageButton
+            android:id="@+id/btnBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_back"
+            app:tint="@color/black"
+            android:background="@null"/>
+
+        <TextView
+            android:id="@+id/txtTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textSize="@dimen/text_size_detail_title"/>
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/margin_padding_extremely_large"
+            android:background="@drawable/bg_rectangle_downside_grey_bordered"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_padding_small"
+                android:text="@string/route_info_content_title_1"
+                android:textColor="@color/text_sub_title_1"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/txtStartStation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="StartStation"/>
+
+                <ImageView
+                    android:layout_width="@dimen/icon_size_range"
+                    android:layout_height="@dimen/icon_size_range"
+                    android:layout_marginHorizontal="@dimen/margin_padding_extremely_small"
+                    android:src="@drawable/ic_range"
+                    app:tint="@color/black"/>
+
+                <TextView
+                    android:id="@+id/txtEndStation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="EndStation"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/margin_padding_extremely_large"
+            android:background="@drawable/bg_rectangle_downside_grey_bordered"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_padding_small"
+                android:text="@string/route_info_content_title_2"
+                android:textColor="@color/text_sub_title_1"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="@dimen/margin_padding_default"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/margin_padding_extremely_small"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/margin_padding_default"
+                        android:text="@string/start_station" />
+
+                    <TextView
+                        android:id="@+id/txtStartFirstTime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        tools:text="StartFirstTime"/>
+
+                    <TextView
+                        android:layout_width="@dimen/icon_size_range"
+                        android:layout_height="@dimen/icon_size_range"
+                        android:layout_marginHorizontal="@dimen/margin_padding_extremely_small"
+                        android:gravity="center"
+                        android:text="~"/>
+
+                    <TextView
+                        android:id="@+id/txtStartLastTime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        tools:text="StartLastTime"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/margin_padding_default"
+                        android:text="@string/turnaround_station" />
+
+                    <TextView
+                        android:id="@+id/txtEndFirstTime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        tools:text="EndFirstTime"/>
+
+                    <TextView
+                        android:layout_width="@dimen/icon_size_range"
+                        android:layout_height="@dimen/icon_size_range"
+                        android:layout_marginHorizontal="@dimen/margin_padding_extremely_small"
+                        android:gravity="center"
+                        android:text="~"/>
+
+                    <TextView
+                        android:id="@+id/txtEndLastTime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        tools:text="EndLastTime"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/margin_padding_extremely_large"
+            android:background="@drawable/bg_rectangle_downside_grey_bordered"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_padding_small"
+                android:text="@string/route_info_content_title_3"
+                android:textColor="@color/text_sub_title_1"/>
+
+            <TextView
+                android:id="@+id/txtInterval"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="RouteInterval"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

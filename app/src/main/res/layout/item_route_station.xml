@@ -6,7 +6,7 @@
     android:layout_height="@dimen/height_item_route_station"
     android:paddingHorizontal="@dimen/margin_padding_default"
     android:gravity="center"
-    android:background="@drawable/bg_rectangle_downside_bordered">
+    android:background="@drawable/bg_rectangle_downside_grey_bordered">
 
     <LinearLayout
         android:layout_width="match_parent"

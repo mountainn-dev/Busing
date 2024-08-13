@@ -11,8 +11,8 @@ import com.tickaroo.tikxml.annotation.Xml
 /**
  * RouteSummary
  *
- * 버스 노선 검색 시 노선 요약 정보를 담는 클래스
- * 버스 노선 검색 화면 검색 결과를 구성한다.
+ * 노선 검색 시 노선 요약 정보를 담는 클래스
+ * 노선 검색 화면 검색 결과를 구성한다.
  */
 @Xml(name = "busRouteList")
 data class RouteSummary(

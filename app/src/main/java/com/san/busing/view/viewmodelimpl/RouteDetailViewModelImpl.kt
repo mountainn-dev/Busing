@@ -1,4 +1,4 @@
-package com.san.busing.domain.viewmodelimpl
+package com.san.busing.view.viewmodelimpl
 
 import android.app.Activity
 import android.os.CountDownTimer
@@ -18,7 +18,7 @@ import com.san.busing.domain.model.RouteInfoModel
 import com.san.busing.domain.model.RouteRecentSearchModel
 import com.san.busing.domain.model.RouteStationModel
 import com.san.busing.domain.state.UiState
-import com.san.busing.domain.viewmodel.RouteDetailViewModel
+import com.san.busing.view.viewmodel.RouteDetailViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll

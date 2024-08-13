@@ -16,15 +16,11 @@ import com.san.busing.domain.model.RouteInfoModel
 import com.san.busing.domain.model.RouteRecentSearchModel
 import com.san.busing.domain.model.RouteStationModel
 import com.san.busing.domain.model.RouteSummaryModel
-import com.san.busing.domain.utils.Const
-import retrofit2.Retrofit
-import java.net.SocketTimeoutException
 
 class RouteRepositoryImpl(
-    private val retrofit: Retrofit,
+    private val service: RouteService,
     private val context: Context
 ) : RouteRepository {
-    private val service = retrofit.create(RouteService::class.java)
     private val db = Room.databaseBuilder(
         context, RecentSearchDatabase::class.java, "recentSearch").build()
 

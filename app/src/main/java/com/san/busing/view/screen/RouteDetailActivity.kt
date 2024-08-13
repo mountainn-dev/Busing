@@ -1,6 +1,7 @@
 package com.san.busing.view.screen
 
 import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -13,6 +14,8 @@ import com.san.busing.BuildConfig
 import com.san.busing.R
 import com.san.busing.data.repositoryimpl.BusLocationRepositoryImpl
 import com.san.busing.data.repositoryimpl.RouteRepositoryImpl
+import com.san.busing.data.source.remote.retrofit.BusLocationService
+import com.san.busing.data.source.remote.retrofit.RouteService
 import com.san.busing.data.vo.Id
 import com.san.busing.databinding.ActivityRouteDetailBinding
 import com.san.busing.domain.enums.RouteType
@@ -20,9 +23,9 @@ import com.san.busing.domain.model.RouteStationModel
 import com.san.busing.domain.state.UiState
 import com.san.busing.domain.utils.Const
 import com.san.busing.domain.utils.Utils
-import com.san.busing.domain.viewmodel.RouteDetailViewModel
-import com.san.busing.domain.viewmodelfactory.RouteDetailViewModelFactory
-import com.san.busing.domain.viewmodelimpl.RouteDetailViewModelImpl
+import com.san.busing.view.viewmodel.RouteDetailViewModel
+import com.san.busing.view.viewmodelfactory.RouteDetailViewModelFactory
+import com.san.busing.view.viewmodelimpl.RouteDetailViewModelImpl
 import com.san.busing.view.adapter.RouteStationAdapter
 import com.san.busing.view.listener.ItemClickEventListener
 import com.san.busing.view.widget.ErrorToast
@@ -36,20 +39,26 @@ class RouteDetailActivity : AppCompatActivity() {
         binding = ActivityRouteDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val busRouteRepository = RouteRepositoryImpl(Utils.getRetrofit(BuildConfig.ROUTES_URL), this.applicationContext)
-        val busLocationRepository = BusLocationRepositoryImpl(Utils.getRetrofit(BuildConfig.LOCATION_URL))
+        val busRouteRepository = RouteRepositoryImpl(
+            Utils.getRetrofit(BuildConfig.ROUTES_URL).create(RouteService::class.java),
+            this.applicationContext
+        )
+        val busLocationRepository = BusLocationRepositoryImpl(
+            Utils.getRetrofit(BuildConfig.LOCATION_URL).create(BusLocationService::class.java)
+        )
         val routeId = intent.getSerializableExtra(Const.TAG_ROUTE_ID) as Id
         val routeName = intent.getStringExtra(Const.TAG_ROUTE_NAME) ?: Const.EMPTY_TEXT
         val routeType = intent.getSerializableExtra(Const.TAG_ROUTE_TYPE) as RouteType
         viewModel = ViewModelProvider(
             this, RouteDetailViewModelFactory(
                 busRouteRepository, busLocationRepository, routeId, routeName, routeType
-            )).get(RouteDetailViewModelImpl::class.java)
+            )
+        ).get(RouteDetailViewModelImpl::class.java)
 
         viewModel.update(this)
         initToolbar(routeName, routeType, this)
         initObserver(viewModel, routeType, this)
-        initListener(viewModel)
+        initListener(viewModel, this)
     }
 
     private fun initToolbar(routeName: String, routeType: RouteType, context: Activity) {
@@ -203,8 +212,9 @@ class RouteDetailActivity : AppCompatActivity() {
         else binding.btnBookMark.setImageResource(R.drawable.ic_off_book_mark)
     }
 
-    private fun initListener(viewModel: RouteDetailViewModel) {
+    private fun initListener(viewModel: RouteDetailViewModel, activity: Activity) {
         setBtnBackListener()
+        setBtnRouteInfoListener(activity)
         setBtnBookMarkListener(viewModel)
         setBtnScrollToStartStationListener()
         setBtnRequestListener(viewModel)
@@ -214,6 +224,21 @@ class RouteDetailActivity : AppCompatActivity() {
 
     private fun setBtnBackListener() {
         binding.btnBack.setOnClickListener { finish() }
+    }
+
+    private fun setBtnRouteInfoListener(activity: Activity) {
+        binding.btnRouteInfo.setOnClickListener {
+            if (routeInfoReady()) sendUserToRouteInfoScreen(activity)
+        }
+    }
+
+    private fun routeInfoReady() = viewModel.state.value == UiState.Success
+
+    private fun sendUserToRouteInfoScreen(activity: Activity) {
+        val intent = Intent(activity, RouteInfoActivity::class.java)
+        intent.putExtra(Const.TAG_ROUTE_INFO, viewModel.routeInfo)
+
+        startActivity(intent)
     }
 
     private fun setBtnBookMarkListener(viewModel: RouteDetailViewModel) {

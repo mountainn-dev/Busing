@@ -12,7 +12,7 @@ import com.tickaroo.tikxml.annotation.Xml
  * RouteStation
  *
  * 노선 상세 화면의 정류장 아이템 정보를 담는 클래스
- * 버스 노선 상세 화면 컨텐츠를 구성한다.
+ * 노선 상세 화면 컨텐츠를 구성한다.
  */
 @Xml(name = "busRouteStationList")
 data class RouteStation(

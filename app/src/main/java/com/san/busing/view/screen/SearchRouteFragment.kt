@@ -14,15 +14,16 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.san.busing.BuildConfig
 import com.san.busing.data.repositoryimpl.RouteRepositoryImpl
+import com.san.busing.data.source.remote.retrofit.RouteService
 import com.san.busing.databinding.FragmentSearchRouteBinding
 import com.san.busing.domain.model.RouteRecentSearchModel
 import com.san.busing.domain.model.RouteSummaryModel
 import com.san.busing.domain.state.UiState
 import com.san.busing.domain.utils.Const
 import com.san.busing.domain.utils.Utils
-import com.san.busing.domain.viewmodel.SearchRouteViewModel
-import com.san.busing.domain.viewmodelfactory.SearchRouteViewModelFactory
-import com.san.busing.domain.viewmodelimpl.SearchRouteViewModelImpl
+import com.san.busing.view.viewmodel.SearchRouteViewModel
+import com.san.busing.view.viewmodelfactory.SearchRouteViewModelFactory
+import com.san.busing.view.viewmodelimpl.SearchRouteViewModelImpl
 import com.san.busing.view.adapter.RouteRecentSearchAdapter
 import com.san.busing.view.adapter.RouteSearchResultAdapter
 import com.san.busing.view.listener.ItemClickEventListener
@@ -41,7 +42,10 @@ class SearchRouteFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val repository = RouteRepositoryImpl(Utils.getRetrofit(BuildConfig.ROUTES_URL), requireActivity().applicationContext)
+        val repository = RouteRepositoryImpl(
+            Utils.getRetrofit(BuildConfig.ROUTES_URL).create(RouteService::class.java),
+            requireActivity().applicationContext
+        )
         viewModel = ViewModelProvider(requireActivity(), SearchRouteViewModelFactory(repository)).get(
             SearchRouteViewModelImpl::class.java
         )
