@@ -1,6 +1,5 @@
 package com.san.busing.data.entity
 
-import android.nfc.FormatException
 import com.san.busing.data.exception.ExceptionMessage
 import com.san.busing.data.vo.Id
 import com.san.busing.domain.model.RouteInfoModel
@@ -11,6 +10,7 @@ import com.tickaroo.tikxml.annotation.PropertyElement
 import com.tickaroo.tikxml.annotation.Xml
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeParseException
 
 /**
  * RouteInfo
@@ -52,13 +52,13 @@ data class RouteInfo(
     private fun localTime(time: String?): LocalTime? {
         if (time == null) return null
 
-        try {
-            return LocalTime.parse(time, DateTimeFormatter.ofPattern("HH:mm"))
-        } catch (e: FormatException) {
-            return LocalTime.parse(time, DateTimeFormatter.ofPattern("H:mm"))
-        } catch (e: FormatException) {
-            return LocalTime.parse(time, DateTimeFormatter.ofPattern("HH:m"))
-        } catch (e: FormatException) {
+        return try {
+            LocalTime.parse(time, DateTimeFormatter.ofPattern("HH:mm"))
+        } catch (e: DateTimeParseException) {
+            LocalTime.parse(time, DateTimeFormatter.ofPattern("H:mm"))
+        } catch (e: DateTimeParseException) {
+            LocalTime.parse(time, DateTimeFormatter.ofPattern("HH:m"))
+        } catch (e: DateTimeParseException) {
             throw Exception(ExceptionMessage.WRONG_TIME_FORMAT_EXCEPTION)
         }
     }
