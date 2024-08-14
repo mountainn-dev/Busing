@@ -19,6 +19,8 @@ class BusLocationRepositoryImpl(
             return Result.success(response.body()!!.get())
         } catch (e: ServiceException.ResultException) {
             return Result.success(listOf())
+        } catch (e: ServiceException.OptionalParameterException) {
+            return Result.success(listOf())
         } catch (e: Exception) {
             Log.e(ExceptionMessage.TAG_BUS_EXCEPTION, e.message ?: e.toString())
             return Result.error(e)

@@ -9,51 +9,30 @@ import java.io.IOException
  */
 object ServiceException {
     /**
-     * SystemException
+     * ServerException (Critical)
      *
-     * Server, Interceptor(XmlPullParser, IO) 관련 에러를 전부 포함하는 Exception
+     * Server, Interceptor(XmlPullParser, IO) 관련 에러 등 서비스 서버로부터 발생한 액션이 원인이 될 때 발생하는 Exception
      */
-    class SystemException(override val message: String?) : IOException(message)
+    class ServerException(override val message: String?) : IOException(message)
 
     /**
-     * KeyException
+     * EssentialParameterException (Critical)
      *
-     * 서비스 키 인증과 관련된 Exception
+     * 필수 입력값이 생략되거나 포맷이 올바르지 않을 때 발생하는 Exception
      */
-    class KeyException(override val message: String?) : IOException(message)
+    class EssentialParameterException(override val message: String?) : IOException(message)
 
     /**
-     * RequestException
+     * OptionalParameterException
      *
-     * 서비스 요청과 관련된 Exception
+     * 입력값이 생략되거나 포맷이 올바르지 않을 때 발생하는 Exception
      */
-    class RequestException(override val message: String?) : IOException(message)
-
-    /**
-     * KeywordFormatException
-     *
-     * 검색 시 키워드 형식과 관련된 Exception
-     */
-    class KeywordFormatException(override val message: String?) : IOException(message)
-
-    /**
-     * IdException
-     *
-     * 데이터 ID 와 관련된 Exception
-     */
-    class IdException(override val message: String?) : IOException(message)
-
-    /**
-     * ParameterException
-     *
-     * 필수 요청 파라미터와 관련된 Exception
-     */
-    class ParameterException(override val message: String?) : IOException(message)
+    class OptionalParameterException(override val message: String?) : IOException(message)
 
     /**
      * ResultException
      *
-     * 검색 결과와 관련된 Exception
+     * 데이터 조회 시 일치하는 결과 값이 존재하지 않을 때 발생하는 Exception
      */
     class ResultException(override val message: String?) : IOException(message)
 }

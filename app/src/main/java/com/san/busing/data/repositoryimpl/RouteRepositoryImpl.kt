@@ -38,9 +38,9 @@ class RouteRepositoryImpl(
         try {
             val response = service.getBusRouteList(BuildConfig.API_KEY, keyword)
             return Result.success(response.body()!!.get())
-        } catch (e: ServiceException.ResultException) {   // 검색 결과 없음
+        } catch (e: ServiceException.ResultException) {
             return Result.success(listOf())
-        } catch (e: ServiceException.ParameterException) {   // 키워드 조건 충족 x
+        } catch (e: ServiceException.OptionalParameterException) {
             return Result.success(listOf())
         } catch (e: Exception) {
             Log.e(ExceptionMessage.TAG_ROUTE_SUMMARY_EXCEPTION, e.message ?: e.toString())
@@ -52,6 +52,10 @@ class RouteRepositoryImpl(
         try {
             val response = service.getBusStationList(BuildConfig.API_KEY, id.get())
             return Result.success(response.body()!!.get())
+        } catch (e: ServiceException.ResultException) {
+            return Result.success(listOf())
+        } catch (e: ServiceException.OptionalParameterException) {
+            return Result.success(listOf())
         } catch (e: Exception) {
             Log.e(ExceptionMessage.TAG_ROUTE_STATION_EXCEPTION, e.message ?: e.toString())
             return Result.error(e)

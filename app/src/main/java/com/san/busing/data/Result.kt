@@ -16,14 +16,11 @@ abstract class Result<T> {
 class Success <T> (val data: T) : Result<T>()
 
 class Error <T> (private val error: Exception) : Result<T>() {
-    fun message(): String {
-        return when(error) {
-            is UnknownHostException -> ExceptionMessage.UNSTABLE_INTERNET_CONNECTION
-            is ServiceException.SystemException -> ExceptionMessage.UNSTABLE_SERVICE_EXCEPTION
-            else -> error.message ?: error.toString()
-        }
-    }
+    fun message() =
+        if (error is UnknownHostException) ExceptionMessage.INTERNET_CONNECTION_FAIL_EXCEPTION
+        else error.message ?: error.toString()
 
-    fun isCritical() = error is UnknownHostException || error is ServiceException.SystemException
+    fun isCritical() =
+        error is UnknownHostException || error is ServiceException.ServerException || error is ServiceException.EssentialParameterException
     fun isTimeOut() = error is SocketTimeoutException
 }

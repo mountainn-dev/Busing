@@ -58,7 +58,7 @@ class RouteInfoActivity : AppCompatActivity() {
 
     companion object {
         private const val NO_TIME_DATA = "-"
-        private const val NO_INTERVAL_DATA_MESSAGE = "최대 %-분"
+        private const val NO_INTERVAL_DATA_MESSAGE = "최대 -분"
         private const val MAX_INTERVAL_MESSAGE = "최대 %d분"
     }
 }
