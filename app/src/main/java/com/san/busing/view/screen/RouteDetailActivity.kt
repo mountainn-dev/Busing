@@ -55,13 +55,16 @@ class RouteDetailActivity : AppCompatActivity() {
             )
         ).get(RouteDetailViewModelImpl::class.java)
 
-        viewModel.update(this)
+        viewModel.updateRecentSearch(this)
         initToolbar(routeName, routeType, this)
-        initObserver(viewModel, routeType, this)
-        initListener(viewModel, this)
+        initObserver(routeType, this)
+        initListener(this)
     }
 
-    private fun initToolbar(routeName: String, routeType: RouteType, context: Activity) {
+    private fun initToolbar(
+        routeName: String, routeType: RouteType,
+        context: Activity
+    ) {
         setTitle(routeName)
         setBgColor(routeType, context)
     }
@@ -77,14 +80,10 @@ class RouteDetailActivity : AppCompatActivity() {
         binding.ctbRouteDetail.setBackgroundColor(color)
     }
 
-    private fun initObserver(
-        viewModel: RouteDetailViewModel,
-        routeType: RouteType,
-        context: Activity
-    ) {
+    private fun initObserver(routeType: RouteType, context: Activity) {
         viewModel.state.observe(
             context as LifecycleOwner,
-            uiStateObserver(viewModel, routeType, context)
+            uiStateObserver(routeType, context)
         )
         viewModel.loadableRemainTime.observe(
             context as LifecycleOwner,
@@ -96,15 +95,11 @@ class RouteDetailActivity : AppCompatActivity() {
         )
     }
 
-    private fun uiStateObserver(
-        viewModel: RouteDetailViewModel,
-        routeType: RouteType,
-        context: Activity
-    ) = Observer<UiState> {
+    private fun uiStateObserver(routeType: RouteType, context: Activity) = Observer<UiState> {
         when (it) {
             UiState.Success -> {
-                loadRouteInfo(viewModel)
-                loadRouteStation(viewModel, routeType, context)
+                loadRouteInfo()
+                loadRouteStation(routeType, context)
             }
             UiState.Loading -> {
                 unloadRouteInfo()
@@ -116,21 +111,19 @@ class RouteDetailActivity : AppCompatActivity() {
             }
             UiState.Error -> {
                 unloadRouteInfo()
-                errorView(viewModel, context)
+                errorView(context)
             }
         }
     }
 
-    private fun loadRouteInfo(viewModel: RouteDetailViewModel) {
+    private fun loadRouteInfo() {
         binding.txtRouteStartStation.text = viewModel.routeInfo.startStationName
         binding.txtRouteEndStation.text = viewModel.routeInfo.endStationName
         binding.btnScrollToStartStation.text = viewModel.routeInfo.startStationName
         binding.btnScrollToEndStation.text = viewModel.routeInfo.endStationName
     }
 
-    private fun loadRouteStation(
-        viewModel: RouteDetailViewModel, routeType: RouteType, context: Activity
-    ) {
+    private fun loadRouteStation(routeType: RouteType, context: Activity) {
         val state = binding.rvBusRouteStationList.layoutManager?.onSaveInstanceState()
         binding.rvBusRouteStationList.adapter = RouteStationAdapter(
             routeType,
@@ -143,7 +136,7 @@ class RouteDetailActivity : AppCompatActivity() {
         binding.txtRouteBusCount.text = String.format(ROUTE_BUS_COUNT, viewModel.routeBuses.size)
         binding.rvBusRouteStationList.layoutManager?.onRestoreInstanceState(state)
         toggleView(binding.rvBusRouteStationList)
-        setBtnScrollToEndStation(viewModel)
+        setBtnScrollToEndStation()
     }
 
     private fun routeStationClickEventListener(
@@ -158,8 +151,8 @@ class RouteDetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun setBtnScrollToEndStation(viewModel: RouteDetailViewModel) {
-        val idx = turnaroundIndex(viewModel)
+    private fun setBtnScrollToEndStation() {
+        val idx = turnaroundIndex()
 
         binding.btnScrollToEndStation.setOnClickListener {
             if (binding.abRouteDetail.isLifted)
@@ -168,9 +161,7 @@ class RouteDetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun turnaroundIndex(
-        viewModel: RouteDetailViewModel
-    ) = viewModel.routeStations.find { it.isTurnaround }?.sequenceNumber ?: 1
+    private fun turnaroundIndex() = viewModel.routeStations.find { it.isTurnaround }?.sequenceNumber ?: DEFAULT_TURNAROUND_INDEX
 
     private fun unloadRouteInfo() {
         binding.txtRouteStartStation.text = Const.EMPTY_TEXT
@@ -188,7 +179,7 @@ class RouteDetailActivity : AppCompatActivity() {
         toggleView(binding.llTimeout)
     }
 
-    private fun errorView(viewModel: RouteDetailViewModel, context: Activity) {
+    private fun errorView(context: Activity) {
         toggleView(binding.llServiceError)
         val toast = ErrorToast(context, viewModel.error)
         if (toast.previousFinished()) toast.show()
@@ -212,14 +203,14 @@ class RouteDetailActivity : AppCompatActivity() {
         else binding.btnBookMark.setImageResource(R.drawable.ic_off_book_mark)
     }
 
-    private fun initListener(viewModel: RouteDetailViewModel, activity: Activity) {
+    private fun initListener(activity: Activity) {
         setBtnBackListener()
         setBtnRouteInfoListener(activity)
-        setBtnBookMarkListener(viewModel)
+        setBtnBookMarkListener()
         setBtnScrollToStartStationListener()
-        setBtnRequestListener(viewModel)
+        setBtnRequestListener()
         setFabScrollUpListener()
-        setFabRefreshListener(viewModel)
+        setFabRefreshListener()
     }
 
     private fun setBtnBackListener() {
@@ -241,7 +232,7 @@ class RouteDetailActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    private fun setBtnBookMarkListener(viewModel: RouteDetailViewModel) {
+    private fun setBtnBookMarkListener() {
         binding.btnBookMark.setOnClickListener { viewModel.toggleBookMark() }
     }
 
@@ -251,7 +242,7 @@ class RouteDetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun setBtnRequestListener(viewModel: RouteDetailViewModel) {
+    private fun setBtnRequestListener() {
         binding.btnTimeoutRequest.setOnClickListener { viewModel.load() }
         binding.btnServiceErrorRequest.setOnClickListener { viewModel.load() }
     }
@@ -263,8 +254,8 @@ class RouteDetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun setFabRefreshListener(viewModel: RouteDetailViewModel) {
-        binding.fabRefresh.setOnClickListener { viewModel.reload() }
+    private fun setFabRefreshListener() {
+        binding.fabRefresh.setOnClickListener { viewModel.loadWithTimer() }
     }
 
     /**
@@ -288,5 +279,6 @@ class RouteDetailActivity : AppCompatActivity() {
         private const val ROUTE_BUS_COUNT = "%d대"
         private const val POSITION_VALUE_WHEN_LIFTED = - 1
         private const val POSITION_VALUE_WHEN_NOT_LIFTED = + 4
+        private const val DEFAULT_TURNAROUND_INDEX = 1
     }
 }

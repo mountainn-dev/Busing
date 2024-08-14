@@ -78,7 +78,7 @@ class SearchRouteViewModelImpl(
         if (result is Error) error = result.message()
     }
 
-    override fun deleteAll(context: Activity) {
+    override fun deleteAllRecentSearches(context: Activity) {
         if (dataState(recentSearchContentLoaded)) {
             resetRecentSearchIndex(context)   // 최근 검색 인덱스 초기화
             viewModelScope.launch {

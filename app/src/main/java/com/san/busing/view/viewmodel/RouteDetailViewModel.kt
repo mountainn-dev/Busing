@@ -17,7 +17,7 @@ interface RouteDetailViewModel {
     var error: String
 
     fun load()
-    fun reload()
-    fun update(context: Activity)
+    fun loadWithTimer()
+    fun updateRecentSearch(context: Activity)
     fun toggleBookMark()
 }
