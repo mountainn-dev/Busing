@@ -1,6 +1,7 @@
 package com.san.busing.data.exception
 
 object ExceptionMessage {
+    // Exception Logging Tag
     const val TAG_ERROR_INTERCEPTOR_EXCEPTION = "Error Interceptor Exception"
     const val TAG_ROUTE_INFO_EXCEPTION = "Route Info Exception"
     const val TAG_ROUTE_SUMMARY_EXCEPTION = "Route Summary Exception"
