@@ -14,6 +14,8 @@ import com.san.busing.domain.state.UiState
 import com.san.busing.domain.utils.Const
 import com.san.busing.view.viewmodel.SearchRouteViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -32,18 +34,15 @@ class SearchRouteViewModelImpl(
 
     override var keyword = Const.EMPTY_TEXT
     override lateinit var error: String
-    private var isSearching = false
+    private var searchingJob: Job? = null
 
     override fun search(keyword: String) {
-        if (!isSearching) {
-            isSearching = true
-            this.keyword = keyword
+        searchingJob?.cancel()
+        this.keyword = keyword
 
-            viewModelScope.launch {
-                withContext(Dispatchers.IO) {
-                    searchBusRoutes()
-                    isSearching = false
-                }
+        searchingJob = viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                searchBusRoutes()
             }
         }
     }

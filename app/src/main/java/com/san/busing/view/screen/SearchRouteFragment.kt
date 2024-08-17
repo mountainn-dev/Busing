@@ -3,11 +3,13 @@ package com.san.busing.view.screen
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -180,21 +182,16 @@ class SearchRouteFragment : Fragment() {
     }
 
     private fun initListener(context: Activity) {
-        setEdRouteActionListener()
+        setEdRouteListener()
         setBtnDeleteSearchKeywordListener(context)
         setBtnDeleteAllRecentSearchListener(context)
         setRvBusRouteScrollListener(context)
         setBtnRequestListener()
     }
 
-    private fun setEdRouteActionListener() {
-        binding.edRoute.setOnEditorActionListener { textView, i, keyEvent ->
-            if (i == EditorInfo.IME_ACTION_SEARCH) {
-                viewModel.search(binding.edRoute.text.toString())
-                return@setOnEditorActionListener true
-            }
-
-            return@setOnEditorActionListener false
+    private fun setEdRouteListener() {
+        binding.edRoute.doOnTextChanged { text, start, before, count ->
+            viewModel.search(text.toString())
         }
     }
 
