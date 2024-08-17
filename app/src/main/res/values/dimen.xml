@@ -16,6 +16,8 @@
     <dimen name="radius_extremely_small_rounded">2dp</dimen>
     <dimen name="radius_btn_info">32dp</dimen>
 
+    <dimen name="text_default">14sp</dimen>
+
     <!-- Route -->
     <dimen name="height_search_layout">128dp</dimen>
 

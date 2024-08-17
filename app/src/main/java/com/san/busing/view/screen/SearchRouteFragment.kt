@@ -9,6 +9,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.TextView
+import androidx.core.widget.doAfterTextChanged
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -190,7 +192,7 @@ class SearchRouteFragment : Fragment() {
     }
 
     private fun setEdRouteListener() {
-        binding.edRoute.doOnTextChanged { text, start, before, count ->
+        binding.edRoute.doAfterTextChanged { text ->
             viewModel.search(text.toString())
         }
     }
@@ -235,7 +237,6 @@ class SearchRouteFragment : Fragment() {
     }
 
     private fun restore() {
-        binding.edRoute.setText(viewModel.keyword)
         viewModel.restore()
     }
 

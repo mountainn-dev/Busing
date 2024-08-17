@@ -9,17 +9,17 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/height_search_layout"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:gravity="center"
         android:padding="@dimen/margin_padding_default"
-        android:weightSum="1"
         android:background="@color/semi_light_grey">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.6"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_padding_default"
+            android:padding="@dimen/margin_padding_default"
             android:orientation="horizontal"
             android:gravity="start|center_vertical"
             android:background="@drawable/bg_rectangle_white_rounded">
@@ -31,6 +31,7 @@
                 android:layout_weight="1"
                 android:layout_marginStart="@dimen/margin_padding_default"
                 android:hint="@string/route_input_hint"
+                android:textSize="@dimen/text_default"
                 android:textColorHint="@color/grey"
                 android:background="@drawable/bg_rectangle_white_rounded"
                 android:inputType="text" />
@@ -47,24 +48,24 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.4"
-            android:weightSum="1"
+            android:layout_height="wrap_content"
             android:gravity="center_vertical|end"
             android:layout_marginTop="@dimen/margin_padding_default"
+
             android:orientation="horizontal">
 
             <FrameLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:paddingEnd="@dimen/margin_padding_small"
+
                 tools:ignore="NestedWeights">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:visibility="visible"
+                    android:paddingVertical="@dimen/margin_padding_small"
                     android:gravity="center"
                     android:text="@string/route_no_recent_search"
                     android:textColor="@color/grey"/>
@@ -82,7 +83,8 @@
                 android:id="@+id/btnDeleteAllRecentSearch"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:padding="@dimen/margin_padding_default"
+                android:layout_marginEnd="@dimen/margin_padding_default"
+                android:paddingHorizontal="@dimen/margin_padding_default"
                 android:src="@drawable/ic_delete_rounded"
                 android:background="@null"/>
 
