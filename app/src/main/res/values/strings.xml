@@ -29,7 +29,7 @@
 
     <!-- Bus Station -->
     <string name="tab_name_station">정류장</string>
-    <string name="station_input_hint">정류장 검색</string>
+    <string name="station_input_hint">정류장 이름 검색</string>
     <string name="station_no_recent_search">최근 조회한 정류장이 없습니다.</string>
 
 </resources>
