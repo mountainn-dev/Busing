@@ -85,9 +85,9 @@ class RouteDetailActivity : AppCompatActivity() {
             context as LifecycleOwner,
             uiStateObserver(routeType, context)
         )
-        viewModel.loadableRemainTime.observe(
+        viewModel.resetTimer.observe(
             context as LifecycleOwner,
-            loadableRemainTimeObserver()
+            resetTimerObserver()
         )
         viewModel.bookMark.observe(
             context as LifecycleOwner,
@@ -185,7 +185,7 @@ class RouteDetailActivity : AppCompatActivity() {
         if (toast.previousFinished()) toast.show()
     }
 
-    private fun loadableRemainTimeObserver() = Observer<Int> {
+    private fun resetTimerObserver() = Observer<Int> {
         if (it == Const.ZERO) {
             binding.fabRefresh.setImageResource(R.drawable.ic_refresh)
             binding.fabTime.visibility = View.GONE

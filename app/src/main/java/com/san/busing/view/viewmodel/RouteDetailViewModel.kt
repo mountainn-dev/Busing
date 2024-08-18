@@ -12,7 +12,7 @@ interface RouteDetailViewModel {
     val routeInfo: RouteInfoModel
     val routeStations: List<RouteStationModel>
     val routeBuses: List<BusModel>
-    val loadableRemainTime: LiveData<Int>
+    val resetTimer: LiveData<Int>
     val bookMark: LiveData<Boolean>
     var error: String
 

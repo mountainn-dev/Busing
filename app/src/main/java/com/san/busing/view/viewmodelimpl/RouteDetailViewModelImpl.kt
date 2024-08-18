@@ -42,7 +42,7 @@ class RouteDetailViewModelImpl(
     override lateinit var routeStations: List<RouteStationModel>
     override lateinit var routeBuses: List<BusModel>
 
-    override val loadableRemainTime: LiveData<Int>
+    override val resetTimer: LiveData<Int>
         get() = remainTime
     private val remainTime = MutableLiveData<Int>()
     private var isLoadable = false

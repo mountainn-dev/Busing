@@ -15,7 +15,6 @@ import com.san.busing.domain.utils.Const
 import com.san.busing.view.viewmodel.SearchRouteViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -23,8 +22,8 @@ class SearchRouteViewModelImpl(
     private val routeRepository: RouteRepository
 ) : SearchRouteViewModel, ViewModel() {
     override val state: LiveData<UiState>
-        get() = searchResultState
-    private val searchResultState = MutableLiveData<UiState>()
+        get() = viewModelState
+    private val viewModelState = MutableLiveData<UiState>()
     override lateinit var routeSummaries: List<RouteSummaryModel>
 
     override val recentSearchContentReady: LiveData<Boolean>
@@ -48,17 +47,17 @@ class SearchRouteViewModelImpl(
     }
 
     private suspend fun searchBusRoutes() {
-        searchResultState.postValue(UiState.Loading)
+        viewModelState.postValue(UiState.Loading)
         val result = routeRepository.getRoutes(keyword)
 
         if (result is Success) {
             // 검색 결과 출력 시 노선 번호, 운행 지역 순으로 출력
             routeSummaries = result.data.sortedWith(compareBy({it.name}, {it.region}))
-            searchResultState.postValue(UiState.Success)
+            viewModelState.postValue(UiState.Success)
         } else {
             error = (result as Error).message()
-            if (result.isTimeOut()) searchResultState.postValue(UiState.Timeout)
-            if (result.isCritical()) searchResultState.postValue(UiState.Error)
+            if (result.isTimeOut()) viewModelState.postValue(UiState.Timeout)
+            if (result.isCritical()) viewModelState.postValue(UiState.Error)
         }
     }
 
