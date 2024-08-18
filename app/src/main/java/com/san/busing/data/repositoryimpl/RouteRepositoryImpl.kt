@@ -64,7 +64,7 @@ class RouteRepositoryImpl(
 
     override suspend fun getRecentSearch(id: Id): Result<RouteRecentSearchModel> {
         try {
-            db.recentSearchDao().get(id.get())?.let {
+            db.recentSearchDao().getBy(id.get())?.let {
                 return Result.success(it.toRouteRecentSearchModel())
             }
             return Result.error(NoSuchElementException(""))
@@ -74,7 +74,7 @@ class RouteRepositoryImpl(
         }
     }
 
-    override suspend fun getRecentSearches(): Result<List<RouteRecentSearchModel>> {
+    override suspend fun getAllRecentSearch(): Result<List<RouteRecentSearchModel>> {
         try {
             return Result.success(db.recentSearchDao().getAll().map { it.toRouteRecentSearchModel() })
         } catch (e: Exception) {
@@ -116,10 +116,9 @@ class RouteRepositoryImpl(
         }
     }
 
-    override suspend fun deleteAllRecentSearch(recentSearchModels: List<RouteRecentSearchModel>): Result<Boolean> {
+    override suspend fun deleteAllRecentSearch(): Result<Boolean> {
         try {
-            db.recentSearchDao().deleteAll(
-                recentSearchModels.map { it.toBusRouteRecentSearchEntity() }.toList())
+            db.recentSearchDao().deleteAll()
             return Result.success(true)
         } catch (e: Exception) {
             Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.message ?: e.toString())

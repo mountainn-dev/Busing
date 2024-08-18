@@ -2,6 +2,7 @@ package com.san.busing.view.adapter
 
 import android.app.Activity
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
@@ -29,6 +30,7 @@ class RouteRecentSearchAdapter(
 
         private fun loadContent(position: Int) {
             binding.txtBusRouteRecentSearchName.text = items[position].name
+            binding.btnDeleteRecentSearch.visibility = if (items[position].bookMark) View.GONE else View.VISIBLE
         }
 
         private fun setBackground(position: Int) {

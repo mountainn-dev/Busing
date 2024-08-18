@@ -95,7 +95,7 @@ class SearchRouteViewModelImpl(
     }
 
     private suspend fun deleteAllRecentSearch() {
-        val result = routeRepository.deleteAllRecentSearch(routeRecentSearches)
+        val result = routeRepository.deleteAllRecentSearch()
 
         if (result is Error) error = result.message()
     }
@@ -111,7 +111,7 @@ class SearchRouteViewModelImpl(
     }
 
     private suspend fun loadRecentSearchContent() {
-        val result = routeRepository.getRecentSearches()
+        val result = routeRepository.getAllRecentSearch()
 
         if (result is Success) {
             if (result.data.isEmpty()) recentSearchContentLoaded.postValue(false)

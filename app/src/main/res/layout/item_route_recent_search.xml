@@ -6,7 +6,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginEnd="@dimen/margin_padding_extremely_small"
-    android:padding="@dimen/margin_padding_small"
+    android:paddingHorizontal="@dimen/margin_padding_small"
     android:orientation="horizontal"
     android:gravity="center"
     android:weightSum="1"
@@ -17,7 +17,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:layout_marginStart="@dimen/margin_padding_extremely_small"
+        android:padding="@dimen/margin_padding_small"
         android:textSize="@dimen/text_extremely_small"
         android:gravity="center"
         android:maxLines="1"
@@ -28,7 +28,8 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:src="@drawable/ic_delete"
-        android:paddingStart="@dimen/margin_padding_small"
+        android:layout_marginStart="@dimen/margin_padding_small"
+        android:paddingEnd="@dimen/margin_padding_small"
         android:background="@null"/>
 
 </LinearLayout>
