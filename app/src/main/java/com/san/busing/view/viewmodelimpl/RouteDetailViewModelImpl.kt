@@ -42,14 +42,14 @@ class RouteDetailViewModelImpl(
     override lateinit var routeStations: List<RouteStationModel>
     override lateinit var routeBuses: List<BusModel>
 
-    override val loadableRemainTime: LiveData<Int>
+    override val resetTimer: LiveData<Int>
         get() = remainTime
     private val remainTime = MutableLiveData<Int>()
     private var isLoadable = false
-    private val timer = object: CountDownTimer(REMAIN_TOTAL_MILLIS, REMAIN_INTERVAL_MILLIS) {
+    private val timer = object: CountDownTimer(REMAIN_TOTAL_MILLIS, TIMER_INTERVAL_MILLIS) {
         override fun onTick(time: Long) {
             if (!isLoadable) isLoadable = true
-            remainTime.postValue((time/ REMAIN_INTERVAL_MILLIS).toInt())
+            remainTime.postValue((time/ TIMER_INTERVAL_MILLIS).toInt())
         }
         override fun onFinish() {
             isLoadable = false
@@ -58,7 +58,7 @@ class RouteDetailViewModelImpl(
 
     override val bookMark: LiveData<Boolean>
         get() = isBookMark
-    private val isBookMark = MutableLiveData<Boolean>()
+    private val isBookMark = MutableLiveData<Boolean>(false)
     private lateinit var recentSearch: RouteRecentSearchModel
 
     override lateinit var error: String
@@ -118,7 +118,7 @@ class RouteDetailViewModelImpl(
         }
     }
 
-    override fun reload() {
+    override fun loadWithTimer() {
         if (!isLoadable) {
             timer.start()
             load()
@@ -126,7 +126,9 @@ class RouteDetailViewModelImpl(
     }
 
     // 최근검색 목록 갱신
-    override fun update(context: Activity) {
+    override fun updateRecentSearch(
+        context: Activity
+    ) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 loadRecentSearch(context)
@@ -253,6 +255,6 @@ class RouteDetailViewModelImpl(
 
     companion object {
         private const val REMAIN_TOTAL_MILLIS: Long = 9999
-        private const val REMAIN_INTERVAL_MILLIS: Long = 1000
+        private const val TIMER_INTERVAL_MILLIS: Long = 1000
     }
 }

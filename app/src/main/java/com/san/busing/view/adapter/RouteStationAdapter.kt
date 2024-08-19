@@ -30,13 +30,17 @@ class RouteStationAdapter(
         }
 
         private fun loadContent(position: Int) {
-            binding.txtRouteStationName.text = stationItems[position].name
-            binding.txtRouteStationNumber.text = stationItems[position].number
-            loadBusInfoBy(position)
-            loadTurnaroundBy(position)
+            loadStationInfo(position)
+            loadBusInfo(position)
+            loadTurnaround(position)
         }
 
-        private fun loadBusInfoBy(position: Int) {
+        private fun loadStationInfo(position: Int) {
+            binding.txtRouteStationName.text = stationItems[position].name
+            binding.txtRouteStationNumber.text = stationItems[position].number
+        }
+
+        private fun loadBusInfo(position: Int) {
             val busIdx = getBusIndex(position)
 
             if (busIdx != NO_MATCH_BUS) {   // 정류소 순번과 일치하는 버스가 존재하는 경우
@@ -58,6 +62,7 @@ class RouteStationAdapter(
             binding.llBusInfo.visibility = View.VISIBLE
             binding.lineBusInfo.visibility = View.VISIBLE
             binding.imgBus.visibility = View.VISIBLE
+
             binding.txtPlateNumber.text = item.plateNumber
             binding.txtRemainSeat.text = remainSeatText(item.remainSeat)
         }
@@ -73,7 +78,7 @@ class RouteStationAdapter(
             binding.imgBus.visibility = View.GONE
         }
 
-        private fun loadTurnaroundBy(position: Int) {
+        private fun loadTurnaround(position: Int) {
             if (stationItems[position].isTurnaround) loadTurnaround()
             else unloadTurnaround()
         }

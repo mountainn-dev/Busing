@@ -11,7 +11,7 @@ import com.san.busing.data.entity.RouteRecentSearch
 @Dao
 interface RecentSearchDao {
     @Query("SELECT * FROM routerecentsearch WHERE id = :id")
-    suspend fun get(id: Int): RouteRecentSearch?
+    suspend fun getBy(id: Int): RouteRecentSearch?
 
     @Query("SELECT * FROM routerecentsearch")
     suspend fun getAll(): List<RouteRecentSearch>
@@ -25,6 +25,6 @@ interface RecentSearchDao {
     @Delete
     suspend fun delete(busRouteRecentSearch: RouteRecentSearch)
 
-    @Delete
-    suspend fun deleteAll(busRouteRecentSearches: List<RouteRecentSearch>)
+    @Query("DELETE FROM routerecentsearch WHERE bookMark = 0")
+    suspend fun deleteAll()
 }

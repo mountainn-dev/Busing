@@ -9,7 +9,7 @@ enum class ServiceResult(val code: Int, val message: String) {
     SUCCESS(0, "정상적으로 처리되었습니다."),
     SYSTEM_ERROR(1, "시스템 에러가 발생하였습니다."),
     NO_ESSENTIAL_PARAMETER(2, "필수 요청 Parameter 가 존재하지 않습니다."),
-    WRONG_ESSENTIAL_PARAMETER(3, "필수 요청 Parameter가 잘못되었습니다"),
+    WRONG_ESSENTIAL_PARAMETER(3, "필수 요청 Parameter 가 잘못되었습니다"),
     NO_RESULT(4, "결과가 존재하지 않습니다."),
     NO_SERVICE_KEY(5, "필수 요청 Parameter (인증키) 가 존재하지 않습니다."),
     WRONG_SERVICE_KEY(6, "등록되지 않은 키입니다."),

@@ -16,7 +16,7 @@ interface SearchRouteViewModel {
 
     fun search(keyword: String)
     fun delete(recentSearchModel: RouteRecentSearchModel)
-    fun deleteAll(context: Activity)
+    fun deleteAllRecentSearches(context: Activity)
     fun clearKeyword()
     fun restore()
 }

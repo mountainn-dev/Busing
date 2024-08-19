@@ -21,6 +21,12 @@
         android:id="@+id/btmNav"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:itemTextColor="@drawable/bottom_nav_text_selector"
+        app:itemIconTint="@drawable/bottom_nav_text_selector"
+        app:itemActiveIndicatorStyle="@null"
+        app:itemRippleColor="@null"
+        app:itemTextAppearanceActiveBoldEnabled="false"
+        android:background="@color/semi_light_grey"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:menu="@menu/menu_bottom_navigation"/>

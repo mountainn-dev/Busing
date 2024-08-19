@@ -3,11 +3,15 @@ package com.san.busing.view.screen
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.TextView
+import androidx.core.widget.doAfterTextChanged
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -63,34 +67,28 @@ class SearchRouteFragment : Fragment() {
     ): View {
         binding = FragmentSearchRouteBinding.inflate(layoutInflater)
 
-        initObserver(viewModel, requireActivity())
-        initListener(viewModel, requireActivity())
+        initObserver(requireActivity())
+        initListener(requireActivity())
 
         return binding.root
     }
 
-    private fun initObserver(
-        viewModel: SearchRouteViewModel,
-        context: Activity
-    ) {
+    private fun initObserver(context: Activity) {
         viewModel.state.observe(
             viewLifecycleOwner,
-            uiStateObserver(viewModel, context)
+            uiStateObserver(context)
         )
         viewModel.recentSearchContentReady.observe(
             viewLifecycleOwner,
-            recentSearchContentReadyObserver(viewModel, context)
+            recentSearchContentReadyObserver(context)
         )
     }
 
-    private fun uiStateObserver(
-        viewModel: SearchRouteViewModel,
-        context: Activity
-    ) = Observer<UiState> {
+    private fun uiStateObserver(context: Activity) = Observer<UiState> {
         when (it) {
             UiState.Success -> {
                 if (viewModel.routeSummaries.isEmpty()) noSearchResultView()
-                else loadSearchResult(viewModel, context)
+                else loadSearchResult(context)
             }
             UiState.Loading -> {
                 loadingView()
@@ -108,7 +106,7 @@ class SearchRouteFragment : Fragment() {
         toggleView(binding.txtNoResult)
     }
 
-    private fun loadSearchResult(viewModel: SearchRouteViewModel, context: Activity) {
+    private fun loadSearchResult(context: Activity) {
         binding.rvSearchResult.adapter = RouteSearchResultAdapter(
             viewModel.routeSummaries,
             searchResultItemClickEventListener(viewModel.routeSummaries, context),
@@ -146,15 +144,12 @@ class SearchRouteFragment : Fragment() {
         toggleView(binding.llServiceError)
     }
 
-    private fun recentSearchContentReadyObserver(
-        viewModel: SearchRouteViewModel,
-        context: Activity
-    ) = Observer<Boolean> {
-        if (it) { whenRecentSearchReady(viewModel, context) }
+    private fun recentSearchContentReadyObserver(context: Activity) = Observer<Boolean> {
+        if (it) { whenRecentSearchReady(context) }
         else { whenRecentSearchNotReady() }
     }
 
-    private fun whenRecentSearchReady(viewModel: SearchRouteViewModel, context: Activity) {
+    private fun whenRecentSearchReady(context: Activity) {
         binding.rvRecentSearch.adapter = RouteRecentSearchAdapter(
             viewModel.routeRecentSearches,
             recentSearchItemClickEventListener(viewModel.routeRecentSearches, context),
@@ -188,26 +183,21 @@ class SearchRouteFragment : Fragment() {
         }
     }
 
-    private fun initListener(viewModel: SearchRouteViewModel, context: Activity) {
-        setEdRouteActionListener(viewModel)
-        setBtnDeleteSearchKeywordListener(viewModel, context)
-        setBtnDeleteAllRecentSearchListener(viewModel, context)
+    private fun initListener(context: Activity) {
+        setEdRouteListener()
+        setBtnDeleteSearchKeywordListener(context)
+        setBtnDeleteAllRecentSearchListener(context)
         setRvBusRouteScrollListener(context)
-        setBtnRequestListener(viewModel)
+        setBtnRequestListener()
     }
 
-    private fun setEdRouteActionListener(viewModel: SearchRouteViewModel) {
-        binding.edRoute.setOnEditorActionListener { textView, i, keyEvent ->
-            if (i == EditorInfo.IME_ACTION_SEARCH) {
-                viewModel.search(binding.edRoute.text.toString())
-                return@setOnEditorActionListener true
-            }
-
-            return@setOnEditorActionListener false
+    private fun setEdRouteListener() {
+        binding.edRoute.doAfterTextChanged { text ->
+            viewModel.search(text.toString())
         }
     }
 
-    private fun setBtnDeleteSearchKeywordListener(viewModel: SearchRouteViewModel, context: Activity) {
+    private fun setBtnDeleteSearchKeywordListener(context: Activity) {
         binding.btnDeleteSearchKeyword.setOnClickListener {
             viewModel.clearKeyword()
             binding.edRoute.setText(viewModel.keyword)
@@ -222,12 +212,9 @@ class SearchRouteFragment : Fragment() {
         }
     }
 
-    private fun setBtnDeleteAllRecentSearchListener(
-        viewModel: SearchRouteViewModel,
-        context: Activity
-    ) {
+    private fun setBtnDeleteAllRecentSearchListener(context: Activity) {
         binding.btnDeleteAllRecentSearch.setOnClickListener {
-            viewModel.deleteAll(context)
+            viewModel.deleteAllRecentSearches(context)
         }
     }
 
@@ -235,7 +222,7 @@ class SearchRouteFragment : Fragment() {
         binding.rvSearchResult.addOnScrollListener(RecyclerViewScrollListener(context))
     }
 
-    private fun setBtnRequestListener(viewModel: SearchRouteViewModel) {
+    private fun setBtnRequestListener() {
         binding.btnTimeoutRequest.setOnClickListener {
             viewModel.search(viewModel.keyword)
         }
@@ -246,11 +233,10 @@ class SearchRouteFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        restore(viewModel)
+        restore()
     }
 
-    private fun restore(viewModel: SearchRouteViewModel) {
-        binding.edRoute.setText(viewModel.keyword)
+    private fun restore() {
         viewModel.restore()
     }
 

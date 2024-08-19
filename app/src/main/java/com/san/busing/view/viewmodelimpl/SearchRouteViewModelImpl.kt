@@ -14,6 +14,7 @@ import com.san.busing.domain.state.UiState
 import com.san.busing.domain.utils.Const
 import com.san.busing.view.viewmodel.SearchRouteViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -21,8 +22,8 @@ class SearchRouteViewModelImpl(
     private val routeRepository: RouteRepository
 ) : SearchRouteViewModel, ViewModel() {
     override val state: LiveData<UiState>
-        get() = searchResultState
-    private val searchResultState = MutableLiveData<UiState>()
+        get() = viewModelState
+    private val viewModelState = MutableLiveData<UiState>()
     override lateinit var routeSummaries: List<RouteSummaryModel>
 
     override val recentSearchContentReady: LiveData<Boolean>
@@ -32,34 +33,31 @@ class SearchRouteViewModelImpl(
 
     override var keyword = Const.EMPTY_TEXT
     override lateinit var error: String
-    private var isSearching = false
+    private var searchingJob: Job? = null
 
     override fun search(keyword: String) {
-        if (!isSearching) {
-            isSearching = true
-            this.keyword = keyword
+        searchingJob?.cancel()
+        this.keyword = keyword
 
-            viewModelScope.launch {
-                withContext(Dispatchers.IO) {
-                    searchBusRoutes()
-                    isSearching = false
-                }
+        searchingJob = viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                searchBusRoutes()
             }
         }
     }
 
     private suspend fun searchBusRoutes() {
-        searchResultState.postValue(UiState.Loading)
+        viewModelState.postValue(UiState.Loading)
         val result = routeRepository.getRoutes(keyword)
 
         if (result is Success) {
             // 검색 결과 출력 시 노선 번호, 운행 지역 순으로 출력
             routeSummaries = result.data.sortedWith(compareBy({it.name}, {it.region}))
-            searchResultState.postValue(UiState.Success)
+            viewModelState.postValue(UiState.Success)
         } else {
             error = (result as Error).message()
-            if (result.isTimeOut()) searchResultState.postValue(UiState.Timeout)
-            if (result.isCritical()) searchResultState.postValue(UiState.Error)
+            if (result.isTimeOut()) viewModelState.postValue(UiState.Timeout)
+            if (result.isCritical()) viewModelState.postValue(UiState.Error)
         }
     }
 
@@ -78,7 +76,7 @@ class SearchRouteViewModelImpl(
         if (result is Error) error = result.message()
     }
 
-    override fun deleteAll(context: Activity) {
+    override fun deleteAllRecentSearches(context: Activity) {
         if (dataState(recentSearchContentLoaded)) {
             resetRecentSearchIndex(context)   // 최근 검색 인덱스 초기화
             viewModelScope.launch {
@@ -97,7 +95,7 @@ class SearchRouteViewModelImpl(
     }
 
     private suspend fun deleteAllRecentSearch() {
-        val result = routeRepository.deleteAllRecentSearch(routeRecentSearches)
+        val result = routeRepository.deleteAllRecentSearch()
 
         if (result is Error) error = result.message()
     }
@@ -113,7 +111,7 @@ class SearchRouteViewModelImpl(
     }
 
     private suspend fun loadRecentSearchContent() {
-        val result = routeRepository.getRecentSearches()
+        val result = routeRepository.getAllRecentSearch()
 
         if (result is Success) {
             if (result.data.isEmpty()) recentSearchContentLoaded.postValue(false)
