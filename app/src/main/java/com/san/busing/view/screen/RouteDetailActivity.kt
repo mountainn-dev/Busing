@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
@@ -63,10 +64,10 @@ class RouteDetailActivity : AppCompatActivity() {
 
     private fun initToolbar(
         routeName: String, routeType: RouteType,
-        context: Activity
+        activity: Activity
     ) {
         setTitle(routeName)
-        setBgColor(routeType, context)
+        setBgColor(routeType, activity)
     }
 
     private fun setTitle(routeName: String) {
@@ -74,32 +75,32 @@ class RouteDetailActivity : AppCompatActivity() {
         binding.txtRouteName.text = routeName
     }
 
-    private fun setBgColor(type: RouteType, context: Activity) {
-        val color = ContextCompat.getColor(context, Utils.getLightColorByRouteType(type))
+    private fun setBgColor(type: RouteType, activity: Activity) {
+        val color = ContextCompat.getColor(activity, Utils.getLightColorByRouteType(type))
         binding.ctbRouteDetail.setContentScrimColor(color)
         binding.ctbRouteDetail.setBackgroundColor(color)
     }
 
-    private fun initObserver(routeType: RouteType, context: Activity) {
+    private fun initObserver(routeType: RouteType, activity: Activity) {
         viewModel.state.observe(
-            context as LifecycleOwner,
-            uiStateObserver(routeType, context)
+            activity as LifecycleOwner,
+            uiStateObserver(routeType, activity)
         )
         viewModel.resetTimer.observe(
-            context as LifecycleOwner,
+            activity as LifecycleOwner,
             resetTimerObserver()
         )
         viewModel.bookMark.observe(
-            context as LifecycleOwner,
+            activity as LifecycleOwner,
             bookMarkObserver()
         )
     }
 
-    private fun uiStateObserver(routeType: RouteType, context: Activity) = Observer<UiState> {
+    private fun uiStateObserver(routeType: RouteType, activity: Activity) = Observer<UiState> {
         when (it) {
             UiState.Success -> {
                 loadRouteInfo()
-                loadRouteStation(routeType, context)
+                loadRouteStation(routeType, activity)
             }
             UiState.Loading -> {
                 unloadRouteInfo()
@@ -111,7 +112,7 @@ class RouteDetailActivity : AppCompatActivity() {
             }
             UiState.Error -> {
                 unloadRouteInfo()
-                errorView(context)
+                errorView(activity)
             }
         }
     }
@@ -123,16 +124,16 @@ class RouteDetailActivity : AppCompatActivity() {
         binding.btnScrollToEndStation.text = viewModel.routeInfo.endStationName
     }
 
-    private fun loadRouteStation(routeType: RouteType, context: Activity) {
+    private fun loadRouteStation(routeType: RouteType, activity: Activity) {
         val state = binding.rvBusRouteStationList.layoutManager?.onSaveInstanceState()
         binding.rvBusRouteStationList.adapter = RouteStationAdapter(
             routeType,
             viewModel.routeStations,
             viewModel.routeBuses,
             routeStationClickEventListener(viewModel.routeStations),
-            context
+            activity
         )
-        binding.rvBusRouteStationList.layoutManager = LinearLayoutManager(context)
+        binding.rvBusRouteStationList.layoutManager = LinearLayoutManager(activity)
         binding.txtRouteBusCount.text = String.format(ROUTE_BUS_COUNT, viewModel.routeBuses.size)
         binding.rvBusRouteStationList.layoutManager?.onRestoreInstanceState(state)
         toggleView(binding.rvBusRouteStationList)
@@ -179,9 +180,9 @@ class RouteDetailActivity : AppCompatActivity() {
         toggleView(binding.llTimeout)
     }
 
-    private fun errorView(context: Activity) {
+    private fun errorView(activity: Activity) {
         toggleView(binding.llServiceError)
-        val toast = ErrorToast(context, viewModel.error)
+        val toast = ErrorToast(activity, viewModel.error)
         if (toast.previousFinished()) toast.show()
     }
 
@@ -206,7 +207,7 @@ class RouteDetailActivity : AppCompatActivity() {
     private fun initListener(activity: Activity) {
         setBtnBackListener()
         setBtnRouteInfoListener(activity)
-        setBtnBookMarkListener()
+        setBtnBookMarkListener(activity)
         setBtnScrollToStartStationListener()
         setBtnRequestListener()
         setFabScrollUpListener()
@@ -232,8 +233,12 @@ class RouteDetailActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    private fun setBtnBookMarkListener() {
-        binding.btnBookMark.setOnClickListener { viewModel.toggleBookMark() }
+    private fun setBtnBookMarkListener(activity: Activity) {
+        binding.btnBookMark.setOnClickListener {
+            if (viewModel.bookMark.value!!) Toast.makeText(activity, BOOKMARK_UNREGISTER_MESSAGE, Toast.LENGTH_SHORT).show()
+            else Toast.makeText(activity, BOOKMARK_REGISTER_MESSAGE, Toast.LENGTH_SHORT).show()
+            viewModel.toggleBookMark()
+        }
     }
 
     private fun setBtnScrollToStartStationListener() {
@@ -280,5 +285,8 @@ class RouteDetailActivity : AppCompatActivity() {
         private const val POSITION_VALUE_WHEN_LIFTED = - 1
         private const val POSITION_VALUE_WHEN_NOT_LIFTED = + 4
         private const val DEFAULT_TURNAROUND_INDEX = 1
+
+        private const val BOOKMARK_REGISTER_MESSAGE = "즐겨찾기가 등록되었습니다."
+        private const val BOOKMARK_UNREGISTER_MESSAGE = "즐겨찾기가 해제되었습니다."
     }
 }
