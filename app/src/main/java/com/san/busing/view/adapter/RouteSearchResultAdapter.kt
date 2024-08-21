@@ -38,7 +38,7 @@ class RouteSearchResultAdapter(
         }
 
         private fun setItemClickEventListener(position: Int) {
-            binding.clRouteItem.setOnClickListener {
+            binding.clRouteSearchResultItem.setOnClickListener {
                 itemClickEventListener.onItemClickListener(position)
             }
         }
