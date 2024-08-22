@@ -9,18 +9,18 @@
     android:background="@drawable/bg_rectangle_downside_grey_bordered">
 
     <TextView
-        android:id="@+id/txtRouteName"
+        android:id="@+id/txtStationName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/margin_padding_default"
         android:textSize="@dimen/text_large"
-        app:layout_constraintBottom_toTopOf="@id/txtRouteTypeTag"
+        app:layout_constraintBottom_toTopOf="@id/txtStationMobileNo"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="routeName" />
+        tools:text="stationName" />
 
     <TextView
-        android:id="@+id/txtRouteTypeTag"
+        android:id="@+id/txtStationMobileNo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/margin_padding_default"
@@ -28,11 +28,11 @@
 
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/txtRouteName"
-        tools:text="routeTypeTag" />
+        app:layout_constraintTop_toBottomOf="@id/txtStationName"
+        tools:text="stationMobileNo" />
 
     <TextView
-        android:id="@+id/txtRegion"
+        android:id="@+id/txtRegionName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/margin_padding_default"
@@ -41,6 +41,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="region" />
+        tools:text="regionName" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

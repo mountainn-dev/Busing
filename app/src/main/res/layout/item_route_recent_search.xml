@@ -9,8 +9,7 @@
     android:paddingHorizontal="@dimen/margin_padding_small"
     android:orientation="horizontal"
     android:gravity="center"
-    android:weightSum="1"
-    android:background="@drawable/bg_rectangle_white_rounded">
+    android:weightSum="1">
 
     <TextView
         android:id="@+id/txtBusRouteRecentSearchName"
