@@ -3,15 +3,11 @@ package com.san.busing.view.screen
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.TextView
 import androidx.core.widget.doAfterTextChanged
-import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -179,7 +175,7 @@ class SearchRouteFragment : Fragment() {
         }
 
         override fun onDeleteButtonClickListener(position: Int) {
-            viewModel.delete(items[position])
+            viewModel.deleteRecentSearch(position)
         }
     }
 

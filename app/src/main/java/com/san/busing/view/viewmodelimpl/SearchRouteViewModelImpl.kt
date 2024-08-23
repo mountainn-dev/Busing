@@ -61,16 +61,16 @@ class SearchRouteViewModelImpl(
         }
     }
 
-    override fun delete(recentSearchModel: RouteRecentSearchModel) {
+    override fun deleteRecentSearch(itemIdx: Int) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                deleteRecentSearch(recentSearchModel)
+                delete(routeRecentSearches[itemIdx])
                 loadRecentSearchContent()
             }
         }
     }
 
-    private suspend fun deleteRecentSearch(recentSearchModel: RouteRecentSearchModel) {
+    private suspend fun delete(recentSearchModel: RouteRecentSearchModel) {
         val result = routeRepository.deleteRecentSearch(recentSearchModel)
 
         if (result is Error) error = result.message()
