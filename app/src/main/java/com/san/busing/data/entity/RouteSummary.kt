@@ -23,7 +23,7 @@ data class RouteSummary(
     @PropertyElement val districtCd: Int,
     @PropertyElement val regionName: String,
 ) {
-    fun toBusRouteSearchResultModel() = RouteSummaryModel(
+    fun toRouteSummaryModel() = RouteSummaryModel(
         Id(routeId),
         Utils.getRouteType(routeTypeCd),
         routeName,
@@ -37,6 +37,6 @@ data class RouteSummaries(
     @Path("msgBody") @Element val routeSummaries: List<RouteSummary>
 ) {
     fun get(): List<RouteSummaryModel> {
-        return routeSummaries.map { it.toBusRouteSearchResultModel() }.toList()
+        return routeSummaries.map { it.toRouteSummaryModel() }.toList()
     }
 }

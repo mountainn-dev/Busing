@@ -22,7 +22,7 @@ class RouteRepositoryImpl(
     private val context: Context
 ) : RouteRepository {
     private val db = Room.databaseBuilder(
-        context, RecentSearchDatabase::class.java, "recentSearch").build()
+        this.context, RecentSearchDatabase::class.java, "recentSearch").build()
 
     override suspend fun getRouteInfo(id: Id): Result<RouteInfoModel> {
         try {

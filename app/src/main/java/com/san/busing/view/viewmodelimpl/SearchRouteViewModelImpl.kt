@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class SearchRouteViewModelImpl(
-    private val routeRepository: RouteRepository
+    private val repository: RouteRepository
 ) : SearchRouteViewModel, ViewModel() {
     override val state: LiveData<UiState>
         get() = viewModelState
@@ -41,14 +41,14 @@ class SearchRouteViewModelImpl(
 
         searchingJob = viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                searchBusRoutes()
+                searchRoutes()
             }
         }
     }
 
-    private suspend fun searchBusRoutes() {
+    private suspend fun searchRoutes() {
         viewModelState.postValue(UiState.Loading)
-        val result = routeRepository.getRoutes(keyword)
+        val result = repository.getRoutes(keyword)
 
         if (result is Success) {
             // 검색 결과 출력 시 노선 번호, 운행 지역 순으로 출력
@@ -71,7 +71,7 @@ class SearchRouteViewModelImpl(
     }
 
     private suspend fun delete(recentSearchModel: RouteRecentSearchModel) {
-        val result = routeRepository.deleteRecentSearch(recentSearchModel)
+        val result = repository.deleteRecentSearch(recentSearchModel)
 
         if (result is Error) error = result.message()
     }
@@ -89,13 +89,13 @@ class SearchRouteViewModelImpl(
     }
 
     private fun resetRecentSearchIndex(context: Activity) {
-        val result = routeRepository.updateRecentSearchIndex(context, DEFAULT_RECENT_SEARCH_INDEX)
+        val result = repository.updateRecentSearchIndex(context, DEFAULT_RECENT_SEARCH_INDEX)
 
         if (result is Error) error = result.message()
     }
 
     private suspend fun deleteAllRecentSearch() {
-        val result = routeRepository.deleteAllRecentSearch()
+        val result = repository.deleteAllRecentSearch()
 
         if (result is Error) error = result.message()
     }
@@ -111,7 +111,7 @@ class SearchRouteViewModelImpl(
     }
 
     private suspend fun loadRecentSearchContent() {
-        val result = routeRepository.getAllRecentSearch()
+        val result = repository.getAllRecentSearch()
 
         if (result is Success) {
             if (result.data.isEmpty()) recentSearchContentLoaded.postValue(false)

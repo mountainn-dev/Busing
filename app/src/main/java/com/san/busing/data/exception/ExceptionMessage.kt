@@ -8,6 +8,7 @@ object ExceptionMessage {
     const val TAG_ROUTE_STATION_EXCEPTION = "Route Station Exception"
     const val TAG_ROUTE_RECENT_SEARCH_EXCEPTION = "Route Recent Search Exception"
     const val TAG_BUS_EXCEPTION = "Bus Exception"
+    const val TAG_STATION_SUMMARY_EXCEPTION = "Station Summary Exception"
 
     // Service Exception Message
     const val NO_SERVICE_RESULT_EXCEPTION = "서비스 결과 코드가 존재하지 않습니다."
