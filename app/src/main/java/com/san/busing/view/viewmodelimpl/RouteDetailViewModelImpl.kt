@@ -20,6 +20,7 @@ import com.san.busing.domain.model.RouteStationModel
 import com.san.busing.domain.state.UiState
 import com.san.busing.view.viewmodel.RouteDetailViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
@@ -62,13 +63,16 @@ class RouteDetailViewModelImpl(
     private lateinit var recentSearch: RouteRecentSearchModel
 
     override lateinit var error: String
+    private var loadingJob: Job? = null
 
     init {
         merge(uiState, routeInfoState, routeStationState, routeBusState)
     }
 
     override fun load() {
-        viewModelScope.launch {
+        loadingJob?.cancel()
+
+        loadingJob = viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 awaitAll(
                     async { loadRouteInfoContent() },

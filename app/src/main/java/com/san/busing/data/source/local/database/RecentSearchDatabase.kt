@@ -8,6 +8,7 @@ import com.san.busing.data.source.local.dao.RecentSearchDao
 @Database(
     version = 1,
     entities = [RouteRecentSearch::class],
+    exportSchema = false
 )
 abstract class RecentSearchDatabase : RoomDatabase() {
     abstract fun recentSearchDao(): RecentSearchDao
