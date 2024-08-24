@@ -13,6 +13,7 @@ import com.san.busing.domain.utils.Utils
  * 노선 검색 화면 상단에 위치한 최근 검색 아이템을 구성한다.
  *
  * bookMark: 즐겨찾기 상태 데이터, SearchRouteFragment 에서 아이템 상단 고정 여부에 사용된다.
+ * 북마크 데이터 연동 작업이 검색 화면에서도 진행되어 편의성을 위해 북마크 데이터를 분리하여 유지하지 않고 엔티티와 함께 묶었다.
  */
 @Entity
 data class RouteRecentSearch(

@@ -7,24 +7,25 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.san.busing.data.entity.RouteRecentSearch
+import com.san.busing.data.entity.StationRecentSearch
 
 @Dao
 interface RecentSearchDao {
     @Query("SELECT * FROM routerecentsearch WHERE id = :id")
-    suspend fun getBy(id: Int): RouteRecentSearch?
+    suspend fun getRouteRecentSearch(id: Int): RouteRecentSearch?
 
     @Query("SELECT * FROM routerecentsearch")
-    suspend fun getAll(): List<RouteRecentSearch>
+    suspend fun getAllRouteRecentSearches(): List<RouteRecentSearch>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(busRouteRecentSearch: RouteRecentSearch)
+    suspend fun insert(routeRecentSearch: RouteRecentSearch)
 
     @Update
-    suspend fun update(busRouteRecentSearch: RouteRecentSearch)
+    suspend fun update(routeRecentSearch: RouteRecentSearch)
 
     @Delete
-    suspend fun delete(busRouteRecentSearch: RouteRecentSearch)
+    suspend fun delete(routeRecentSearch: RouteRecentSearch)
 
     @Query("DELETE FROM routerecentsearch WHERE bookMark = 0")
-    suspend fun deleteAll()
+    suspend fun deleteAllRouteRecentSearches()
 }
