@@ -15,10 +15,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.san.busing.BuildConfig
 import com.san.busing.data.repositoryimpl.StationRepositoryImpl
 import com.san.busing.data.source.remote.retrofit.StationService
+import com.san.busing.data.vo.Id
 import com.san.busing.databinding.FragmentSearchStationBinding
+import com.san.busing.domain.model.RouteRecentSearchModel
+import com.san.busing.domain.model.StationRecentSearchModel
 import com.san.busing.domain.model.StationSummaryModel
 import com.san.busing.domain.state.UiState
 import com.san.busing.domain.utils.Utils
+import com.san.busing.view.adapter.RouteRecentSearchAdapter
+import com.san.busing.view.adapter.StationRecentSearchAdapter
 import com.san.busing.view.adapter.StationSearchResultAdapter
 import com.san.busing.view.listener.ItemClickEventListener
 import com.san.busing.view.listener.RecyclerViewScrollListener
@@ -34,7 +39,8 @@ class SearchStationFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         val repository = StationRepositoryImpl(
-            Utils.getRetrofit(BuildConfig.STATION_URL).create(StationService::class.java)
+            Utils.getRetrofit(BuildConfig.STATION_URL).create(StationService::class.java),
+            requireActivity()
         )
         viewModel = ViewModelProvider(requireActivity(), SearchStationViewModelFactory(repository)).get(
             SearchStationViewModelImpl::class.java
@@ -57,6 +63,10 @@ class SearchStationFragment : Fragment() {
         viewModel.state.observe(
             activity as LifecycleOwner,
             stateObserver(activity)
+        )
+        viewModel.recentSearchContentReady.observe(
+            viewLifecycleOwner,
+            recentSearchContentReadyObserver(activity)
         )
     }
 
@@ -96,10 +106,20 @@ class SearchStationFragment : Fragment() {
         activity: Activity
     ) = object : ItemClickEventListener {
         override fun onItemClickListener(position: Int) {
-            // sendUserToStationDetailScreen
+            sendUserToStationDetailScreen(
+                activity,
+                items[position].id, items[position].name, items[position].regionName
+            )
         }
 
         override fun onDeleteButtonClickListener(position: Int) {}
+    }
+
+    private fun sendUserToStationDetailScreen(
+        activity: Activity,
+        id: Id, name: String, regionName: String
+    ) {
+
     }
 
     private fun loadingView() {
@@ -112,6 +132,42 @@ class SearchStationFragment : Fragment() {
 
     private fun errorView() {
         toggleView(binding.llServiceError)
+    }
+
+    private fun recentSearchContentReadyObserver(activity: Activity) = Observer<Boolean> {
+        if (it) { whenRecentSearchReady(activity) }
+        else { whenRecentSearchNotReady() }
+    }
+
+    private fun whenRecentSearchReady(activity: Activity) {
+        binding.rvRecentSearch.adapter = StationRecentSearchAdapter(
+            viewModel.stationRecentSearches,
+            recentSearchItemClickEventListener(viewModel.stationRecentSearches, activity)
+        )
+        binding.rvRecentSearch.layoutManager = LinearLayoutManager(
+            activity, LinearLayoutManager.HORIZONTAL, false
+        )
+        binding.rvRecentSearch.visibility = View.VISIBLE
+    }
+
+    private fun whenRecentSearchNotReady() {
+        binding.rvRecentSearch.visibility = View.GONE
+    }
+
+    private fun recentSearchItemClickEventListener(
+        items: List<StationRecentSearchModel>,
+        activity: Activity
+    ) = object : ItemClickEventListener {
+        override fun onItemClickListener(position: Int) {
+            sendUserToStationDetailScreen(
+                activity,
+                items[position].id, items[position].name, items[position].regionName
+            )
+        }
+
+        override fun onDeleteButtonClickListener(position: Int) {
+            viewModel.deleteRecentSearch(position)
+        }
     }
 
     private fun initListener(activity: Activity) {

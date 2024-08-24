@@ -7,10 +7,9 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.san.busing.data.entity.RouteRecentSearch
-import com.san.busing.data.entity.StationRecentSearch
 
 @Dao
-interface RecentSearchDao {
+interface RouteRecentSearchDao {
     @Query("SELECT * FROM routerecentsearch WHERE id = :id")
     suspend fun getRouteRecentSearch(id: Int): RouteRecentSearch?
 

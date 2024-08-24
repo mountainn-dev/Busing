@@ -4,7 +4,8 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import com.san.busing.data.entity.RouteRecentSearch
 import com.san.busing.data.entity.StationRecentSearch
-import com.san.busing.data.source.local.dao.RecentSearchDao
+import com.san.busing.data.source.local.dao.RouteRecentSearchDao
+import com.san.busing.data.source.local.dao.StationRecentSearchDao
 
 @Database(
     version = 1,
@@ -12,5 +13,6 @@ import com.san.busing.data.source.local.dao.RecentSearchDao
     exportSchema = false
 )
 abstract class RecentSearchDatabase : RoomDatabase() {
-    abstract fun recentSearchDao(): RecentSearchDao
+    abstract fun routeRecentSearchDao(): RouteRecentSearchDao
+    abstract fun stationRecentSearchDao(): StationRecentSearchDao
 }

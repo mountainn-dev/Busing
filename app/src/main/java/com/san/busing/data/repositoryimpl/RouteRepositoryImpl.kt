@@ -64,7 +64,7 @@ class RouteRepositoryImpl(
 
     override suspend fun getRecentSearch(id: Id): Result<RouteRecentSearchModel> {
         try {
-            db.recentSearchDao().getRouteRecentSearch(id.get())?.let {
+            db.routeRecentSearchDao().getRouteRecentSearch(id.get())?.let {
                 return Result.success(it.toRouteRecentSearchModel())
             }
             return Result.error(NoSuchElementException(""))
@@ -76,7 +76,7 @@ class RouteRepositoryImpl(
 
     override suspend fun getAllRecentSearch(): Result<List<RouteRecentSearchModel>> {
         try {
-            return Result.success(db.recentSearchDao().getAllRouteRecentSearches().map { it.toRouteRecentSearchModel() })
+            return Result.success(db.routeRecentSearchDao().getAllRouteRecentSearches().map { it.toRouteRecentSearchModel() })
         } catch (e: Exception) {
             Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.message ?: e.toString())
             return Result.error(e)
@@ -85,8 +85,8 @@ class RouteRepositoryImpl(
 
     override suspend fun insertRecentSearch(recentSearchModel: RouteRecentSearchModel): Result<Boolean> {
         try {
-            db.recentSearchDao().insert(
-                recentSearchModel.toBusRouteRecentSearchEntity())
+            db.routeRecentSearchDao().insert(
+                recentSearchModel.toRouteRecentSearchEntity())
             return Result.success(true)
         } catch (e: Exception) {
             Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.message ?: e.toString())
@@ -96,8 +96,8 @@ class RouteRepositoryImpl(
 
     override suspend fun updateRecentSearch(recentSearchModel: RouteRecentSearchModel): Result<Boolean> {
         try {
-            db.recentSearchDao().update(
-                recentSearchModel.toBusRouteRecentSearchEntity())
+            db.routeRecentSearchDao().update(
+                recentSearchModel.toRouteRecentSearchEntity())
             return Result.success(true)
         } catch (e: Exception) {
             Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.message ?: e.toString())
@@ -107,8 +107,8 @@ class RouteRepositoryImpl(
 
     override suspend fun deleteRecentSearch(recentSearchModel: RouteRecentSearchModel): Result<Boolean> {
         try {
-            db.recentSearchDao().delete(
-                recentSearchModel.toBusRouteRecentSearchEntity())
+            db.routeRecentSearchDao().delete(
+                recentSearchModel.toRouteRecentSearchEntity())
             return Result.success(true)
         } catch (e: Exception) {
             Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.message ?: e.toString())
@@ -118,7 +118,7 @@ class RouteRepositoryImpl(
 
     override suspend fun deleteAllRecentSearch(): Result<Boolean> {
         try {
-            db.recentSearchDao().deleteAllRouteRecentSearches()
+            db.routeRecentSearchDao().deleteAllRouteRecentSearches()
             return Result.success(true)
         } catch (e: Exception) {
             Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.message ?: e.toString())
@@ -135,14 +135,14 @@ class RouteRepositoryImpl(
     override fun getRecentSearchIndex(activity: Activity): Result<Long> {
         val preference = activity.getSharedPreferences(BuildConfig.APPLICATION_ID, Context.MODE_PRIVATE)
         return Result.success(
-            preference.getLong(BuildConfig.BUS_ROUTE_PREFERENCE_KEY, DEFAULT_INDEX)
+            preference.getLong(BuildConfig.ROUTE_PREFERENCE_KEY, DEFAULT_INDEX)
         )
     }
 
     override fun updateRecentSearchIndex(activity: Activity, newIdx: Long): Result<Boolean> {
         val preference = activity.getSharedPreferences(BuildConfig.APPLICATION_ID, Context.MODE_PRIVATE)
         try {
-            preference.edit().putLong(BuildConfig.BUS_ROUTE_PREFERENCE_KEY, newIdx).apply()
+            preference.edit().putLong(BuildConfig.ROUTE_PREFERENCE_KEY, newIdx).apply()
             return Result.success(true)
         } catch (e: Exception) {
             Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.message ?: e.toString())

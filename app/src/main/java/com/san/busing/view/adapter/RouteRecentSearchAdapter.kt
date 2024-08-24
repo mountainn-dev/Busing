@@ -15,9 +15,9 @@ class RouteRecentSearchAdapter(
     private val items: List<RouteRecentSearchModel>,
     private val itemClickEventListener: ItemClickEventListener,
     private val context: Activity
-) : RecyclerView.Adapter<RouteRecentSearchAdapter.BusRouteRecentSearchViewHolder>() {
+) : RecyclerView.Adapter<RouteRecentSearchAdapter.RouteRecentSearchViewHolder>() {
 
-    inner class BusRouteRecentSearchViewHolder(
+    inner class RouteRecentSearchViewHolder(
         private val binding: ItemRouteRecentSearchBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
@@ -29,7 +29,7 @@ class RouteRecentSearchAdapter(
         }
 
         private fun loadContent(position: Int) {
-            binding.txtBusRouteRecentSearchName.text = items[position].name
+            binding.txtRouteRecentSearchName.text = items[position].name
             binding.btnDeleteRecentSearch.visibility = if (items[position].bookMark) View.GONE else View.VISIBLE
         }
 
@@ -42,7 +42,7 @@ class RouteRecentSearchAdapter(
         private fun setContentColor(position: Int) {
             val color = ContextCompat.getColor(context, Utils.getColorByRouteType(items[position].type))
 
-            binding.txtBusRouteRecentSearchName.setTextColor(color)
+            binding.txtRouteRecentSearchName.setTextColor(color)
         }
 
         private fun setItemClickEventListener(position: Int) {
@@ -56,17 +56,17 @@ class RouteRecentSearchAdapter(
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): BusRouteRecentSearchViewHolder {
+    ): RouteRecentSearchViewHolder {
         val binding = ItemRouteRecentSearchBinding.inflate(
             LayoutInflater.from(parent.context), parent, false
         )
 
-        return BusRouteRecentSearchViewHolder(binding)
+        return RouteRecentSearchViewHolder(binding)
     }
 
     override fun getItemCount() = items.size
 
-    override fun onBindViewHolder(holder: BusRouteRecentSearchViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: RouteRecentSearchViewHolder, position: Int) {
         holder.bind(position)
     }
 }

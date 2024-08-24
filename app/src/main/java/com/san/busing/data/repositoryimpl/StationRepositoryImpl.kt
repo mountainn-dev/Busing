@@ -39,8 +39,8 @@ class StationRepositoryImpl(
 
     override suspend fun getRecentSearch(id: Id): Result<StationRecentSearchModel> {
         try {
-            db.recentSearchDao().getRouteRecentSearch(id.get())?.let {
-                return Result.success(it.toRouteRecentSearchModel())
+            db.stationRecentSearchDao().getStationRecentSearch(id.get())?.let {
+                return Result.success(it.toStationRecentSearchModel())
             }
             return Result.error(NoSuchElementException(""))
         } catch (e: Exception) {
@@ -49,19 +49,19 @@ class StationRepositoryImpl(
         }
     }
 
-    override suspend fun getAllRecentSearch(): Result<List<RouteRecentSearchModel>> {
+    override suspend fun getAllRecentSearch(): Result<List<StationRecentSearchModel>> {
         try {
-            return Result.success(db.recentSearchDao().getAllRouteRecentSearches().map { it.toRouteRecentSearchModel() })
+            return Result.success(db.stationRecentSearchDao().getAllStationRecentSearches().map { it.toStationRecentSearchModel() })
         } catch (e: Exception) {
             Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.message ?: e.toString())
             return Result.error(e)
         }
     }
 
-    override suspend fun insertRecentSearch(recentSearchModel: RouteRecentSearchModel): Result<Boolean> {
+    override suspend fun insertRecentSearch(recentSearchModel: StationRecentSearchModel): Result<Boolean> {
         try {
-            db.recentSearchDao().insert(
-                recentSearchModel.toBusRouteRecentSearchEntity())
+            db.stationRecentSearchDao().insert(
+                recentSearchModel.toStationRecentSearchEntity())
             return Result.success(true)
         } catch (e: Exception) {
             Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.message ?: e.toString())
@@ -69,10 +69,10 @@ class StationRepositoryImpl(
         }
     }
 
-    override suspend fun updateRecentSearch(recentSearchModel: RouteRecentSearchModel): Result<Boolean> {
+    override suspend fun updateRecentSearch(recentSearchModel: StationRecentSearchModel): Result<Boolean> {
         try {
-            db.recentSearchDao().update(
-                recentSearchModel.toBusRouteRecentSearchEntity())
+            db.stationRecentSearchDao().update(
+                recentSearchModel.toStationRecentSearchEntity())
             return Result.success(true)
         } catch (e: Exception) {
             Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.message ?: e.toString())
@@ -80,10 +80,10 @@ class StationRepositoryImpl(
         }
     }
 
-    override suspend fun deleteRecentSearch(recentSearchModel: RouteRecentSearchModel): Result<Boolean> {
+    override suspend fun deleteRecentSearch(recentSearchModel: StationRecentSearchModel): Result<Boolean> {
         try {
-            db.recentSearchDao().delete(
-                recentSearchModel.toBusRouteRecentSearchEntity())
+            db.stationRecentSearchDao().delete(
+                recentSearchModel.toStationRecentSearchEntity())
             return Result.success(true)
         } catch (e: Exception) {
             Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.message ?: e.toString())
@@ -93,7 +93,7 @@ class StationRepositoryImpl(
 
     override suspend fun deleteAllRecentSearch(): Result<Boolean> {
         try {
-            db.recentSearchDao().deleteAllRouteRecentSearches()
+            db.stationRecentSearchDao().deleteAllStationRecentSearches()
             return Result.success(true)
         } catch (e: Exception) {
             Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.message ?: e.toString())
@@ -101,23 +101,17 @@ class StationRepositoryImpl(
         }
     }
 
-    /**
-     * fun getRecentSearchIndex(context: Activity): Result<Int>
-     *
-     * 최근 검색 노선의 생성 고유 인덱스 호출 함수
-     * preference.getLong() 에서 디폴트값을 설정하기 때문에 별도 예외처리를 진행하지 않는다.
-     */
     override fun getRecentSearchIndex(activity: Activity): Result<Long> {
         val preference = activity.getSharedPreferences(BuildConfig.APPLICATION_ID, Context.MODE_PRIVATE)
         return Result.success(
-            preference.getLong(BuildConfig.BUS_ROUTE_PREFERENCE_KEY, DEFAULT_INDEX)
+            preference.getLong(BuildConfig.STATION_PREFERENCE_KEY, DEFAULT_INDEX)
         )
     }
 
     override fun updateRecentSearchIndex(activity: Activity, newIdx: Long): Result<Boolean> {
         val preference = activity.getSharedPreferences(BuildConfig.APPLICATION_ID, Context.MODE_PRIVATE)
         try {
-            preference.edit().putLong(BuildConfig.BUS_ROUTE_PREFERENCE_KEY, newIdx).apply()
+            preference.edit().putLong(BuildConfig.STATION_PREFERENCE_KEY, newIdx).apply()
             return Result.success(true)
         } catch (e: Exception) {
             Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.message ?: e.toString())
