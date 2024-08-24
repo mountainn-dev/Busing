@@ -14,8 +14,8 @@ class RouteSearchResultAdapter(
     private val items: List<RouteSummaryModel>,
     private val itemClickEventListener: ItemClickEventListener,
     private val context: Activity
-) : RecyclerView.Adapter<RouteSearchResultAdapter.BusRouteSearchResultViewHolder>() {
-    inner class BusRouteSearchResultViewHolder(
+) : RecyclerView.Adapter<RouteSearchResultAdapter.RouteSearchResultViewHolder>() {
+    inner class RouteSearchResultViewHolder(
         private val binding: ItemRouteSearchResultBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(position: Int) {
@@ -38,7 +38,7 @@ class RouteSearchResultAdapter(
         }
 
         private fun setItemClickEventListener(position: Int) {
-            binding.clRouteItem.setOnClickListener {
+            binding.clRouteSearchResultItem.setOnClickListener {
                 itemClickEventListener.onItemClickListener(position)
             }
         }
@@ -46,16 +46,16 @@ class RouteSearchResultAdapter(
 
     override fun onCreateViewHolder(
         parent: ViewGroup, viewType: Int
-    ): BusRouteSearchResultViewHolder {
+    ): RouteSearchResultViewHolder {
         val binding = ItemRouteSearchResultBinding.inflate(
             LayoutInflater.from(parent.context), parent, false
         )
-        return BusRouteSearchResultViewHolder(binding)
+        return RouteSearchResultViewHolder(binding)
     }
 
     override fun getItemCount() = items.size
 
-    override fun onBindViewHolder(holder: BusRouteSearchResultViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: RouteSearchResultViewHolder, position: Int) {
         holder.bind(position)
     }
 }

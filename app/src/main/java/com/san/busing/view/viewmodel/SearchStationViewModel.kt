@@ -2,15 +2,15 @@ package com.san.busing.view.viewmodel
 
 import android.app.Activity
 import androidx.lifecycle.LiveData
-import com.san.busing.domain.model.RouteRecentSearchModel
-import com.san.busing.domain.model.RouteSummaryModel
+import com.san.busing.domain.model.StationRecentSearchModel
+import com.san.busing.domain.model.StationSummaryModel
 import com.san.busing.domain.state.UiState
 
-interface SearchRouteViewModel {
+interface SearchStationViewModel {
     val state: LiveData<UiState>
     val recentSearchContentReady: LiveData<Boolean>
-    var routeSummaries: List<RouteSummaryModel>
-    var routeRecentSearches: List<RouteRecentSearchModel>
+    var stationSummaries: List<StationSummaryModel>
+    var stationRecentSearches: List<StationRecentSearchModel>
     var keyword: String
     var error: String
 

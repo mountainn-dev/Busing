@@ -7,29 +7,30 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.san.busing.data.Error
 import com.san.busing.data.Success
-import com.san.busing.data.repository.RouteRepository
+import com.san.busing.data.repository.StationRepository
 import com.san.busing.domain.model.RouteRecentSearchModel
-import com.san.busing.domain.model.RouteSummaryModel
+import com.san.busing.domain.model.StationRecentSearchModel
+import com.san.busing.domain.model.StationSummaryModel
 import com.san.busing.domain.state.UiState
 import com.san.busing.domain.utils.Const
-import com.san.busing.view.viewmodel.SearchRouteViewModel
+import com.san.busing.view.viewmodel.SearchStationViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class SearchRouteViewModelImpl(
-    private val repository: RouteRepository
-) : SearchRouteViewModel, ViewModel() {
+class SearchStationViewModelImpl(
+    private val repository: StationRepository
+) : SearchStationViewModel, ViewModel() {
     override val state: LiveData<UiState>
         get() = viewModelState
     private val viewModelState = MutableLiveData<UiState>()
-    override lateinit var routeSummaries: List<RouteSummaryModel>
+    override lateinit var stationSummaries: List<StationSummaryModel>
 
     override val recentSearchContentReady: LiveData<Boolean>
         get() = recentSearchContentLoaded
     private val recentSearchContentLoaded = MutableLiveData<Boolean>()
-    override lateinit var routeRecentSearches: List<RouteRecentSearchModel>
+    override lateinit var stationRecentSearches: List<StationRecentSearchModel>
 
     override var keyword = Const.EMPTY_TEXT
     override lateinit var error: String
@@ -41,18 +42,18 @@ class SearchRouteViewModelImpl(
 
         searchingJob = viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                searchRoutes()
+                searchStations()
             }
         }
     }
 
-    private suspend fun searchRoutes() {
+    private suspend fun searchStations() {
         viewModelState.postValue(UiState.Loading)
-        val result = repository.getRoutes(keyword)
+        val result = repository.getStations(keyword)
 
         if (result is Success) {
             // 검색 결과 출력 시 노선 번호, 운행 지역 순으로 출력
-            routeSummaries = result.data.sortedWith(compareBy({it.name}, {it.region}))
+            stationSummaries = result.data.sortedWith(compareBy({it.name}, {it.regionName}))
             viewModelState.postValue(UiState.Success)
         } else {
             error = (result as Error).message()
@@ -64,21 +65,37 @@ class SearchRouteViewModelImpl(
     override fun deleteRecentSearch(itemIdx: Int) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                delete(routeRecentSearches[itemIdx])
+                delete(stationRecentSearches[itemIdx])
                 loadRecentSearchContent()
             }
         }
     }
 
-    private suspend fun delete(recentSearchModel: RouteRecentSearchModel) {
+    private suspend fun delete(recentSearchModel: StationRecentSearchModel) {
         val result = repository.deleteRecentSearch(recentSearchModel)
 
         if (result is Error) error = result.message()
     }
 
-    override fun deleteAllRecentSearches(context: Activity) {
+    private suspend fun loadRecentSearchContent() {
+        val result = repository.getAllRecentSearch()
+
+        if (result is Success) {
+            if (result.data.isEmpty()) recentSearchContentLoaded.postValue(false)
+            else {
+                stationRecentSearches = result.data.sortedWith(
+                    compareByDescending<StationRecentSearchModel> { it.bookMark }.thenByDescending { it.index })
+                recentSearchContentLoaded.postValue(true)
+            }
+        } else {
+            error = (result as Error).message()
+            recentSearchContentLoaded.postValue(false)
+        }
+    }
+
+    override fun deleteAllRecentSearches(activity: Activity) {
         if (dataState(recentSearchContentLoaded)) {
-            resetRecentSearchIndex(context)
+            resetRecentSearchIndex(activity)   // 최근 검색 인덱스 초기화
             viewModelScope.launch {
                 withContext(Dispatchers.IO) {
                     deleteAllRecentSearch()
@@ -88,8 +105,8 @@ class SearchRouteViewModelImpl(
         }
     }
 
-    private fun resetRecentSearchIndex(context: Activity) {
-        val result = repository.updateRecentSearchIndex(context, DEFAULT_RECENT_SEARCH_INDEX)
+    private fun resetRecentSearchIndex(activity: Activity) {
+        val result = repository.updateRecentSearchIndex(activity, DEFAULT_RECENT_SEARCH_INDEX)
 
         if (result is Error) error = result.message()
     }
@@ -107,22 +124,6 @@ class SearchRouteViewModelImpl(
     override fun restore() {
         viewModelScope.launch {
             withContext(Dispatchers.IO) { loadRecentSearchContent() }
-        }
-    }
-
-    private suspend fun loadRecentSearchContent() {
-        val result = repository.getAllRecentSearch()
-
-        if (result is Success) {
-            if (result.data.isEmpty()) recentSearchContentLoaded.postValue(false)
-            else {
-                routeRecentSearches = result.data.sortedWith(
-                    compareByDescending<RouteRecentSearchModel> { it.bookMark }.thenByDescending { it.index })
-                recentSearchContentLoaded.postValue(true)
-            }
-        } else {
-            error = (result as Error).message()
-            recentSearchContentLoaded.postValue(false)
         }
     }
 

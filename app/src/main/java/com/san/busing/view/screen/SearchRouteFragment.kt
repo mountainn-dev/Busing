@@ -3,15 +3,11 @@ package com.san.busing.view.screen
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.TextView
 import androidx.core.widget.doAfterTextChanged
-import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -19,7 +15,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.san.busing.BuildConfig
 import com.san.busing.data.repositoryimpl.RouteRepositoryImpl
 import com.san.busing.data.source.remote.retrofit.RouteService
+import com.san.busing.data.vo.Id
 import com.san.busing.databinding.FragmentSearchRouteBinding
+import com.san.busing.domain.enums.RouteType
 import com.san.busing.domain.model.RouteRecentSearchModel
 import com.san.busing.domain.model.RouteSummaryModel
 import com.san.busing.domain.state.UiState
@@ -118,18 +116,27 @@ class SearchRouteFragment : Fragment() {
 
     private fun searchResultItemClickEventListener(
         items: List<RouteSummaryModel>,
-        context: Activity
+        activity: Activity
     ) = object : ItemClickEventListener {
         override fun onItemClickListener(position: Int) {
-            val intent = Intent(context, RouteDetailActivity::class.java)
-            intent.putExtra(Const.TAG_ROUTE_ID, items[position].id)
-            intent.putExtra(Const.TAG_ROUTE_NAME, items[position].name)
-            intent.putExtra(Const.TAG_ROUTE_TYPE, items[position].type)
-
-            context.startActivity(intent)
+            sendUserToRouteDetailScreen(
+                activity, items[position].id, items[position].name, items[position].type
+            )
         }
 
         override fun onDeleteButtonClickListener(position: Int) {}
+    }
+
+    private fun sendUserToRouteDetailScreen(
+        activity: Activity,
+        id: Id, name: String, type: RouteType
+    ) {
+        val intent = Intent(activity, RouteDetailActivity::class.java)
+        intent.putExtra(Const.TAG_ROUTE_ID, id)
+        intent.putExtra(Const.TAG_ROUTE_NAME, name)
+        intent.putExtra(Const.TAG_ROUTE_TYPE, type)
+
+        activity.startActivity(intent)
     }
 
     private fun loadingView() {
@@ -167,19 +174,17 @@ class SearchRouteFragment : Fragment() {
 
     private fun recentSearchItemClickEventListener(
         items: List<RouteRecentSearchModel>,
-        context: Activity
+        activity: Activity
     ) = object : ItemClickEventListener {
         override fun onItemClickListener(position: Int) {
-            val intent = Intent(context, RouteDetailActivity::class.java)
-            intent.putExtra(Const.TAG_ROUTE_ID, items[position].id)
-            intent.putExtra(Const.TAG_ROUTE_NAME, items[position].name)
-            intent.putExtra(Const.TAG_ROUTE_TYPE, items[position].type)
-
-            context.startActivity(intent)
+            sendUserToRouteDetailScreen(
+                activity,
+                items[position].id, items[position].name, items[position].type
+            )
         }
 
         override fun onDeleteButtonClickListener(position: Int) {
-            viewModel.delete(items[position])
+            viewModel.deleteRecentSearch(position)
         }
     }
 

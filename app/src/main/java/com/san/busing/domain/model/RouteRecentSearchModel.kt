@@ -17,7 +17,7 @@ data class RouteRecentSearchModel(
     val index: Long,
     val bookMark: Boolean
 ) {
-    fun toBusRouteRecentSearchEntity() = RouteRecentSearch(
+    fun toRouteRecentSearchEntity() = RouteRecentSearch(
         id.get(),
         name,
         type.code,

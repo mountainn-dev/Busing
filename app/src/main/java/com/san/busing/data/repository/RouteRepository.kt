@@ -18,6 +18,6 @@ interface RouteRepository {
     suspend fun updateRecentSearch(recentSearchModel: RouteRecentSearchModel): Result<Boolean>
     suspend fun deleteRecentSearch(recentSearchModel: RouteRecentSearchModel): Result<Boolean>
     suspend fun deleteAllRecentSearch(): Result<Boolean>
-    fun getRecentSearchIndex(context: Activity): Result<Long>
-    fun updateRecentSearchIndex(context: Activity, newIdx: Long): Result<Boolean>
+    fun getRecentSearchIndex(activity: Activity): Result<Long>
+    fun updateRecentSearchIndex(activity: Activity, newIdx: Long): Result<Boolean>
 }
