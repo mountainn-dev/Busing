@@ -59,7 +59,7 @@ class RouteDetailViewModelImpl(
 
     override val bookMark: LiveData<Boolean>
         get() = isBookMark
-    private val isBookMark = MutableLiveData<Boolean>(false)
+    private val isBookMark = MutableLiveData(false)
     private lateinit var recentSearch: RouteRecentSearchModel
 
     override lateinit var error: String

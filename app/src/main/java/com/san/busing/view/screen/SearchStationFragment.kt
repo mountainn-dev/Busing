@@ -1,6 +1,7 @@
 package com.san.busing.view.screen
 
 import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -21,6 +22,7 @@ import com.san.busing.domain.model.RouteRecentSearchModel
 import com.san.busing.domain.model.StationRecentSearchModel
 import com.san.busing.domain.model.StationSummaryModel
 import com.san.busing.domain.state.UiState
+import com.san.busing.domain.utils.Const
 import com.san.busing.domain.utils.Utils
 import com.san.busing.view.adapter.RouteRecentSearchAdapter
 import com.san.busing.view.adapter.StationRecentSearchAdapter
@@ -108,7 +110,7 @@ class SearchStationFragment : Fragment() {
         override fun onItemClickListener(position: Int) {
             sendUserToStationDetailScreen(
                 activity,
-                items[position].id, items[position].name, items[position].regionName
+                items[position].id, items[position].mobileNo, items[position].name, items[position].regionName
             )
         }
 
@@ -117,9 +119,15 @@ class SearchStationFragment : Fragment() {
 
     private fun sendUserToStationDetailScreen(
         activity: Activity,
-        id: Id, name: String, regionName: String
+        id: Id, mobileNo: String, name: String, regionName: String
     ) {
+        val intent = Intent(activity, StationDetailActivity::class.java)
+        intent.putExtra(Const.TAG_STATION_ID, id)
+        intent.putExtra(Const.TAG_STATION_MOBILE_NUMBER, mobileNo)
+        intent.putExtra(Const.TAG_STATION_NAME, name)
+        intent.putExtra(Const.TAG_REGION_NAME, regionName)
 
+        startActivity(intent)
     }
 
     private fun loadingView() {
@@ -161,7 +169,7 @@ class SearchStationFragment : Fragment() {
         override fun onItemClickListener(position: Int) {
             sendUserToStationDetailScreen(
                 activity,
-                items[position].id, items[position].name, items[position].regionName
+                items[position].id, items[position].mobileNo, items[position].name, items[position].regionName
             )
         }
 
