@@ -76,9 +76,9 @@ class SearchRouteViewModelImpl(
         if (result is Error) error = result.message()
     }
 
-    override fun deleteAllRecentSearches(context: Activity) {
+    override fun deleteAllRecentSearches(activity: Activity) {
         if (dataState(recentSearchContentLoaded)) {
-            resetRecentSearchIndex(context)
+            resetRecentSearchIndex(activity)
             viewModelScope.launch {
                 withContext(Dispatchers.IO) {
                     deleteAllRecentSearch()
@@ -88,8 +88,8 @@ class SearchRouteViewModelImpl(
         }
     }
 
-    private fun resetRecentSearchIndex(context: Activity) {
-        val result = repository.updateRecentSearchIndex(context, DEFAULT_RECENT_SEARCH_INDEX)
+    private fun resetRecentSearchIndex(activity: Activity) {
+        val result = repository.updateRecentSearchIndex(activity, DEFAULT_RECENT_SEARCH_INDEX)
 
         if (result is Error) error = result.message()
     }

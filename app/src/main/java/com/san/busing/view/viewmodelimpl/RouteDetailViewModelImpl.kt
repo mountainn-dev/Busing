@@ -131,11 +131,11 @@ class RouteDetailViewModelImpl(
 
     // 최근검색 목록 갱신
     override fun updateRecentSearch(
-        context: Activity
+        activity: Activity
     ) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                loadRecentSearch(context)
+                loadRecentSearch(activity)
                 loadBookMarkContent()
                 insertRecentSearch()
                 updateRecentSearch()
@@ -143,40 +143,40 @@ class RouteDetailViewModelImpl(
         }
     }
 
-    private suspend fun loadRecentSearch(context: Activity) {
+    private suspend fun loadRecentSearch(activity: Activity) {
         val result = routeRepository.getRecentSearch(routeId)
 
         if (result is Success) {
             val model = result.data
             recentSearch = RouteRecentSearchModel(
                 model.id, model.name, model.type,
-                if (model.bookMark) model.index else nextRecentSearchIndex(context),
+                if (model.bookMark) model.index else nextRecentSearchIndex(activity),
                 model.bookMark)
         }
         else {
             recentSearch = RouteRecentSearchModel(
                 routeId, routeName, routeType,
-                nextRecentSearchIndex(context), false)
+                nextRecentSearchIndex(activity), false)
             isBookMark.postValue(false)
             error = (result as Error).message()
         }
     }
 
-    private fun nextRecentSearchIndex(context: Activity): Long {
-        val newIndex = previousRecentSearchIndex(context) + 1
-        updateRecentSearchIndex(context, newIndex)
+    private fun nextRecentSearchIndex(activity: Activity): Long {
+        val newIndex = previousRecentSearchIndex(activity) + 1
+        updateRecentSearchIndex(activity, newIndex)
 
         return newIndex
     }
 
-    private fun previousRecentSearchIndex(context: Activity): Long {
-        val result = routeRepository.getRecentSearchIndex(context)
+    private fun previousRecentSearchIndex(activity: Activity): Long {
+        val result = routeRepository.getRecentSearchIndex(activity)
 
         return (result as Success).data
     }
 
-    private fun updateRecentSearchIndex(context: Activity, newIdx: Long) {
-        val result = routeRepository.updateRecentSearchIndex(context, newIdx)
+    private fun updateRecentSearchIndex(activity: Activity, newIdx: Long) {
+        val result = routeRepository.updateRecentSearchIndex(activity, newIdx)
 
         if (result is Error) error = result.message()
     }
