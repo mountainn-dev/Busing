@@ -17,3 +17,15 @@ data class BusModel(
     val isLowPlate: Boolean,
     val remainSeat: Int
 )
+
+data class BusModels(
+    private var models: List<BusModel>
+) {
+    init {
+        models = models.sortedBy { it.sequenceNumber }
+    }
+
+    fun get(index: Int) = models[index]
+    fun count() = models.size
+    fun indices() = models.indices
+}

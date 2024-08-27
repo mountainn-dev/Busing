@@ -25,3 +25,16 @@ data class RouteRecentSearchModel(
         bookMark
     )
 }
+
+data class RouteRecentSearchModels(
+    private var models: List<RouteRecentSearchModel>
+) {
+    init {
+        models = models.sortedWith(
+            compareByDescending<RouteRecentSearchModel> { it.bookMark }.thenByDescending { it.index })
+    }
+
+    fun get(index: Int) = models[index]
+    fun count() = models.size
+    fun isEmpty() = models.isEmpty()
+}

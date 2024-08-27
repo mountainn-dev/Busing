@@ -14,3 +14,15 @@ data class StationSummaryModel(
     val name: String,
     val regionName: String
 )
+
+data class StationSummaryModels(
+    private var models: List<StationSummaryModel>
+) {
+    init {
+        models = models.sortedWith(compareBy<StationSummaryModel>{ it.name }.thenBy { it.regionName })
+    }
+
+    fun get(index: Int) = models[index]
+    fun count() = models.size
+    fun isEmpty() = models.isEmpty()
+}

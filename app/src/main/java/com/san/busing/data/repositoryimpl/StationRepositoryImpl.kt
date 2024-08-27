@@ -14,7 +14,9 @@ import com.san.busing.data.source.remote.retrofit.StationService
 import com.san.busing.data.vo.Id
 import com.san.busing.domain.model.RouteRecentSearchModel
 import com.san.busing.domain.model.StationRecentSearchModel
+import com.san.busing.domain.model.StationRecentSearchModels
 import com.san.busing.domain.model.StationSummaryModel
+import com.san.busing.domain.model.StationSummaryModels
 
 class StationRepositoryImpl(
     private val service: StationService,
@@ -23,14 +25,14 @@ class StationRepositoryImpl(
     private val db = Room.databaseBuilder(
         this.context, RecentSearchDatabase::class.java, "recentSearch").build()
 
-    override suspend fun getStations(keyword: String): Result<List<StationSummaryModel>> {
+    override suspend fun getStations(keyword: String): Result<StationSummaryModels> {
         try {
             val response = service.getBusStationList(BuildConfig.API_KEY, keyword)
-            return Result.success(response.body()!!.get())
+            return Result.success(StationSummaryModels(response.body()!!.get()))
         } catch (e: ServiceException.ResultException) {
-            return Result.success(listOf())
+            return Result.success(StationSummaryModels(listOf()))
         } catch (e: ServiceException.OptionalParameterException) {
-            return Result.success(listOf())
+            return Result.success(StationSummaryModels(listOf()))
         } catch (e: Exception) {
             Log.e(ExceptionMessage.TAG_STATION_SUMMARY_EXCEPTION, e.message ?: e.toString())
             return Result.error(e)
@@ -49,9 +51,10 @@ class StationRepositoryImpl(
         }
     }
 
-    override suspend fun getAllRecentSearch(): Result<List<StationRecentSearchModel>> {
+    override suspend fun getAllRecentSearch(): Result<StationRecentSearchModels> {
         try {
-            return Result.success(db.stationRecentSearchDao().getAllStationRecentSearches().map { it.toStationRecentSearchModel() })
+            val recentSearchModels = db.stationRecentSearchDao().getAllStationRecentSearches().map { it.toStationRecentSearchModel() }
+            return Result.success(StationRecentSearchModels(recentSearchModels))
         } catch (e: Exception) {
             Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.message ?: e.toString())
             return Result.error(e)

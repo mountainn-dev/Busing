@@ -14,9 +14,11 @@ import com.san.busing.data.repository.RouteRepository
 import com.san.busing.data.vo.Id
 import com.san.busing.domain.enums.RouteType
 import com.san.busing.domain.model.BusModel
+import com.san.busing.domain.model.BusModels
 import com.san.busing.domain.model.RouteInfoModel
 import com.san.busing.domain.model.RouteRecentSearchModel
 import com.san.busing.domain.model.RouteStationModel
+import com.san.busing.domain.model.RouteStationModels
 import com.san.busing.domain.state.UiState
 import com.san.busing.view.viewmodel.RouteDetailViewModel
 import kotlinx.coroutines.Dispatchers
@@ -40,8 +42,8 @@ class RouteDetailViewModelImpl(
     private val routeStationState = MutableLiveData<UiState>(UiState.Loading)
     private val routeBusState = MutableLiveData<UiState>(UiState.Loading)
     override lateinit var routeInfo: RouteInfoModel
-    override lateinit var routeStations: List<RouteStationModel>
-    override lateinit var routeBuses: List<BusModel>
+    override lateinit var routeStations: RouteStationModels
+    override lateinit var routeBuses: BusModels
 
     override val resetTimer: LiveData<Int>
         get() = remainTime
@@ -113,7 +115,7 @@ class RouteDetailViewModelImpl(
         val result = busLocationRepository.getBusLocations(routeId)
 
         if (result is Success) {
-            routeBuses = result.data.sortedBy { it.sequenceNumber }
+            routeBuses = result.data
             routeBusState.postValue(UiState.Success)
         } else {
             error = (result as Error).message()

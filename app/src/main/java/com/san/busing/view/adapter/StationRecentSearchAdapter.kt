@@ -5,10 +5,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.san.busing.databinding.ItemStationRecentSearchBinding
 import com.san.busing.domain.model.StationRecentSearchModel
+import com.san.busing.domain.model.StationRecentSearchModels
 import com.san.busing.view.listener.ItemClickEventListener
 
 class StationRecentSearchAdapter(
-    private val items: List<StationRecentSearchModel>,
+    private val items: StationRecentSearchModels,
     private val itemClickEventListener: ItemClickEventListener
 ) : RecyclerView.Adapter<StationRecentSearchAdapter.StationRecentSearchViewHolder>() {
     inner class StationRecentSearchViewHolder(
@@ -20,7 +21,7 @@ class StationRecentSearchAdapter(
         }
 
         private fun loadContent(position: Int) {
-            binding.txtStationRecentSearchName.text = items[position].name
+            binding.txtStationRecentSearchName.text = items.get(position).name
         }
 
         private fun setItemClickEventListener(position: Int) {
@@ -42,7 +43,7 @@ class StationRecentSearchAdapter(
         return StationRecentSearchViewHolder(binding)
     }
 
-    override fun getItemCount() = items.size
+    override fun getItemCount() = items.count()
 
     override fun onBindViewHolder(
         holder: StationRecentSearchAdapter.StationRecentSearchViewHolder,

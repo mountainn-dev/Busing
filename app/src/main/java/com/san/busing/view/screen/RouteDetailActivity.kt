@@ -21,6 +21,7 @@ import com.san.busing.data.vo.Id
 import com.san.busing.databinding.ActivityRouteDetailBinding
 import com.san.busing.domain.enums.RouteType
 import com.san.busing.domain.model.RouteStationModel
+import com.san.busing.domain.model.RouteStationModels
 import com.san.busing.domain.state.UiState
 import com.san.busing.domain.utils.Const
 import com.san.busing.domain.utils.Utils
@@ -134,14 +135,14 @@ class RouteDetailActivity : AppCompatActivity() {
             activity
         )
         binding.rvBusRouteStationList.layoutManager = LinearLayoutManager(activity)
-        binding.txtRouteBusCount.text = String.format(ROUTE_BUS_COUNT, viewModel.routeBuses.size)
+        binding.txtRouteBusCount.text = String.format(ROUTE_BUS_COUNT, viewModel.routeBuses.count())
         binding.rvBusRouteStationList.layoutManager?.onRestoreInstanceState(state)
         toggleView(binding.rvBusRouteStationList)
         setBtnScrollToEndStation()
     }
 
     private fun routeStationClickEventListener(
-        items: List<RouteStationModel>
+        items: RouteStationModels
     ) = object: ItemClickEventListener {
         override fun onItemClickListener(position: Int) {
 
@@ -162,7 +163,7 @@ class RouteDetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun turnaroundIndex() = viewModel.routeStations.find { it.isTurnaround }?.sequenceNumber ?: DEFAULT_TURNAROUND_INDEX
+    private fun turnaroundIndex() = viewModel.routeStations.turnaroundSeqNum() ?: DEFAULT_TURNAROUND_INDEX
 
     private fun unloadRouteInfo() {
         binding.txtRouteStartStation.text = Const.EMPTY_TEXT

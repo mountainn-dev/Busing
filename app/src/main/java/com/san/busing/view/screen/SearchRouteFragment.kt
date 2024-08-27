@@ -19,7 +19,9 @@ import com.san.busing.data.vo.Id
 import com.san.busing.databinding.FragmentSearchRouteBinding
 import com.san.busing.domain.enums.RouteType
 import com.san.busing.domain.model.RouteRecentSearchModel
+import com.san.busing.domain.model.RouteRecentSearchModels
 import com.san.busing.domain.model.RouteSummaryModel
+import com.san.busing.domain.model.RouteSummaryModels
 import com.san.busing.domain.state.UiState
 import com.san.busing.domain.utils.Const
 import com.san.busing.domain.utils.Utils
@@ -115,12 +117,12 @@ class SearchRouteFragment : Fragment() {
     }
 
     private fun searchResultItemClickEventListener(
-        items: List<RouteSummaryModel>,
+        items: RouteSummaryModels,
         activity: Activity
     ) = object : ItemClickEventListener {
         override fun onItemClickListener(position: Int) {
             sendUserToRouteDetailScreen(
-                activity, items[position].id, items[position].name, items[position].type
+                activity, items.get(position).id, items.get(position).name, items.get(position).type
             )
         }
 
@@ -173,13 +175,13 @@ class SearchRouteFragment : Fragment() {
     }
 
     private fun recentSearchItemClickEventListener(
-        items: List<RouteRecentSearchModel>,
+        items: RouteRecentSearchModels,
         activity: Activity
     ) = object : ItemClickEventListener {
         override fun onItemClickListener(position: Int) {
             sendUserToRouteDetailScreen(
                 activity,
-                items[position].id, items[position].name, items[position].type
+                items.get(position).id, items.get(position).name, items.get(position).type
             )
         }
 

@@ -14,8 +14,11 @@ import com.san.busing.data.source.remote.retrofit.RouteService
 import com.san.busing.data.vo.Id
 import com.san.busing.domain.model.RouteInfoModel
 import com.san.busing.domain.model.RouteRecentSearchModel
+import com.san.busing.domain.model.RouteRecentSearchModels
 import com.san.busing.domain.model.RouteStationModel
+import com.san.busing.domain.model.RouteStationModels
 import com.san.busing.domain.model.RouteSummaryModel
+import com.san.busing.domain.model.RouteSummaryModels
 
 class RouteRepositoryImpl(
     private val service: RouteService,
@@ -34,28 +37,28 @@ class RouteRepositoryImpl(
         }
     }
 
-    override suspend fun getRoutes(keyword: String): Result<List<RouteSummaryModel>> {
+    override suspend fun getRoutes(keyword: String): Result<RouteSummaryModels> {
         try {
             val response = service.getBusRouteList(BuildConfig.API_KEY, keyword)
-            return Result.success(response.body()!!.get())
+            return Result.success(RouteSummaryModels(response.body()!!.get()))
         } catch (e: ServiceException.ResultException) {
-            return Result.success(listOf())
+            return Result.success(RouteSummaryModels(listOf()))
         } catch (e: ServiceException.OptionalParameterException) {
-            return Result.success(listOf())
+            return Result.success(RouteSummaryModels(listOf()))
         } catch (e: Exception) {
             Log.e(ExceptionMessage.TAG_ROUTE_SUMMARY_EXCEPTION, e.message ?: e.toString())
             return Result.error(e)
         }
     }
 
-    override suspend fun getRouteStations(id: Id): Result<List<RouteStationModel>> {
+    override suspend fun getRouteStations(id: Id): Result<RouteStationModels> {
         try {
             val response = service.getBusStationList(BuildConfig.API_KEY, id.get())
-            return Result.success(response.body()!!.get())
+            return Result.success(RouteStationModels(response.body()!!.get()))
         } catch (e: ServiceException.ResultException) {
-            return Result.success(listOf())
+            return Result.success(RouteStationModels(listOf()))
         } catch (e: ServiceException.OptionalParameterException) {
-            return Result.success(listOf())
+            return Result.success(RouteStationModels(listOf()))
         } catch (e: Exception) {
             Log.e(ExceptionMessage.TAG_ROUTE_STATION_EXCEPTION, e.message ?: e.toString())
             return Result.error(e)
@@ -74,9 +77,10 @@ class RouteRepositoryImpl(
         }
     }
 
-    override suspend fun getAllRecentSearch(): Result<List<RouteRecentSearchModel>> {
+    override suspend fun getAllRecentSearch(): Result<RouteRecentSearchModels> {
         try {
-            return Result.success(db.routeRecentSearchDao().getAllRouteRecentSearches().map { it.toRouteRecentSearchModel() })
+            val recentSearchModels = db.routeRecentSearchDao().getAllRouteRecentSearches().map { it.toRouteRecentSearchModel() }
+            return Result.success(RouteRecentSearchModels(recentSearchModels))
         } catch (e: Exception) {
             Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.message ?: e.toString())
             return Result.error(e)

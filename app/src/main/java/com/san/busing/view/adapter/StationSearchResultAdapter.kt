@@ -5,10 +5,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.san.busing.databinding.ItemStationSearchResultBinding
 import com.san.busing.domain.model.StationSummaryModel
+import com.san.busing.domain.model.StationSummaryModels
 import com.san.busing.view.listener.ItemClickEventListener
 
 class StationSearchResultAdapter(
-    private val items: List<StationSummaryModel>,
+    private val items: StationSummaryModels,
     private val itemClickEventListener: ItemClickEventListener
 ) : RecyclerView.Adapter<StationSearchResultAdapter.StationSearchResultViewHolder>() {
     inner class StationSearchResultViewHolder(
@@ -20,9 +21,9 @@ class StationSearchResultAdapter(
         }
 
         private fun loadContent(position: Int) {
-            binding.txtStationName.text = items[position].name
-            binding.txtStationMobileNo.text = items[position].mobileNo
-            binding.txtRegionName.text = items[position].regionName
+            binding.txtStationName.text = items.get(position).name
+            binding.txtStationMobileNo.text = items.get(position).mobileNo
+            binding.txtRegionName.text = items.get(position).regionName
         }
 
         private fun setItemClickEventListener(position: Int) {
@@ -43,7 +44,7 @@ class StationSearchResultAdapter(
         return StationSearchResultViewHolder(binding)
     }
 
-    override fun getItemCount() = items.size
+    override fun getItemCount() = items.count()
 
     override fun onBindViewHolder(holder: StationSearchResultViewHolder, position: Int) {
         holder.bind(position)

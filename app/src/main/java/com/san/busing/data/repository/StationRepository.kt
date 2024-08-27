@@ -4,12 +4,14 @@ import android.app.Activity
 import com.san.busing.data.Result
 import com.san.busing.data.vo.Id
 import com.san.busing.domain.model.StationRecentSearchModel
+import com.san.busing.domain.model.StationRecentSearchModels
 import com.san.busing.domain.model.StationSummaryModel
+import com.san.busing.domain.model.StationSummaryModels
 
 interface StationRepository {
-    suspend fun getStations(keyword: String): Result<List<StationSummaryModel>>
+    suspend fun getStations(keyword: String): Result<StationSummaryModels>
     suspend fun getRecentSearch(id: Id): Result<StationRecentSearchModel>
-    suspend fun getAllRecentSearch(): Result<List<StationRecentSearchModel>>
+    suspend fun getAllRecentSearch(): Result<StationRecentSearchModels>
     suspend fun insertRecentSearch(recentSearchModel: StationRecentSearchModel): Result<Boolean>
     suspend fun updateRecentSearch(recentSearchModel: StationRecentSearchModel): Result<Boolean>
     suspend fun deleteRecentSearch(recentSearchModel: StationRecentSearchModel): Result<Boolean>

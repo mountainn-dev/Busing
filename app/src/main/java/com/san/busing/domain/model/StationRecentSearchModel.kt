@@ -26,3 +26,16 @@ data class StationRecentSearchModel(
         bookMark
     )
 }
+
+data class StationRecentSearchModels(
+    private var models: List<StationRecentSearchModel>
+) {
+    init {
+        models = models.sortedWith(
+            compareByDescending<StationRecentSearchModel> { it.bookMark }.thenByDescending { it.index })
+    }
+
+    fun get(index: Int) = models[index]
+    fun count() = models.size
+    fun isEmpty() = models.isEmpty()
+}

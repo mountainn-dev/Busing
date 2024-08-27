@@ -20,7 +20,9 @@ import com.san.busing.data.vo.Id
 import com.san.busing.databinding.FragmentSearchStationBinding
 import com.san.busing.domain.model.RouteRecentSearchModel
 import com.san.busing.domain.model.StationRecentSearchModel
+import com.san.busing.domain.model.StationRecentSearchModels
 import com.san.busing.domain.model.StationSummaryModel
+import com.san.busing.domain.model.StationSummaryModels
 import com.san.busing.domain.state.UiState
 import com.san.busing.domain.utils.Const
 import com.san.busing.domain.utils.Utils
@@ -104,13 +106,13 @@ class SearchStationFragment : Fragment() {
     }
 
     private fun searchResultItemClickEventListener(
-        items: List<StationSummaryModel>,
+        items: StationSummaryModels,
         activity: Activity
     ) = object : ItemClickEventListener {
         override fun onItemClickListener(position: Int) {
             sendUserToStationDetailScreen(
                 activity,
-                items[position].id, items[position].mobileNo, items[position].name, items[position].regionName
+                items.get(position).id, items.get(position).mobileNo, items.get(position).name, items.get(position).regionName
             )
         }
 
@@ -163,13 +165,13 @@ class SearchStationFragment : Fragment() {
     }
 
     private fun recentSearchItemClickEventListener(
-        items: List<StationRecentSearchModel>,
+        items: StationRecentSearchModels,
         activity: Activity
     ) = object : ItemClickEventListener {
         override fun onItemClickListener(position: Int) {
             sendUserToStationDetailScreen(
                 activity,
-                items[position].id, items[position].mobileNo, items[position].name, items[position].regionName
+                items.get(position).id, items.get(position).mobileNo, items.get(position).name, items.get(position).regionName
             )
         }
 

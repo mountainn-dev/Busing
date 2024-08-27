@@ -15,3 +15,15 @@ data class RouteSummaryModel(
     val name: String,
     val region: String
 )
+
+data class RouteSummaryModels(
+    private var models: List<RouteSummaryModel>
+) {
+    init {
+        models = models.sortedWith(compareBy<RouteSummaryModel>{ it.name }.thenBy { it.region })
+    }
+
+    fun get(index: Int) = models[index]
+    fun count() = models.size
+    fun isEmpty() = models.isEmpty()
+}

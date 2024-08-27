@@ -9,15 +9,17 @@ import com.san.busing.R
 import com.san.busing.databinding.ItemRouteStationBinding
 import com.san.busing.domain.enums.RouteType
 import com.san.busing.domain.model.BusModel
+import com.san.busing.domain.model.BusModels
 import com.san.busing.domain.model.RouteStationModel
+import com.san.busing.domain.model.RouteStationModels
 import com.san.busing.domain.utils.Const
 import com.san.busing.domain.utils.Utils
 import com.san.busing.view.listener.ItemClickEventListener
 
 class RouteStationAdapter(
     private val routeType: RouteType,
-    private val stationItems: List<RouteStationModel>,
-    private val busItems: List<BusModel>,
+    private val stationItems: RouteStationModels,
+    private val busItems: BusModels,
     private val itemClickEventListener: ItemClickEventListener,
     private val context: Activity
 ) : RecyclerView.Adapter<RouteStationAdapter.BusRouteStationViewHolder>() {
@@ -36,23 +38,23 @@ class RouteStationAdapter(
         }
 
         private fun loadStationInfo(position: Int) {
-            binding.txtRouteStationName.text = stationItems[position].name
-            binding.txtRouteStationNumber.text = stationItems[position].number
+            binding.txtRouteStationName.text = stationItems.get(position).name
+            binding.txtRouteStationNumber.text = stationItems.get(position).number
         }
 
         private fun loadBusInfo(position: Int) {
             val busIdx = getBusIndex(position)
 
             if (busIdx != NO_MATCH_BUS) {   // 정류소 순번과 일치하는 버스가 존재하는 경우
-                loadBusInfo(busItems[busIdx])
+                loadBusInfo(busItems.get(busIdx))
             } else { unloadBusInfo() }
         }
 
         private fun getBusIndex(position: Int): Int {
             var idx = NO_MATCH_BUS
 
-            for (i in busItems.indices) {
-                if (busItems[i].sequenceNumber == position+1) idx = i
+            for (i in busItems.indices()) {
+                if (busItems.get(i).sequenceNumber == position+1) idx = i
             }
 
             return idx
@@ -79,7 +81,7 @@ class RouteStationAdapter(
         }
 
         private fun loadTurnaround(position: Int) {
-            if (stationItems[position].isTurnaround) loadTurnaround()
+            if (stationItems.get(position).isTurnaround) loadTurnaround()
             else unloadTurnaround()
         }
 
@@ -112,7 +114,7 @@ class RouteStationAdapter(
         )
     }
 
-    override fun getItemCount() = stationItems.size
+    override fun getItemCount() = stationItems.count()
 
     override fun onBindViewHolder(holder: BusRouteStationViewHolder, position: Int) {
         holder.bind(position)

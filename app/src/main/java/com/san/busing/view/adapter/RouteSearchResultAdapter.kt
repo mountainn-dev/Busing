@@ -7,11 +7,12 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.san.busing.databinding.ItemRouteSearchResultBinding
 import com.san.busing.domain.model.RouteSummaryModel
+import com.san.busing.domain.model.RouteSummaryModels
 import com.san.busing.domain.utils.Utils
 import com.san.busing.view.listener.ItemClickEventListener
 
 class RouteSearchResultAdapter(
-    private val items: List<RouteSummaryModel>,
+    private val items: RouteSummaryModels,
     private val itemClickEventListener: ItemClickEventListener,
     private val context: Activity
 ) : RecyclerView.Adapter<RouteSearchResultAdapter.RouteSearchResultViewHolder>() {
@@ -25,14 +26,14 @@ class RouteSearchResultAdapter(
         }
 
         private fun loadContent(position: Int) {
-            binding.txtRouteName.text = items[position].name
-            binding.txtRouteTypeTag.text = items[position].type.tag
-            binding.txtRegion.text = items[position].region
+            binding.txtRouteName.text = items.get(position).name
+            binding.txtRouteTypeTag.text = items.get(position).type.tag
+            binding.txtRegion.text = items.get(position).region
         }
 
         private fun setContentColor(position: Int) {
             val color = ContextCompat.getColor(
-                context, Utils.getColorByRouteType(items[position].type))
+                context, Utils.getColorByRouteType(items.get(position).type))
             binding.txtRouteName.setTextColor(color)
             binding.txtRouteTypeTag.setTextColor(color)
         }
@@ -53,7 +54,7 @@ class RouteSearchResultAdapter(
         return RouteSearchResultViewHolder(binding)
     }
 
-    override fun getItemCount() = items.size
+    override fun getItemCount() = items.count()
 
     override fun onBindViewHolder(holder: RouteSearchResultViewHolder, position: Int) {
         holder.bind(position)

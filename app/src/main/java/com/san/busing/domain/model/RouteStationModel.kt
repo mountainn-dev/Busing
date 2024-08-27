@@ -17,3 +17,15 @@ data class RouteStationModel(
     val positionX: Double,
     val positionY: Double
 )
+
+data class RouteStationModels(
+    private var models: List<RouteStationModel>
+) {
+    init {
+        models = models.sortedBy { it.sequenceNumber }
+    }
+
+    fun get(index: Int) = models[index]
+    fun count() = models.size
+    fun turnaroundSeqNum() = models.find { it.isTurnaround }?.sequenceNumber
+}

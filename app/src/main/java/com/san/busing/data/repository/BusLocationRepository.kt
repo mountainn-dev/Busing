@@ -3,7 +3,8 @@ package com.san.busing.data.repository
 import com.san.busing.data.Result
 import com.san.busing.data.vo.Id
 import com.san.busing.domain.model.BusModel
+import com.san.busing.domain.model.BusModels
 
 interface BusLocationRepository {
-    suspend fun getBusLocations(id: Id): Result<List<BusModel>>
+    suspend fun getBusLocations(id: Id): Result<BusModels>
 }
