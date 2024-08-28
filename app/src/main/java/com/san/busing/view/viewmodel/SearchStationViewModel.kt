@@ -18,7 +18,7 @@ interface SearchStationViewModel {
 
     fun search(keyword: String)
     fun deleteRecentSearch(itemIdx: Int)
-    fun deleteAllRecentSearches(context: Activity)
+    fun deleteAllRecentSearches(activity: Activity)
     fun clearKeyword()
     fun restore()
 }

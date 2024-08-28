@@ -20,6 +20,6 @@ interface RouteDetailViewModel {
 
     fun load()
     fun loadWithTimer()
-    fun updateRecentSearch(context: Activity)
+    fun updateRecentSearch(activity: Activity)
     fun toggleBookMark()
 }
