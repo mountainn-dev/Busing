@@ -1,9 +1,15 @@
 package com.san.busing.view.screen
 
+import android.app.Activity
 import android.os.Bundle
+import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.san.busing.BuildConfig
+import com.san.busing.R
 import com.san.busing.data.repositoryimpl.StationRepositoryImpl
 import com.san.busing.data.source.remote.retrofit.StationService
 import com.san.busing.data.vo.Id
@@ -37,6 +43,8 @@ class StationDetailActivity : AppCompatActivity() {
 
         viewModel.updateRecentSearch(this)
         initAppBar(stationName, stationMobileNo, regionName)
+        initObserver(this)
+        initListener(this)
     }
 
     private fun initAppBar(
@@ -56,5 +64,72 @@ class StationDetailActivity : AppCompatActivity() {
         binding.txtStationName.text = name
         binding.txtStationMobileNo.text = mobileNo
         binding.txtRegionName.text = regionName
+    }
+
+    private fun initObserver(activity: Activity) {
+        viewModel.resetTimer.observe(
+            activity as LifecycleOwner,
+            resetTimerObserver()
+        )
+        viewModel.bookMark.observe(
+            activity as LifecycleOwner,
+            bookMarkObserver()
+        )
+    }
+
+    private fun resetTimerObserver() = Observer<Int> {
+        if (it == Const.ZERO) {
+            binding.fabRefresh.setImageResource(R.drawable.ic_refresh)
+            binding.fabTime.visibility = View.GONE
+        } else {
+            if (binding.fabTime.visibility == View.GONE) {
+                binding.fabTime.visibility = View.VISIBLE
+                binding.fabRefresh.setImageResource(android.R.color.transparent)
+            }
+            binding.fabTime.text = it.toString()
+        }
+    }
+
+    private fun bookMarkObserver() = Observer<Boolean> {
+        if (it) binding.btnBookMark.setImageResource(R.drawable.ic_on_book_mark)
+        else binding.btnBookMark.setImageResource(R.drawable.ic_off_book_mark)
+    }
+
+    private fun initListener(activity: Activity) {
+        setBtnBackListener()
+        setBtnBookMarkListener(activity)
+        setBtnRequestListener()
+        setFabRefreshListener()
+    }
+
+    private fun setBtnBackListener() {
+        binding.btnBack.setOnClickListener { finish() }
+    }
+
+    private fun setBtnBookMarkListener(activity: Activity) {
+        binding.btnBookMark.setOnClickListener {
+            if (viewModel.bookMark.value!!) Toast.makeText(activity, BOOKMARK_UNREGISTER_MESSAGE, Toast.LENGTH_SHORT).show()
+            else Toast.makeText(activity, BOOKMARK_REGISTER_MESSAGE, Toast.LENGTH_SHORT).show()
+            viewModel.toggleBookMark()
+        }
+    }
+
+    private fun setBtnRequestListener() {
+        binding.btnTimeoutRequest.setOnClickListener { viewModel.load() }
+        binding.btnServiceErrorRequest.setOnClickListener { viewModel.load() }
+    }
+
+    private fun setFabRefreshListener() {
+        binding.fabRefresh.setOnClickListener { viewModel.loadWithTimer() }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.load()
+    }
+
+    companion object {
+        private const val BOOKMARK_REGISTER_MESSAGE = "즐겨찾기가 등록되었습니다."
+        private const val BOOKMARK_UNREGISTER_MESSAGE = "즐겨찾기가 해제되었습니다."
     }
 }

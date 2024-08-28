@@ -64,8 +64,9 @@ class RouteDetailViewModelImpl(
     private val isBookMark = MutableLiveData(false)
     private lateinit var recentSearch: RouteRecentSearchModel
 
-    override lateinit var error: String
     private var loadingJob: Job? = null
+
+    override lateinit var error: String
 
     init {
         merge(uiState, routeInfoState, routeStationState, routeBusState)

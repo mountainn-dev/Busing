@@ -49,8 +49,9 @@ class StationDetailViewModelImpl(
     private val isBookMark = MutableLiveData(false)
     private lateinit var recentSearch: StationRecentSearchModel
 
-    override lateinit var error: String
     private var loadingJob: Job? = null
+
+    override lateinit var error: String
 
     override fun load() {
         loadingJob?.cancel()

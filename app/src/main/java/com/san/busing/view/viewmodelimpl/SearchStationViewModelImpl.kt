@@ -35,8 +35,9 @@ class SearchStationViewModelImpl(
     override lateinit var stationRecentSearches: StationRecentSearchModels
 
     override var keyword = Const.EMPTY_TEXT
-    override lateinit var error: String
     private var searchingJob: Job? = null
+
+    override lateinit var error: String
 
     override fun search(keyword: String) {
         searchingJob?.cancel()
