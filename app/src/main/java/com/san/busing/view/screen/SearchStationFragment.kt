@@ -152,7 +152,8 @@ class SearchStationFragment : Fragment() {
     private fun whenRecentSearchReady(activity: Activity) {
         binding.rvRecentSearch.adapter = StationRecentSearchAdapter(
             viewModel.stationRecentSearches,
-            recentSearchItemClickEventListener(viewModel.stationRecentSearches, activity)
+            recentSearchItemClickEventListener(viewModel.stationRecentSearches, activity),
+            activity
         )
         binding.rvRecentSearch.layoutManager = LinearLayoutManager(
             activity, LinearLayoutManager.HORIZONTAL, false
@@ -219,6 +220,15 @@ class SearchStationFragment : Fragment() {
         binding.btnServiceErrorRequest.setOnClickListener {
             viewModel.search(viewModel.keyword)
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        restore()
+    }
+
+    private fun restore() {
+        viewModel.restore()
     }
 
     private fun toggleView(view: View) {

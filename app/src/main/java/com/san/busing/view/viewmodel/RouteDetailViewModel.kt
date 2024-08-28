@@ -2,10 +2,8 @@ package com.san.busing.view.viewmodel
 
 import android.app.Activity
 import androidx.lifecycle.LiveData
-import com.san.busing.domain.model.BusModel
 import com.san.busing.domain.model.BusModels
 import com.san.busing.domain.model.RouteInfoModel
-import com.san.busing.domain.model.RouteStationModel
 import com.san.busing.domain.model.RouteStationModels
 import com.san.busing.domain.state.UiState
 

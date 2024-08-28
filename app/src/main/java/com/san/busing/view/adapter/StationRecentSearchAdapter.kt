@@ -1,27 +1,38 @@
 package com.san.busing.view.adapter
 
+import android.app.Activity
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.san.busing.databinding.ItemStationRecentSearchBinding
 import com.san.busing.domain.model.StationRecentSearchModel
 import com.san.busing.domain.model.StationRecentSearchModels
+import com.san.busing.domain.utils.Utils
 import com.san.busing.view.listener.ItemClickEventListener
 
 class StationRecentSearchAdapter(
     private val items: StationRecentSearchModels,
-    private val itemClickEventListener: ItemClickEventListener
+    private val itemClickEventListener: ItemClickEventListener,
+    private val activity: Activity
 ) : RecyclerView.Adapter<StationRecentSearchAdapter.StationRecentSearchViewHolder>() {
     inner class StationRecentSearchViewHolder(
         private val binding: ItemStationRecentSearchBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(position: Int) {
             loadContent(position)
+            setBackground(position)
             setItemClickEventListener(position)
         }
 
         private fun loadContent(position: Int) {
             binding.txtStationRecentSearchName.text = items.get(position).name
+        }
+
+        private fun setBackground(position: Int) {
+            val background = ContextCompat.getDrawable(activity, Utils.getBackgroundByBookMarkStatus(items.get(position).bookMark))
+
+            binding.clStationRecentSearchItem.background = background
         }
 
         private fun setItemClickEventListener(position: Int) {

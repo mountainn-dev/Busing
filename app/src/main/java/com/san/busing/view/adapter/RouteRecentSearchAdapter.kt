@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.san.busing.databinding.ItemRouteRecentSearchBinding
-import com.san.busing.domain.model.RouteRecentSearchModel
 import com.san.busing.domain.model.RouteRecentSearchModels
 import com.san.busing.domain.utils.Utils
 import com.san.busing.view.listener.ItemClickEventListener
@@ -15,7 +14,7 @@ import com.san.busing.view.listener.ItemClickEventListener
 class RouteRecentSearchAdapter(
     private val items: RouteRecentSearchModels,
     private val itemClickEventListener: ItemClickEventListener,
-    private val context: Activity
+    private val activity: Activity
 ) : RecyclerView.Adapter<RouteRecentSearchAdapter.RouteRecentSearchViewHolder>() {
 
     inner class RouteRecentSearchViewHolder(
@@ -35,13 +34,13 @@ class RouteRecentSearchAdapter(
         }
 
         private fun setBackground(position: Int) {
-            val background = ContextCompat.getDrawable(context, Utils.getBackgroundByBookMarkStatus(items.get(position).bookMark))
+            val background = ContextCompat.getDrawable(activity, Utils.getBackgroundByBookMarkStatus(items.get(position).bookMark))
 
             binding.clRouteRecentSearchItem.background = background
         }
 
         private fun setContentColor(position: Int) {
-            val color = ContextCompat.getColor(context, Utils.getColorByRouteType(items.get(position).type))
+            val color = ContextCompat.getColor(activity, Utils.getColorByRouteType(items.get(position).type))
 
             binding.txtRouteRecentSearchName.setTextColor(color)
         }
