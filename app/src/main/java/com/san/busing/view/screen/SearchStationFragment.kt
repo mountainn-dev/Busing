@@ -184,6 +184,7 @@ class SearchStationFragment : Fragment() {
     private fun initListener(activity: Activity) {
         setEdRouteListener()
         setBtnDeleteSearchKeywordListener(activity)
+        setBtnDeleteAllRecentSearchListener(activity)
         setRvBusRouteScrollListener(activity)
         setBtnRequestListener()
     }
@@ -199,6 +200,12 @@ class SearchStationFragment : Fragment() {
             viewModel.clearKeyword()
             binding.edStation.setText(viewModel.keyword)
             showSoftInput(binding.edStation, activity)
+        }
+    }
+
+    private fun setBtnDeleteAllRecentSearchListener(activity: Activity) {
+        binding.btnDeleteAllRecentSearch.setOnClickListener {
+            viewModel.deleteAllRecentSearches(activity)
         }
     }
 
