@@ -42,16 +42,17 @@ class StationDetailActivity : AppCompatActivity() {
         ).get(StationDetailViewModelImpl::class.java)
 
         viewModel.updateRecentSearch(this)
-        initAppBar(stationName, stationMobileNo, regionName)
+        initToolbar(stationName, stationMobileNo, regionName)
         initObserver(this)
         initListener(this)
     }
 
-    private fun initAppBar(
+    private fun initToolbar(
         name: String, mobileNo: String, regionName: String
     ) {
         setTitle(name)
         setContent(name, mobileNo, regionName)
+        startEllipsizeMarqueeEffect()
     }
 
     private fun setTitle(stationName: String) {
@@ -64,6 +65,11 @@ class StationDetailActivity : AppCompatActivity() {
         binding.txtStationName.text = name
         binding.txtStationMobileNo.text = mobileNo
         binding.txtRegionName.text = regionName
+    }
+
+    private fun startEllipsizeMarqueeEffect() {
+        binding.txtTitle.setHorizontallyScrolling(true)
+        binding.txtTitle.isSelected = true
     }
 
     private fun initObserver(activity: Activity) {

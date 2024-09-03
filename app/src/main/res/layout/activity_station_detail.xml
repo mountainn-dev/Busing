@@ -98,6 +98,9 @@
                     android:textColor="@color/white"
                     android:textSize="@dimen/text_size_detail_title"
                     android:textStyle="bold"
+                    android:maxLines="1"
+                    android:ellipsize="marquee"
+                    android:marqueeRepeatLimit="marquee_forever"
                     tools:text="title"/>
 
             </androidx.appcompat.widget.Toolbar>

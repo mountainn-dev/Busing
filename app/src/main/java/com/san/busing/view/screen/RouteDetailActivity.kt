@@ -69,6 +69,7 @@ class RouteDetailActivity : AppCompatActivity() {
     ) {
         setTitle(routeName)
         setBgColor(routeType, activity)
+        startEllipsizeMarqueeEffect()
     }
 
     private fun setTitle(routeName: String) {
@@ -80,6 +81,11 @@ class RouteDetailActivity : AppCompatActivity() {
         val color = ContextCompat.getColor(activity, Utils.getLightColorByRouteType(type))
         binding.ctbRouteDetail.setContentScrimColor(color)
         binding.ctbRouteDetail.setBackgroundColor(color)
+    }
+
+    private fun startEllipsizeMarqueeEffect() {
+        binding.txtTitle.setHorizontallyScrolling(true)
+        binding.txtTitle.isSelected = true
     }
 
     private fun initObserver(routeType: RouteType, activity: Activity) {
