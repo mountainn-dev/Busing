@@ -13,9 +13,9 @@
 
     <TextView
         android:id="@+id/txtRouteRecentSearchName"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:maxWidth="@dimen/max_width_item_recent_search"
         android:padding="@dimen/margin_padding_small"
         android:textSize="@dimen/text_extremely_small"
         android:gravity="center"

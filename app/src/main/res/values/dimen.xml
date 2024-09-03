@@ -25,7 +25,7 @@
     <dimen name="height_search_layout">128dp</dimen>
 
         <!-- Recent Search -->
-        <dimen name="width_item_recent_search">76dp</dimen>
+        <dimen name="max_width_item_recent_search">120dp</dimen>
         <dimen name="size_icon_delete">20dp</dimen>
 
         <!-- Search Result -->
