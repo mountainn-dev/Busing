@@ -33,17 +33,15 @@ class StationDetailActivity : AppCompatActivity() {
 
         val stationRepository = StationRepositoryImpl(
             Utils.getRetrofit(BuildConfig.STATION_URL).create(StationService::class.java),
+            Utils.getRetrofit(BuildConfig.ARRIVAL_URL).create(BusArrivalService::class.java),
             this.applicationContext
-        )
-        val busArrivalRepository = BusArrivalRepositoryImpl(
-            Utils.getRetrofit(BuildConfig.ARRIVAL_URL).create(BusArrivalService::class.java)
         )
         val stationId = intent.getSerializableExtra(Const.TAG_STATION_ID) as Id
         val stationMobileNo = intent.getStringExtra(Const.TAG_STATION_MOBILE_NUMBER) ?: Const.EMPTY_TEXT
         val stationName = intent.getStringExtra(Const.TAG_STATION_NAME) ?: Const.EMPTY_TEXT
         val regionName = intent.getStringExtra(Const.TAG_REGION_NAME) ?: Const.EMPTY_TEXT
         viewModel = ViewModelProvider(
-            this, StationDetailViewModelFactory(stationRepository, busArrivalRepository, stationId, stationMobileNo, stationName, regionName)
+            this, StationDetailViewModelFactory(stationRepository, stationId, stationMobileNo, stationName, regionName)
         ).get(StationDetailViewModelImpl::class.java)
 
         viewModel.updateRecentSearch(this)

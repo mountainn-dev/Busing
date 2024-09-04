@@ -5,5 +5,5 @@ import com.san.busing.data.vo.Id
 import com.san.busing.domain.model.BusArrivalModels
 
 interface BusArrivalRepository {
-    suspend fun getBusArrivals(id: Id): Result<BusArrivalModels>
+
 }

@@ -13,17 +13,5 @@ import com.san.busing.data.Result
 class BusArrivalRepositoryImpl(
     private val service: BusArrivalService
 ) : BusArrivalRepository {
-    override suspend fun getBusArrivals(id: Id): Result<BusArrivalModels> {
-        try {
-            val response = service.getBusArrivalList(BuildConfig.API_KEY, id.get())
-            return Result.success(BusArrivalModels(response.body()!!.get()))
-        } catch (e: ServiceException.ResultException) {
-            return Result.success(BusArrivalModels(listOf()))
-        } catch (e: ServiceException.OptionalParameterException) {
-            return Result.success(BusArrivalModels(listOf()))
-        } catch (e: Exception) {
-            Log.e(ExceptionMessage.TAG_BUS_ARRIVAL_EXCEPTION, e.message ?: e.toString())
-            return Result.error(e)
-        }
-    }
+
 }

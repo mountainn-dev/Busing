@@ -10,18 +10,19 @@ import com.san.busing.data.exception.ExceptionMessage
 import com.san.busing.data.exception.ServiceException
 import com.san.busing.data.repository.RouteRepository
 import com.san.busing.data.source.local.database.RecentSearchDatabase
+import com.san.busing.data.source.remote.retrofit.BusLocationService
 import com.san.busing.data.source.remote.retrofit.RouteService
 import com.san.busing.data.vo.Id
+import com.san.busing.domain.model.BusModels
 import com.san.busing.domain.model.RouteInfoModel
 import com.san.busing.domain.model.RouteRecentSearchModel
 import com.san.busing.domain.model.RouteRecentSearchModels
-import com.san.busing.domain.model.RouteStationModel
 import com.san.busing.domain.model.RouteStationModels
-import com.san.busing.domain.model.RouteSummaryModel
 import com.san.busing.domain.model.RouteSummaryModels
 
 class RouteRepositoryImpl(
-    private val service: RouteService,
+    private val routeService: RouteService,
+    private val busLocationService: BusLocationService,
     private val context: Context
 ) : RouteRepository {
     private val db = Room.databaseBuilder(
@@ -29,7 +30,7 @@ class RouteRepositoryImpl(
 
     override suspend fun getRouteInfo(id: Id): Result<RouteInfoModel> {
         try {
-            val response = service.getBusRouteInfoItem(BuildConfig.API_KEY, id.get())
+            val response = routeService.getBusRouteInfoItem(BuildConfig.API_KEY, id.get())
             return Result.success(response.body()!!.get())
         } catch (e: Exception) {
             Log.e(ExceptionMessage.TAG_ROUTE_INFO_EXCEPTION, e.message ?: e.toString())
@@ -39,7 +40,7 @@ class RouteRepositoryImpl(
 
     override suspend fun getRoutes(keyword: String): Result<RouteSummaryModels> {
         try {
-            val response = service.getBusRouteList(BuildConfig.API_KEY, keyword)
+            val response = routeService.getBusRouteList(BuildConfig.API_KEY, keyword)
             return Result.success(RouteSummaryModels(response.body()!!.get()))
         } catch (e: ServiceException.ResultException) {
             return Result.success(RouteSummaryModels(listOf()))
@@ -53,7 +54,7 @@ class RouteRepositoryImpl(
 
     override suspend fun getRouteStations(id: Id): Result<RouteStationModels> {
         try {
-            val response = service.getBusStationList(BuildConfig.API_KEY, id.get())
+            val response = routeService.getBusStationList(BuildConfig.API_KEY, id.get())
             return Result.success(RouteStationModels(response.body()!!.get()))
         } catch (e: ServiceException.ResultException) {
             return Result.success(RouteStationModels(listOf()))
@@ -61,6 +62,20 @@ class RouteRepositoryImpl(
             return Result.success(RouteStationModels(listOf()))
         } catch (e: Exception) {
             Log.e(ExceptionMessage.TAG_ROUTE_STATION_EXCEPTION, e.message ?: e.toString())
+            return Result.error(e)
+        }
+    }
+
+    override suspend fun getBusLocations(id: Id): Result<BusModels> {
+        try {
+            val response = busLocationService.getBusLocationList(BuildConfig.API_KEY, id.get())
+            return Result.success(BusModels(response.body()!!.get()))
+        } catch (e: ServiceException.ResultException) {
+            return Result.success(BusModels(listOf()))
+        } catch (e: ServiceException.OptionalParameterException) {
+            return Result.success(BusModels(listOf()))
+        } catch (e: Exception) {
+            Log.e(ExceptionMessage.TAG_BUS_EXCEPTION, e.message ?: e.toString())
             return Result.error(e)
         }
     }

@@ -23,7 +23,6 @@ import kotlinx.coroutines.withContext
 
 class StationDetailViewModelImpl(
     private val stationRepository: StationRepository,
-    private val busArrivalRepository: BusArrivalRepository,
     private val stationId: Id,
     private val stationMobileNo: String,
     private val stationName: String,
@@ -70,7 +69,7 @@ class StationDetailViewModelImpl(
     }
 
     private suspend fun loadBusArrivals() {
-        val result = busArrivalRepository.getBusArrivals(stationId)
+        val result = stationRepository.getBusArrivals(stationId)
 
         if (result is Success) {
             busArrivals = result.data

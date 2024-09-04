@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.san.busing.BuildConfig
 import com.san.busing.data.repositoryimpl.RouteRepositoryImpl
+import com.san.busing.data.source.remote.retrofit.BusLocationService
 import com.san.busing.data.source.remote.retrofit.RouteService
 import com.san.busing.data.vo.Id
 import com.san.busing.databinding.FragmentSearchRouteBinding
@@ -48,6 +49,7 @@ class SearchRouteFragment : Fragment() {
 
         val repository = RouteRepositoryImpl(
             Utils.getRetrofit(BuildConfig.ROUTES_URL).create(RouteService::class.java),
+            Utils.getRetrofit(BuildConfig.LOCATION_URL).create(BusLocationService::class.java),
             requireActivity().applicationContext
         )
         viewModel = ViewModelProvider(requireActivity(), SearchRouteViewModelFactory(repository)).get(

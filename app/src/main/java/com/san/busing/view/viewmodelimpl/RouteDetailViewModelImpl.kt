@@ -9,7 +9,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.san.busing.data.Error
 import com.san.busing.data.Success
-import com.san.busing.data.repository.BusLocationRepository
 import com.san.busing.data.repository.RouteRepository
 import com.san.busing.data.vo.Id
 import com.san.busing.domain.enums.RouteType
@@ -28,7 +27,6 @@ import kotlinx.coroutines.withContext
 
 class RouteDetailViewModelImpl(
     private val routeRepository: RouteRepository,
-    private val busLocationRepository: BusLocationRepository,
     private val routeId: Id,
     private val routeName: String,
     private val routeType: RouteType,
@@ -111,7 +109,7 @@ class RouteDetailViewModelImpl(
     }
 
     private suspend fun loadBusLocations() {
-        val result = busLocationRepository.getBusLocations(routeId)
+        val result = routeRepository.getBusLocations(routeId)
 
         if (result is Success) {
             routeBuses = result.data

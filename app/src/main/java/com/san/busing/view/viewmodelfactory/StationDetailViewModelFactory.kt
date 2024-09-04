@@ -9,7 +9,6 @@ import com.san.busing.view.viewmodelimpl.StationDetailViewModelImpl
 
 class StationDetailViewModelFactory(
     private val stationRepository: StationRepository,
-    private val busArrivalRepository: BusArrivalRepository,
     private val stationId: Id,
     private val stationMobileNo: String,
     private val stationName: String,
@@ -18,9 +17,7 @@ class StationDetailViewModelFactory(
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(StationDetailViewModelImpl::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return StationDetailViewModelImpl(
-                stationRepository, busArrivalRepository,
-                stationId, stationMobileNo, stationName, regionName) as T
+            return StationDetailViewModelImpl(stationRepository, stationId, stationMobileNo, stationName, regionName) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

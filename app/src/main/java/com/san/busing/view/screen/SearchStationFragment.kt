@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.san.busing.BuildConfig
 import com.san.busing.data.repositoryimpl.StationRepositoryImpl
+import com.san.busing.data.source.remote.retrofit.BusArrivalService
 import com.san.busing.data.source.remote.retrofit.StationService
 import com.san.busing.data.vo.Id
 import com.san.busing.databinding.FragmentSearchStationBinding
@@ -44,7 +45,8 @@ class SearchStationFragment : Fragment() {
 
         val repository = StationRepositoryImpl(
             Utils.getRetrofit(BuildConfig.STATION_URL).create(StationService::class.java),
-            requireActivity()
+            Utils.getRetrofit(BuildConfig.ARRIVAL_URL).create(BusArrivalService::class.java),
+            requireActivity().applicationContext
         )
         viewModel = ViewModelProvider(requireActivity(), SearchStationViewModelFactory(repository)).get(
             SearchStationViewModelImpl::class.java

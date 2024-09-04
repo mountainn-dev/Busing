@@ -10,16 +10,17 @@ import com.san.busing.data.exception.ExceptionMessage
 import com.san.busing.data.exception.ServiceException
 import com.san.busing.data.repository.StationRepository
 import com.san.busing.data.source.local.database.RecentSearchDatabase
+import com.san.busing.data.source.remote.retrofit.BusArrivalService
 import com.san.busing.data.source.remote.retrofit.StationService
 import com.san.busing.data.vo.Id
-import com.san.busing.domain.model.RouteRecentSearchModel
+import com.san.busing.domain.model.BusArrivalModels
 import com.san.busing.domain.model.StationRecentSearchModel
 import com.san.busing.domain.model.StationRecentSearchModels
-import com.san.busing.domain.model.StationSummaryModel
 import com.san.busing.domain.model.StationSummaryModels
 
 class StationRepositoryImpl(
-    private val service: StationService,
+    private val stationService: StationService,
+    private val busArrivalService: BusArrivalService,
     private val context: Context
 ) : StationRepository {
     private val db = Room.databaseBuilder(
@@ -27,7 +28,7 @@ class StationRepositoryImpl(
 
     override suspend fun getStations(keyword: String): Result<StationSummaryModels> {
         try {
-            val response = service.getBusStationList(BuildConfig.API_KEY, keyword)
+            val response = stationService.getBusStationList(BuildConfig.API_KEY, keyword)
             return Result.success(StationSummaryModels(response.body()!!.get()))
         } catch (e: ServiceException.ResultException) {
             return Result.success(StationSummaryModels(listOf()))
@@ -35,6 +36,20 @@ class StationRepositoryImpl(
             return Result.success(StationSummaryModels(listOf()))
         } catch (e: Exception) {
             Log.e(ExceptionMessage.TAG_STATION_SUMMARY_EXCEPTION, e.message ?: e.toString())
+            return Result.error(e)
+        }
+    }
+
+    override suspend fun getBusArrivals(id: Id): Result<BusArrivalModels> {
+        try {
+            val response = busArrivalService.getBusArrivalList(BuildConfig.API_KEY, id.get())
+            return Result.success(BusArrivalModels(response.body()!!.get()))
+        } catch (e: ServiceException.ResultException) {
+            return Result.success(BusArrivalModels(listOf()))
+        } catch (e: ServiceException.OptionalParameterException) {
+            return Result.success(BusArrivalModels(listOf()))
+        } catch (e: Exception) {
+            Log.e(ExceptionMessage.TAG_BUS_ARRIVAL_EXCEPTION, e.message ?: e.toString())
             return Result.error(e)
         }
     }
