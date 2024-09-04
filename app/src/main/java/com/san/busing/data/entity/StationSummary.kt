@@ -42,7 +42,6 @@ data class StationSummary(
     }
 }
 
-// for Service
 @Xml
 data class StationSummaries(
     @Path("msgBody") @Element val stationSummaries: List<StationSummary>

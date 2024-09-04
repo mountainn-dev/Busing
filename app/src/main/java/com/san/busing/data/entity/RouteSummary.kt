@@ -31,7 +31,6 @@ data class RouteSummary(
     )
 }
 
-// for Service
 @Xml
 data class RouteSummaries(
     @Path("msgBody") @Element val routeSummaries: List<RouteSummary>

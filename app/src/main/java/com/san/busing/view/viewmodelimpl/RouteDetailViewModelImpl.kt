@@ -13,11 +13,9 @@ import com.san.busing.data.repository.BusLocationRepository
 import com.san.busing.data.repository.RouteRepository
 import com.san.busing.data.vo.Id
 import com.san.busing.domain.enums.RouteType
-import com.san.busing.domain.model.BusModel
 import com.san.busing.domain.model.BusModels
 import com.san.busing.domain.model.RouteInfoModel
 import com.san.busing.domain.model.RouteRecentSearchModel
-import com.san.busing.domain.model.RouteStationModel
 import com.san.busing.domain.model.RouteStationModels
 import com.san.busing.domain.state.UiState
 import com.san.busing.view.viewmodel.RouteDetailViewModel
@@ -78,15 +76,15 @@ class RouteDetailViewModelImpl(
         loadingJob = viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 awaitAll(
-                    async { loadRouteInfoContent() },
-                    async { loadRouteStationContent() },
-                    async { loadRouteBusContent() }
+                    async { loadRouteInfo() },
+                    async { loadRouteStations() },
+                    async { loadBusLocations() }
                 )
             }
         }
     }
 
-    private suspend fun loadRouteInfoContent() {
+    private suspend fun loadRouteInfo() {
         val result = routeRepository.getRouteInfo(routeId)
 
         if (result is Success) {
@@ -99,7 +97,7 @@ class RouteDetailViewModelImpl(
         }
     }
 
-    private suspend fun loadRouteStationContent() {
+    private suspend fun loadRouteStations() {
         val result = routeRepository.getRouteStations(routeId)
 
         if (result is Success) {
@@ -112,7 +110,7 @@ class RouteDetailViewModelImpl(
         }
     }
 
-    private suspend fun loadRouteBusContent() {
+    private suspend fun loadBusLocations() {
         val result = busLocationRepository.getBusLocations(routeId)
 
         if (result is Success) {

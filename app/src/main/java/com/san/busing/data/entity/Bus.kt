@@ -56,7 +56,6 @@ data class Bus(
     }
 }
 
-// for Service
 @Xml
 data class Buses(
     @Path("msgBody") @Element val buses: List<Bus>

@@ -52,14 +52,6 @@ data class RouteStation(
     }
 }
 
-// RouteStation Path 어노테이션 중복 입력을 최소화하기 위한 클래스
-data class RouteStationItem(
-    @Path("msgBody") @Element val item: RouteStation
-) {
-    fun get() = item.toRouteStationModel()
-}
-
-// for Service
 @Xml
 data class RouteStations(
     @Path("msgBody") @Element val routeStations: List<RouteStation>

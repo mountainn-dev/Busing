@@ -58,13 +58,14 @@ class StationDetailViewModelImpl(
 
         loadingJob = viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                loadStationRouteContent()
+                loadStationArrivals()
+                // TODO: awaitAll(async { loadRouteDirection(stationArrival[0]).. })
             }
         }
     }
 
-    private suspend fun loadStationRouteContent() {
-        // 정류장 경유 노선별 데이터 호출
+    private suspend fun loadStationArrivals() {
+        // 정류장 노선별 도착 정보
     }
 
     override fun loadWithTimer() {
