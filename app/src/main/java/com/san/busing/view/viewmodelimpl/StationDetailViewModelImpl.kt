@@ -9,8 +9,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.san.busing.data.Error
 import com.san.busing.data.Success
+import com.san.busing.data.repository.BusArrivalRepository
 import com.san.busing.data.repository.StationRepository
 import com.san.busing.data.vo.Id
+import com.san.busing.domain.model.BusArrivalModels
 import com.san.busing.domain.model.StationRecentSearchModel
 import com.san.busing.domain.state.UiState
 import com.san.busing.view.viewmodel.StationDetailViewModel
@@ -20,7 +22,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class StationDetailViewModelImpl(
-    private val repository: StationRepository,
+    private val stationRepository: StationRepository,
+    private val busArrivalRepository: BusArrivalRepository,
     private val stationId: Id,
     private val stationMobileNo: String,
     private val stationName: String,
@@ -29,6 +32,8 @@ class StationDetailViewModelImpl(
     override val state: LiveData<UiState>
         get() = uiState
     private val uiState = MediatorLiveData<UiState>()
+    private val busArrivalState = MutableLiveData<UiState>(UiState.Loading)
+    override lateinit var busArrivals: BusArrivalModels
 
     override val resetTimer: LiveData<Int>
         get() = remainTime
@@ -58,14 +63,23 @@ class StationDetailViewModelImpl(
 
         loadingJob = viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                loadStationArrivals()
-                // TODO: awaitAll(async { loadRouteDirection(stationArrival[0]).. })
+                loadBusArrivals()
+                // TODO: awaitAll(async { loadBusDirection(busArrival[0]).. })
             }
         }
     }
 
-    private suspend fun loadStationArrivals() {
-        // 정류장 노선별 도착 정보
+    private suspend fun loadBusArrivals() {
+        val result = busArrivalRepository.getBusArrivals(stationId)
+
+        if (result is Success) {
+            busArrivals = result.data
+            busArrivalState.postValue(UiState.Success)
+        } else {
+            error = (result as Error).message()
+            if (result.isTimeOut()) busArrivalState.postValue(UiState.Timeout)
+            if (result.isCritical()) busArrivalState.postValue(UiState.Error)
+        }
     }
 
     override fun loadWithTimer() {
@@ -75,7 +89,6 @@ class StationDetailViewModelImpl(
         }
     }
 
-    // 최근검색 목록 갱신
     override fun updateRecentSearch(
         activity: Activity
     ) {
@@ -90,7 +103,7 @@ class StationDetailViewModelImpl(
     }
 
     private suspend fun loadRecentSearch(activity: Activity) {
-        val result = repository.getRecentSearch(stationId)
+        val result = stationRepository.getRecentSearch(stationId)
 
         if (result is Success) {
             val model = result.data
@@ -116,25 +129,25 @@ class StationDetailViewModelImpl(
     }
 
     private fun previousRecentSearchIndex(activity: Activity): Long {
-        val result = repository.getRecentSearchIndex(activity)
+        val result = stationRepository.getRecentSearchIndex(activity)
 
         return (result as Success).data
     }
 
     private fun updateRecentSearchIndex(activity: Activity, newIdx: Long) {
-        val result = repository.updateRecentSearchIndex(activity, newIdx)
+        val result = stationRepository.updateRecentSearchIndex(activity, newIdx)
 
         if (result is Error) error = result.message()
     }
 
     private suspend fun insertRecentSearch() {
-        val result = repository.insertRecentSearch(recentSearch)
+        val result = stationRepository.insertRecentSearch(recentSearch)
 
         if (result is Error) error = result.message()
     }
 
     private suspend fun updateRecentSearch() {
-        val result = repository.updateRecentSearch(recentSearch)
+        val result = stationRepository.updateRecentSearch(recentSearch)
 
         if (result is Error) error = result.message()
     }

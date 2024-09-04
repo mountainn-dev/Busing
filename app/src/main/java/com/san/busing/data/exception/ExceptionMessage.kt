@@ -8,6 +8,7 @@ object ExceptionMessage {
     const val TAG_ROUTE_STATION_EXCEPTION = "Route Station Exception"
     const val TAG_ROUTE_RECENT_SEARCH_EXCEPTION = "Route Recent Search Exception"
     const val TAG_BUS_EXCEPTION = "Bus Exception"
+    const val TAG_BUS_ARRIVAL_EXCEPTION = "Bus Arrival Exception"
     const val TAG_STATION_SUMMARY_EXCEPTION = "Station Summary Exception"
 
     // Service Exception Message

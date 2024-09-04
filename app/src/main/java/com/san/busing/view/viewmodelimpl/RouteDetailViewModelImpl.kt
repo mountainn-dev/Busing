@@ -130,7 +130,6 @@ class RouteDetailViewModelImpl(
         }
     }
 
-    // 최근검색 목록 갱신
     override fun updateRecentSearch(
         activity: Activity
     ) {

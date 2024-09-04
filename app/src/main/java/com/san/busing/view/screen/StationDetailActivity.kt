@@ -10,7 +10,9 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.san.busing.BuildConfig
 import com.san.busing.R
+import com.san.busing.data.repositoryimpl.BusArrivalRepositoryImpl
 import com.san.busing.data.repositoryimpl.StationRepositoryImpl
+import com.san.busing.data.source.remote.retrofit.BusArrivalService
 import com.san.busing.data.source.remote.retrofit.StationService
 import com.san.busing.data.vo.Id
 import com.san.busing.databinding.ActivityStationDetailBinding
@@ -29,16 +31,19 @@ class StationDetailActivity : AppCompatActivity() {
         binding = ActivityStationDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val repository = StationRepositoryImpl(
+        val stationRepository = StationRepositoryImpl(
             Utils.getRetrofit(BuildConfig.STATION_URL).create(StationService::class.java),
             this.applicationContext
+        )
+        val busArrivalRepository = BusArrivalRepositoryImpl(
+            Utils.getRetrofit(BuildConfig.ARRIVAL_URL).create(BusArrivalService::class.java)
         )
         val stationId = intent.getSerializableExtra(Const.TAG_STATION_ID) as Id
         val stationMobileNo = intent.getStringExtra(Const.TAG_STATION_MOBILE_NUMBER) ?: Const.EMPTY_TEXT
         val stationName = intent.getStringExtra(Const.TAG_STATION_NAME) ?: Const.EMPTY_TEXT
         val regionName = intent.getStringExtra(Const.TAG_REGION_NAME) ?: Const.EMPTY_TEXT
         viewModel = ViewModelProvider(
-            this, StationDetailViewModelFactory(repository, stationId, stationMobileNo, stationName, regionName)
+            this, StationDetailViewModelFactory(stationRepository, busArrivalRepository, stationId, stationMobileNo, stationName, regionName)
         ).get(StationDetailViewModelImpl::class.java)
 
         viewModel.updateRecentSearch(this)
