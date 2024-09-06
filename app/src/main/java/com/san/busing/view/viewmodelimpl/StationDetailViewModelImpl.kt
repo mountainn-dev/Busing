@@ -63,7 +63,7 @@ class StationDetailViewModelImpl(
         loadingJob = viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 loadBusArrivals()
-                // TODO: awaitAll(async { loadBusDirection(busArrival[0]).. })
+                // TODO: awaitAll(async { loadBusDirection(busArrival[0].nextStationSeq).. })
             }
         }
     }

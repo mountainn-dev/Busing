@@ -16,6 +16,7 @@ import com.san.busing.data.source.remote.retrofit.BusArrivalService
 import com.san.busing.data.source.remote.retrofit.StationService
 import com.san.busing.data.vo.Id
 import com.san.busing.databinding.ActivityStationDetailBinding
+import com.san.busing.domain.state.UiState
 import com.san.busing.domain.utils.Const
 import com.san.busing.domain.utils.Utils
 import com.san.busing.view.viewmodel.StationDetailViewModel
@@ -76,6 +77,10 @@ class StationDetailActivity : AppCompatActivity() {
     }
 
     private fun initObserver(activity: Activity) {
+        viewModel.state.observe(
+            activity as LifecycleOwner,
+            stateObserver()
+        )
         viewModel.resetTimer.observe(
             activity as LifecycleOwner,
             resetTimerObserver()
@@ -84,6 +89,27 @@ class StationDetailActivity : AppCompatActivity() {
             activity as LifecycleOwner,
             bookMarkObserver()
         )
+    }
+
+    private fun stateObserver() = Observer<UiState> {
+        when (it) {
+            UiState.Success -> {
+                loadRouteInfo()
+                loadRouteStation(routeType, activity)
+            }
+            UiState.Loading -> {
+                unloadRouteInfo()
+                loadingView()
+            }
+            UiState.Timeout -> {
+                unloadRouteInfo()
+                timeoutView()
+            }
+            UiState.Error -> {
+                unloadRouteInfo()
+                errorView(activity)
+            }
+        }
     }
 
     private fun resetTimerObserver() = Observer<Int> {
