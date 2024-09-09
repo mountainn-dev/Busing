@@ -10,7 +10,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.san.busing.BuildConfig
 import com.san.busing.R
-import com.san.busing.data.repositoryimpl.BusArrivalRepositoryImpl
 import com.san.busing.data.repositoryimpl.StationRepositoryImpl
 import com.san.busing.data.source.remote.retrofit.BusArrivalService
 import com.san.busing.data.source.remote.retrofit.StationService

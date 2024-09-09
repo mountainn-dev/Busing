@@ -8,9 +8,11 @@ import com.san.busing.domain.model.StationRecentSearchModel
 import com.san.busing.domain.model.StationRecentSearchModels
 import com.san.busing.domain.model.StationSummaryModel
 import com.san.busing.domain.model.StationSummaryModels
+import com.san.busing.domain.model.StationViaRouteModels
 
 interface StationRepository {
     suspend fun getStations(keyword: String): Result<StationSummaryModels>
+    suspend fun getStationViaRoutes(id: Id): Result<StationViaRouteModels>
     suspend fun getBusArrivals(id: Id): Result<BusArrivalModels>
     suspend fun getRecentSearch(id: Id): Result<StationRecentSearchModel>
     suspend fun getAllRecentSearch(): Result<StationRecentSearchModels>

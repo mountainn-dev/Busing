@@ -2,7 +2,6 @@ package com.san.busing.view.viewmodelfactory
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.san.busing.data.repository.BusArrivalRepository
 import com.san.busing.data.repository.StationRepository
 import com.san.busing.data.vo.Id
 import com.san.busing.view.viewmodelimpl.StationDetailViewModelImpl

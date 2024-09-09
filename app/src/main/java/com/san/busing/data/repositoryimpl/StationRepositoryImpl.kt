@@ -17,6 +17,7 @@ import com.san.busing.domain.model.BusArrivalModels
 import com.san.busing.domain.model.StationRecentSearchModel
 import com.san.busing.domain.model.StationRecentSearchModels
 import com.san.busing.domain.model.StationSummaryModels
+import com.san.busing.domain.model.StationViaRouteModels
 
 class StationRepositoryImpl(
     private val stationService: StationService,
@@ -36,6 +37,20 @@ class StationRepositoryImpl(
             return Result.success(StationSummaryModels(listOf()))
         } catch (e: Exception) {
             Log.e(ExceptionMessage.TAG_STATION_SUMMARY_EXCEPTION, e.message ?: e.toString())
+            return Result.error(e)
+        }
+    }
+
+    override suspend fun getStationViaRoutes(id: Id): Result<StationViaRouteModels> {
+        try {
+            val response = stationService.getBusStationViaRouteList(BuildConfig.API_KEY, id.get())
+            return Result.success(StationViaRouteModels(response.body()!!.get()))
+        } catch (e: ServiceException.ResultException) {
+            return Result.success(StationViaRouteModels(listOf()))
+        } catch (e: ServiceException.OptionalParameterException) {
+            return Result.success(StationViaRouteModels(listOf()))
+        } catch (e: Exception) {
+            Log.e(ExceptionMessage.TAG_STATION_VIA_ROUTE_EXCEPTION, e.message ?: e.toString())
             return Result.error(e)
         }
     }
