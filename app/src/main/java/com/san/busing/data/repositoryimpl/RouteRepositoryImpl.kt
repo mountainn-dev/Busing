@@ -41,11 +41,11 @@ class RouteRepositoryImpl(
     override suspend fun getRoutes(keyword: String): Result<RouteSummaryModels> {
         try {
             val response = routeService.getBusRouteList(BuildConfig.API_KEY, keyword)
-            return Result.success(RouteSummaryModels(response.body()!!.get()))
+            return Result.success(response.body()!!.get())
         } catch (e: ServiceException.ResultException) {
-            return Result.success(RouteSummaryModels(listOf()))
+            return Result.success(RouteSummaryModels.instance())
         } catch (e: ServiceException.OptionalParameterException) {
-            return Result.success(RouteSummaryModels(listOf()))
+            return Result.success(RouteSummaryModels.instance())
         } catch (e: Exception) {
             Log.e(ExceptionMessage.TAG_ROUTE_SUMMARY_EXCEPTION, e.message ?: e.toString())
             return Result.error(e)
@@ -55,11 +55,11 @@ class RouteRepositoryImpl(
     override suspend fun getRouteStations(id: Id): Result<RouteStationModels> {
         try {
             val response = routeService.getBusStationList(BuildConfig.API_KEY, id.get())
-            return Result.success(RouteStationModels(response.body()!!.get()))
+            return Result.success(response.body()!!.get())
         } catch (e: ServiceException.ResultException) {
-            return Result.success(RouteStationModels(listOf()))
+            return Result.success(RouteStationModels.instance())
         } catch (e: ServiceException.OptionalParameterException) {
-            return Result.success(RouteStationModels(listOf()))
+            return Result.success(RouteStationModels.instance())
         } catch (e: Exception) {
             Log.e(ExceptionMessage.TAG_ROUTE_STATION_EXCEPTION, e.message ?: e.toString())
             return Result.error(e)
@@ -69,11 +69,11 @@ class RouteRepositoryImpl(
     override suspend fun getBusLocations(id: Id): Result<BusModels> {
         try {
             val response = busLocationService.getBusLocationList(BuildConfig.API_KEY, id.get())
-            return Result.success(BusModels(response.body()!!.get()))
+            return Result.success(response.body()!!.get())
         } catch (e: ServiceException.ResultException) {
-            return Result.success(BusModels(listOf()))
+            return Result.success(BusModels.instance())
         } catch (e: ServiceException.OptionalParameterException) {
-            return Result.success(BusModels(listOf()))
+            return Result.success(BusModels.instance())
         } catch (e: Exception) {
             Log.e(ExceptionMessage.TAG_BUS_EXCEPTION, e.message ?: e.toString())
             return Result.error(e)

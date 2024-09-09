@@ -28,4 +28,8 @@ data class BusModels(
     fun get(index: Int) = models[index]
     fun count() = models.size
     fun indices() = models.indices
+
+    companion object {
+        fun instance() = BusModels(listOf())
+    }
 }

@@ -32,4 +32,8 @@ data class BusArrivalModels(
 ) {
     fun get(index: Int) = models[index]
     fun count() = models.size
+
+    companion object {
+        fun instance() = BusArrivalModels(listOf())
+    }
 }

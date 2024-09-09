@@ -25,4 +25,8 @@ data class StationSummaryModels(
     fun get(index: Int) = models[index]
     fun count() = models.size
     fun isEmpty() = models.isEmpty()
+
+    companion object {
+        fun instance() = StationSummaryModels(listOf())
+    }
 }

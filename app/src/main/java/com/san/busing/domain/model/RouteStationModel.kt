@@ -28,4 +28,8 @@ data class RouteStationModels(
     fun get(index: Int) = models[index]
     fun count() = models.size
     fun turnaroundSeqNum() = models.find { it.isTurnaround }?.sequenceNumber
+
+    companion object {
+        fun instance() = RouteStationModels(listOf())
+    }
 }

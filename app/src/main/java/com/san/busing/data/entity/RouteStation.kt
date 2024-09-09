@@ -3,6 +3,7 @@ package com.san.busing.data.entity
 import com.san.busing.data.exception.ExceptionMessage
 import com.san.busing.data.vo.Id
 import com.san.busing.domain.model.RouteStationModel
+import com.san.busing.domain.model.RouteStationModels
 import com.tickaroo.tikxml.annotation.Element
 import com.tickaroo.tikxml.annotation.Path
 import com.tickaroo.tikxml.annotation.PropertyElement
@@ -56,7 +57,7 @@ data class RouteStation(
 data class RouteStations(
     @Path("msgBody") @Element val routeStations: List<RouteStation>
 ) {
-    fun get(): List<RouteStationModel> {
-        return routeStations.map { it.toRouteStationModel() }.toList()
+    fun get(): RouteStationModels {
+        return RouteStationModels(routeStations.map { it.toRouteStationModel() })
     }
 }

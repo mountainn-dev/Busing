@@ -1,8 +1,8 @@
 package com.san.busing.data.entity
 
 import com.san.busing.data.vo.Id
-import com.san.busing.domain.model.RouteSummaryModel
 import com.san.busing.domain.model.StationSummaryModel
+import com.san.busing.domain.model.StationSummaryModels
 import com.tickaroo.tikxml.annotation.Element
 import com.tickaroo.tikxml.annotation.Path
 import com.tickaroo.tikxml.annotation.PropertyElement
@@ -46,7 +46,7 @@ data class StationSummary(
 data class StationSummaries(
     @Path("msgBody") @Element val stationSummaries: List<StationSummary>
 ) {
-    fun get(): List<StationSummaryModel> {
-        return stationSummaries.map { it.toStationSummaryModel() }.toList()
+    fun get(): StationSummaryModels {
+        return StationSummaryModels(stationSummaries.map { it.toStationSummaryModel() })
     }
 }

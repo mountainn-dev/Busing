@@ -2,6 +2,7 @@ package com.san.busing.data.entity
 
 import com.san.busing.data.vo.Id
 import com.san.busing.domain.model.RouteSummaryModel
+import com.san.busing.domain.model.RouteSummaryModels
 import com.san.busing.domain.utils.Utils
 import com.tickaroo.tikxml.annotation.Element
 import com.tickaroo.tikxml.annotation.Path
@@ -35,7 +36,7 @@ data class RouteSummary(
 data class RouteSummaries(
     @Path("msgBody") @Element val routeSummaries: List<RouteSummary>
 ) {
-    fun get(): List<RouteSummaryModel> {
-        return routeSummaries.map { it.toRouteSummaryModel() }.toList()
+    fun get(): RouteSummaryModels {
+        return RouteSummaryModels(routeSummaries.map { it.toRouteSummaryModel() })
     }
 }

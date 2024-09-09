@@ -14,4 +14,8 @@ data class StationViaRouteModels(
 
     fun get(index: Int) = models[index]
     fun count() = models.size
+
+    companion object {
+        fun instance() = StationViaRouteModels(listOf())
+    }
 }

@@ -2,9 +2,8 @@ package com.san.busing.data.entity
 
 import com.san.busing.data.exception.ExceptionMessage
 import com.san.busing.data.vo.Id
-import com.san.busing.domain.enums.PlateType.FULL_SIZE
-import com.san.busing.domain.enums.PlateType.MID_SIZE
 import com.san.busing.domain.model.BusModel
+import com.san.busing.domain.model.BusModels
 import com.san.busing.domain.utils.Utils
 import com.tickaroo.tikxml.annotation.Element
 import com.tickaroo.tikxml.annotation.Path
@@ -60,7 +59,7 @@ data class Bus(
 data class Buses(
     @Path("msgBody") @Element val buses: List<Bus>
 ) {
-    fun get(): List<BusModel> {
-        return buses.map { it.toBusModel() }.toList()
+    fun get(): BusModels {
+        return BusModels(buses.map { it.toBusModel() })
     }
 }

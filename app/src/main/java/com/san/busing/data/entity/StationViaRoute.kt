@@ -1,6 +1,7 @@
 package com.san.busing.data.entity
 
 import com.san.busing.domain.model.StationViaRouteModel
+import com.san.busing.domain.model.StationViaRouteModels
 import com.tickaroo.tikxml.annotation.Element
 import com.tickaroo.tikxml.annotation.Path
 import com.tickaroo.tikxml.annotation.PropertyElement
@@ -20,7 +21,7 @@ data class StationViaRoute(
 data class StationViaRoutes(
     @Path("msgBody") @Element val stationViaRoutes: List<StationViaRoute>
 ) {
-    fun get(): List<StationViaRouteModel> {
-        return stationViaRoutes.map { it.toStationViaRouteModel() }.toList()
+    fun get(): StationViaRouteModels {
+        return StationViaRouteModels(stationViaRoutes.map { it.toStationViaRouteModel() })
     }
 }

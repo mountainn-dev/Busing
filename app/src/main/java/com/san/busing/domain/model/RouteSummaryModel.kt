@@ -26,4 +26,8 @@ data class RouteSummaryModels(
     fun get(index: Int) = models[index]
     fun count() = models.size
     fun isEmpty() = models.isEmpty()
+
+    companion object {
+        fun instance() = RouteSummaryModels(listOf())
+    }
 }

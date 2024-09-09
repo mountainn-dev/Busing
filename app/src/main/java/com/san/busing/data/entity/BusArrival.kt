@@ -4,6 +4,7 @@ import com.san.busing.data.exception.ExceptionMessage
 import com.san.busing.data.vo.Id
 import com.san.busing.domain.enums.ArrivalFlag
 import com.san.busing.domain.model.BusArrivalModel
+import com.san.busing.domain.model.BusArrivalModels
 import com.tickaroo.tikxml.annotation.Element
 import com.tickaroo.tikxml.annotation.Path
 import com.tickaroo.tikxml.annotation.PropertyElement
@@ -59,7 +60,7 @@ data class BusArrival(
 data class BusArrivals(
     @Path("msgBody") @Element val busArrivals: List<BusArrival>
 ) {
-    fun get(): List<BusArrivalModel> {
-        return busArrivals.map { it.toBusArrivalModel() }.toList()
+    fun get(): BusArrivalModels {
+        return BusArrivalModels(busArrivals.map { it.toBusArrivalModel() })
     }
 }
