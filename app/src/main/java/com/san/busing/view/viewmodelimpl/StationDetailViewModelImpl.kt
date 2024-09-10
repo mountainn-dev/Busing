@@ -13,10 +13,13 @@ import com.san.busing.data.repository.StationRepository
 import com.san.busing.data.vo.Id
 import com.san.busing.domain.model.BusArrivalModels
 import com.san.busing.domain.model.StationRecentSearchModel
+import com.san.busing.domain.model.StationViaRouteModels
 import com.san.busing.domain.state.UiState
 import com.san.busing.view.viewmodel.StationDetailViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -30,7 +33,9 @@ class StationDetailViewModelImpl(
     override val state: LiveData<UiState>
         get() = uiState
     private val uiState = MediatorLiveData<UiState>()
+    private val viaRouteState = MutableLiveData<UiState>(UiState.Loading)
     private val busArrivalState = MutableLiveData<UiState>(UiState.Loading)
+    override lateinit var viaRoutes: StationViaRouteModels
     override lateinit var busArrivals: BusArrivalModels
 
     override val resetTimer: LiveData<Int>
@@ -61,9 +66,24 @@ class StationDetailViewModelImpl(
 
         loadingJob = viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                loadBusArrivals()
-                // TODO: awaitAll(async { loadBusDirection(busArrival[0].nextStationSeq).. })
+                loadViaRoutes()
+                awaitAll(
+                    async {  }
+                )
             }
+        }
+    }
+
+    private suspend fun loadViaRoutes() {
+        val result = stationRepository.getStationViaRoutes(stationId)
+
+        if (result is Success) {
+            viaRoutes = result.data
+            viaRouteState.postValue(UiState.Success)
+        } else {
+            error = (result as Error).message()
+            if (result.isTimeOut()) viaRouteState.postValue(UiState.Timeout)
+            if (result.isCritical()) viaRouteState.postValue(UiState.Error)
         }
     }
 

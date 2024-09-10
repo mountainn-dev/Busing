@@ -13,6 +13,7 @@ import com.san.busing.data.source.local.database.RecentSearchDatabase
 import com.san.busing.data.source.remote.retrofit.BusArrivalService
 import com.san.busing.data.source.remote.retrofit.StationService
 import com.san.busing.data.vo.Id
+import com.san.busing.domain.model.BusArrivalModel
 import com.san.busing.domain.model.BusArrivalModels
 import com.san.busing.domain.model.StationRecentSearchModel
 import com.san.busing.domain.model.StationRecentSearchModels
@@ -51,6 +52,22 @@ class StationRepositoryImpl(
             return Result.success(StationViaRouteModels.instance())
         } catch (e: Exception) {
             Log.e(ExceptionMessage.TAG_STATION_VIA_ROUTE_EXCEPTION, e.message ?: e.toString())
+            return Result.error(e)
+        }
+    }
+
+    override suspend fun getBusArrival(
+        stationId: Id,
+        routeId: Id,
+        stationSeq: Int
+    ): Result<BusArrivalModel> {
+        try {
+            val response = busArrivalService.getBusArrivalItem(
+                BuildConfig.API_KEY, stationId.get(), routeId.get(), stationSeq
+            )
+            return Result.success(response.body()!!.toBusArrivalModel())
+        } catch (e: Exception) {
+            Log.e(ExceptionMessage.TAG_BUS_ARRIVAL_EXCEPTION, e.message ?: e.toString())
             return Result.error(e)
         }
     }

@@ -21,6 +21,7 @@ import com.san.busing.domain.utils.Utils
 import com.san.busing.view.viewmodel.StationDetailViewModel
 import com.san.busing.view.viewmodelfactory.StationDetailViewModelFactory
 import com.san.busing.view.viewmodelimpl.StationDetailViewModelImpl
+import com.san.busing.view.widget.ErrorToast
 
 class StationDetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityStationDetailBinding
@@ -78,7 +79,7 @@ class StationDetailActivity : AppCompatActivity() {
     private fun initObserver(activity: Activity) {
         viewModel.state.observe(
             activity as LifecycleOwner,
-            stateObserver()
+            stateObserver(activity)
         )
         viewModel.resetTimer.observe(
             activity as LifecycleOwner,
@@ -90,25 +91,39 @@ class StationDetailActivity : AppCompatActivity() {
         )
     }
 
-    private fun stateObserver() = Observer<UiState> {
+    private fun stateObserver(activity: Activity) = Observer<UiState> {
         when (it) {
             UiState.Success -> {
-                loadRouteInfo()
-                loadRouteStation(routeType, activity)
+                loadStationViaRoutes()
             }
             UiState.Loading -> {
-                unloadRouteInfo()
                 loadingView()
             }
             UiState.Timeout -> {
-                unloadRouteInfo()
                 timeoutView()
             }
             UiState.Error -> {
-                unloadRouteInfo()
                 errorView(activity)
             }
         }
+    }
+
+    private fun loadStationViaRoutes() {
+
+    }
+
+    private fun loadingView() {
+        toggleView(binding.pgbStationDetail)
+    }
+
+    private fun timeoutView() {
+        toggleView(binding.llTimeout)
+    }
+
+    private fun errorView(activity: Activity) {
+        toggleView(binding.llServiceError)
+        val toast = ErrorToast(activity, viewModel.error)
+        if (toast.previousFinished()) toast.show()
     }
 
     private fun resetTimerObserver() = Observer<Int> {
@@ -155,6 +170,13 @@ class StationDetailActivity : AppCompatActivity() {
 
     private fun setFabRefreshListener() {
         binding.fabRefresh.setOnClickListener { viewModel.loadWithTimer() }
+    }
+
+    private fun toggleView(view: View) {
+        binding.pgbStationDetail.visibility = if (view == binding.pgbStationDetail) View.VISIBLE else View.GONE
+        binding.rvStationRouteList.visibility = if (view == binding.rvStationRouteList) View.VISIBLE else View.GONE
+        binding.llTimeout.visibility = if (view == binding.llTimeout) View.VISIBLE else View.GONE
+        binding.llServiceError.visibility = if (view == binding.llServiceError) View.VISIBLE else View.GONE
     }
 
     override fun onResume() {
