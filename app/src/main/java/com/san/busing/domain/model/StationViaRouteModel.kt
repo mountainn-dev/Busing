@@ -6,12 +6,11 @@ data class StationViaRouteModel(
 )
 
 data class StationViaRouteModels(
-    private var models: List<StationViaRouteModel>
+    private val data: List<StationViaRouteModel>
 ) {
-    init {
-        models = models.sortedBy { it.routeSummary.name }
-    }
+    private val models = data.sortedBy { it.routeSummary.name }
 
+    fun get() = models
     fun get(index: Int) = models[index]
     fun count() = models.size
 

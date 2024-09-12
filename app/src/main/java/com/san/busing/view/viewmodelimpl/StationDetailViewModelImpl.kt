@@ -9,9 +9,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.san.busing.data.Error
 import com.san.busing.data.Success
+import com.san.busing.data.repository.RouteRepository
 import com.san.busing.data.repository.StationRepository
 import com.san.busing.data.vo.Id
+import com.san.busing.domain.model.BusArrivalModel
 import com.san.busing.domain.model.BusArrivalModels
+import com.san.busing.domain.model.RouteStationModels
 import com.san.busing.domain.model.StationRecentSearchModel
 import com.san.busing.domain.model.StationViaRouteModels
 import com.san.busing.domain.state.UiState
@@ -25,6 +28,7 @@ import kotlinx.coroutines.withContext
 
 class StationDetailViewModelImpl(
     private val stationRepository: StationRepository,
+    private val routeRepository: RouteRepository,
     private val stationId: Id,
     private val stationMobileNo: String,
     private val stationName: String,
@@ -34,9 +38,11 @@ class StationDetailViewModelImpl(
         get() = uiState
     private val uiState = MediatorLiveData<UiState>()
     private val viaRouteState = MutableLiveData<UiState>(UiState.Loading)
+    private val routeDirectionState = MutableLiveData<UiState>(UiState.Loading)
     private val busArrivalState = MutableLiveData<UiState>(UiState.Loading)
     override lateinit var viaRoutes: StationViaRouteModels
-    override lateinit var busArrivals: BusArrivalModels
+    override lateinit var routeDirection: List<String>
+    override lateinit var busArrivals: List<BusArrivalModel>
 
     override val resetTimer: LiveData<Int>
         get() = remainTime
@@ -67,9 +73,12 @@ class StationDetailViewModelImpl(
         loadingJob = viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 loadViaRoutes()
-                awaitAll(
-                    async {  }
-                )
+                if (viaRouteState.value == UiState.Success) {
+                    val directions = viaRoutes.get().map { async { getRouteDirection(it.routeSummary.id, it.sequenceNumber) } }
+                    val arrivals = viaRoutes.get().map { async { getBusArrival(it.routeSummary.id, it.sequenceNumber) } }
+                    directions.map { it.await() }
+                    arrivals.map { it.await() }
+                }
             }
         }
     }
@@ -87,16 +96,34 @@ class StationDetailViewModelImpl(
         }
     }
 
-    private suspend fun loadBusArrivals() {
-        val result = stationRepository.getBusArrivals(stationId)
+    private suspend fun getRouteDirection(routeId: Id, stationSeq: Int): String? {
+        val result = routeRepository.getRouteStations(routeId)
 
         if (result is Success) {
-            busArrivals = result.data
-            busArrivalState.postValue(UiState.Success)
+            val routeStations = result.data
+            return if(!isLastStation(routeStations, stationSeq)) routeStations.get(stationSeq-1).name
+            else routeStations.get(0).name
+        } else {
+            error = (result as Error).message()
+            if (result.isTimeOut()) routeDirectionState.postValue(UiState.Timeout)
+            if (result.isCritical()) routeDirectionState.postValue(UiState.Error)
+            return null
+        }
+    }
+
+    private fun isLastStation(stations: RouteStationModels, stationSeq: Int) =
+        stations.count() == stationSeq
+
+    private suspend fun getBusArrival(routeId: Id, stationSeq: Int): BusArrivalModel? {
+        val result = stationRepository.getBusArrival(stationId, routeId, stationSeq)
+
+        if (result is Success) {
+            return result.data
         } else {
             error = (result as Error).message()
             if (result.isTimeOut()) busArrivalState.postValue(UiState.Timeout)
             if (result.isCritical()) busArrivalState.postValue(UiState.Error)
+            return null
         }
     }
 
