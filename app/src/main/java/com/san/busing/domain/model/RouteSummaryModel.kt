@@ -17,11 +17,9 @@ data class RouteSummaryModel(
 )
 
 data class RouteSummaryModels(
-    private var models: List<RouteSummaryModel>
+    private var data: List<RouteSummaryModel>
 ) {
-    init {
-        models = models.sortedWith(compareBy<RouteSummaryModel>{ it.name }.thenBy { it.region })
-    }
+    private val models = data.sortedWith(compareBy<RouteSummaryModel>{ it.name }.thenBy { it.region })
 
     fun get(index: Int) = models[index]
     fun count() = models.size

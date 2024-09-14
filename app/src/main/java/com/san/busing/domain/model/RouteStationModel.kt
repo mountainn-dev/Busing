@@ -19,11 +19,9 @@ data class RouteStationModel(
 )
 
 data class RouteStationModels(
-    private var models: List<RouteStationModel>
+    private var data: List<RouteStationModel>
 ) {
-    init {
-        models = models.sortedBy { it.sequenceNumber }
-    }
+    private val models = data.sortedBy { it.sequenceNumber }
 
     fun get(index: Int) = models[index]
     fun count() = models.size

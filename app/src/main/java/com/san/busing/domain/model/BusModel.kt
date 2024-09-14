@@ -19,11 +19,9 @@ data class BusModel(
 )
 
 data class BusModels(
-    private var models: List<BusModel>
+    private var data: List<BusModel>
 ) {
-    init {
-        models = models.sortedBy { it.sequenceNumber }
-    }
+    private val models = data.sortedBy { it.sequenceNumber }
 
     fun get(index: Int) = models[index]
     fun count() = models.size

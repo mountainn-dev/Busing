@@ -16,11 +16,9 @@ data class StationSummaryModel(
 )
 
 data class StationSummaryModels(
-    private var models: List<StationSummaryModel>
+    private val data: List<StationSummaryModel>
 ) {
-    init {
-        models = models.sortedWith(compareBy<StationSummaryModel>{ it.name }.thenBy { it.regionName })
-    }
+    private val models = data.sortedWith(compareBy<StationSummaryModel>{ it.name }.thenBy { it.regionName })
 
     fun get(index: Int) = models[index]
     fun count() = models.size

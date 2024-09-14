@@ -28,12 +28,10 @@ data class StationRecentSearchModel(
 }
 
 data class StationRecentSearchModels(
-    private var models: List<StationRecentSearchModel>
+    private var data: List<StationRecentSearchModel>
 ) {
-    init {
-        models = models.sortedWith(
-            compareByDescending<StationRecentSearchModel> { it.bookMark }.thenByDescending { it.index })
-    }
+    private val models = data.sortedWith(
+        compareByDescending<StationRecentSearchModel> { it.bookMark }.thenByDescending { it.index })
 
     fun get(index: Int) = models[index]
     fun count() = models.size

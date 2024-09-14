@@ -27,12 +27,10 @@ data class RouteRecentSearchModel(
 }
 
 data class RouteRecentSearchModels(
-    private var models: List<RouteRecentSearchModel>
+    private var data: List<RouteRecentSearchModel>
 ) {
-    init {
-        models = models.sortedWith(
-            compareByDescending<RouteRecentSearchModel> { it.bookMark }.thenByDescending { it.index })
-    }
+    private val models = data.sortedWith(
+        compareByDescending<RouteRecentSearchModel> { it.bookMark }.thenByDescending { it.index })
 
     fun get(index: Int) = models[index]
     fun count() = models.size

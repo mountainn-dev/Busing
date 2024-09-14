@@ -28,8 +28,10 @@ class BusArrivalModel(
 }
 
 data class BusArrivalModels(
-    private val models: List<BusArrivalModel>
+    private val data: List<BusArrivalModel>
 ) {
+    private val models = data
+
     fun get(index: Int) = models[index]
     fun count() = models.size
 
