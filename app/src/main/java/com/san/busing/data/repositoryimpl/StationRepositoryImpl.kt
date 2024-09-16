@@ -14,7 +14,6 @@ import com.san.busing.data.source.remote.retrofit.BusArrivalService
 import com.san.busing.data.source.remote.retrofit.StationService
 import com.san.busing.data.vo.Id
 import com.san.busing.domain.model.BusArrivalModel
-import com.san.busing.domain.model.BusArrivalModels
 import com.san.busing.domain.model.StationRecentSearchModel
 import com.san.busing.domain.model.StationRecentSearchModels
 import com.san.busing.domain.model.StationSummaryModels
@@ -65,21 +64,7 @@ class StationRepositoryImpl(
             val response = busArrivalService.getBusArrivalItem(
                 BuildConfig.API_KEY, stationId.get(), routeId.get(), stationSeq
             )
-            return Result.success(response.body()!!.toBusArrivalModel())
-        } catch (e: Exception) {
-            Log.e(ExceptionMessage.TAG_BUS_ARRIVAL_EXCEPTION, e.message ?: e.toString())
-            return Result.error(e)
-        }
-    }
-
-    override suspend fun getBusArrivals(id: Id): Result<BusArrivalModels> {
-        try {
-            val response = busArrivalService.getBusArrivalList(BuildConfig.API_KEY, id.get())
             return Result.success(response.body()!!.get())
-        } catch (e: ServiceException.ResultException) {
-            return Result.success(BusArrivalModels.instance())
-        } catch (e: ServiceException.OptionalParameterException) {
-            return Result.success(BusArrivalModels.instance())
         } catch (e: Exception) {
             Log.e(ExceptionMessage.TAG_BUS_ARRIVAL_EXCEPTION, e.message ?: e.toString())
             return Result.error(e)

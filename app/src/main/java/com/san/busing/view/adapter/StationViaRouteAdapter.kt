@@ -83,6 +83,6 @@ class StationViaRouteAdapter(
         private const val REMAIN_BUS_ARRIVAL_TIME = "%d분"
         private const val NO_REMAIN_BUS_ARRIVAL_TIME = "-분"
         private const val REMAIN_BUS_ARRIVAL_LOCATION = "%d번째 전"
-        private const val NO_REMAIN_BUS_ARRIVAL_LOCATION = "%-번째 전"
+        private const val NO_REMAIN_BUS_ARRIVAL_LOCATION = "-번째 전"
     }
 }

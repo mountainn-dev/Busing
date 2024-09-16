@@ -16,7 +16,7 @@ import com.tickaroo.tikxml.annotation.Xml
  * 정류장 버스 도착 정보를 담는 클래스
  * 정류장 상세 화면의 버스 도착 정보 컨텐츠를 구성한다.
  */
-@Xml(name="busArrivalList")
+@Xml(name="busArrivalItem")
 data class BusArrival(
     @PropertyElement val stationId: Int,
     @PropertyElement val routeId: Int,
@@ -57,10 +57,10 @@ data class BusArrival(
 }
 
 @Xml
-data class BusArrivals(
-    @Path("msgBody") @Element val busArrivals: List<BusArrival>
+data class BusArrivalItem(
+    @Path("msgBody") @Element val item: BusArrival
 ) {
-    fun get(): BusArrivalModels {
-        return BusArrivalModels(busArrivals.map { it.toBusArrivalModel() })
+    fun get(): BusArrivalModel {
+        return item.toBusArrivalModel()
     }
 }

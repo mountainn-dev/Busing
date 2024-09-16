@@ -15,7 +15,6 @@ interface StationRepository {
     suspend fun getStations(keyword: String): Result<StationSummaryModels>
     suspend fun getStationViaRoutes(id: Id): Result<StationViaRouteModels>
     suspend fun getBusArrival(stationId: Id, routeId: Id, stationSeq: Int): Result<BusArrivalModel>
-    suspend fun getBusArrivals(id: Id): Result<BusArrivalModels>
     suspend fun getRecentSearch(id: Id): Result<StationRecentSearchModel>
     suspend fun getAllRecentSearch(): Result<StationRecentSearchModels>
     suspend fun insertRecentSearch(recentSearchModel: StationRecentSearchModel): Result<Boolean>
