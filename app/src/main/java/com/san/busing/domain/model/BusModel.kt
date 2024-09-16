@@ -24,6 +24,13 @@ data class BusModels(
     private val models = data.sortedBy { it.sequenceNumber }
 
     fun get(index: Int) = models[index]
+    fun getOrNullBySeq(sequenceNumber: Int): BusModel? {
+        for (bus in models) {
+            if (bus.sequenceNumber == sequenceNumber) return bus
+        }
+
+        return null
+    }
     fun count() = models.size
     fun indices() = models.indices
 

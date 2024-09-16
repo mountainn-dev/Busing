@@ -24,7 +24,7 @@ data class RouteStationModels(
     private val models = data.sortedBy { it.sequenceNumber }
 
     fun get(index: Int) = models[index]
-    fun first() = models.first()
+    fun getOrFirst(index: Int) = if (index !in models.indices) models.first() else models[index]
     fun count() = models.size
     fun turnaroundSeqNum() = models.find { it.isTurnaround }?.sequenceNumber
 

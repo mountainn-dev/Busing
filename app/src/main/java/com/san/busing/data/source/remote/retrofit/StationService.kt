@@ -1,5 +1,7 @@
 package com.san.busing.data.source.remote.retrofit
 
+import com.san.busing.data.entity.RouteStations
+import com.san.busing.data.entity.RouteSummaries
 import com.san.busing.data.entity.StationSummaries
 import com.san.busing.data.entity.StationViaRoutes
 import retrofit2.Response
@@ -17,5 +19,5 @@ interface StationService {
     suspend fun getBusStationViaRouteList(
         @Query("serviceKey") key: String,
         @Query("stationId") id: Int
-    ): Response<StationViaRoutes>
+    ): Response<RouteSummaries>
 }

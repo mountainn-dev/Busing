@@ -23,9 +23,7 @@ class BusArrivalModel(
     val remainSeatSecond: Int,
     val sequenceNumber: Int,
     val arrivalFlag: ArrivalFlag
-) {
-    fun nextStationSeq() = sequenceNumber + 1
-}
+)
 
 data class BusArrivalModels(
     private val data: List<BusArrivalModel>

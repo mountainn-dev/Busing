@@ -8,16 +8,21 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.san.busing.BuildConfig
 import com.san.busing.R
+import com.san.busing.data.repositoryimpl.RouteRepositoryImpl
 import com.san.busing.data.repositoryimpl.StationRepositoryImpl
 import com.san.busing.data.source.remote.retrofit.BusArrivalService
+import com.san.busing.data.source.remote.retrofit.BusLocationService
+import com.san.busing.data.source.remote.retrofit.RouteService
 import com.san.busing.data.source.remote.retrofit.StationService
 import com.san.busing.data.vo.Id
 import com.san.busing.databinding.ActivityStationDetailBinding
 import com.san.busing.domain.state.UiState
 import com.san.busing.domain.utils.Const
 import com.san.busing.domain.utils.Utils
+import com.san.busing.view.adapter.StationViaRouteAdapter
 import com.san.busing.view.viewmodel.StationDetailViewModel
 import com.san.busing.view.viewmodelfactory.StationDetailViewModelFactory
 import com.san.busing.view.viewmodelimpl.StationDetailViewModelImpl
@@ -37,14 +42,21 @@ class StationDetailActivity : AppCompatActivity() {
             Utils.getRetrofit(BuildConfig.ARRIVAL_URL).create(BusArrivalService::class.java),
             this.applicationContext
         )
+        val routeRepository = RouteRepositoryImpl(
+            Utils.getRetrofit(BuildConfig.ROUTES_URL).create(RouteService::class.java),
+            Utils.getRetrofit(BuildConfig.LOCATION_URL).create(BusLocationService::class.java),
+            this.applicationContext
+        )
         val stationId = intent.getSerializableExtra(Const.TAG_STATION_ID) as Id
         val stationMobileNo = intent.getStringExtra(Const.TAG_STATION_MOBILE_NUMBER) ?: Const.EMPTY_TEXT
         val stationName = intent.getStringExtra(Const.TAG_STATION_NAME) ?: Const.EMPTY_TEXT
         val regionName = intent.getStringExtra(Const.TAG_REGION_NAME) ?: Const.EMPTY_TEXT
         viewModel = ViewModelProvider(
-            this, StationDetailViewModelFactory(stationRepository, stationId, stationMobileNo, stationName, regionName)
+            this, StationDetailViewModelFactory(
+                stationRepository, routeRepository,
+                stationId, stationMobileNo, stationName, regionName
+            )
         ).get(StationDetailViewModelImpl::class.java)
-
         viewModel.updateRecentSearch(this)
         initToolbar(stationName, stationMobileNo, regionName)
         initObserver(this)
@@ -94,7 +106,7 @@ class StationDetailActivity : AppCompatActivity() {
     private fun stateObserver(activity: Activity) = Observer<UiState> {
         when (it) {
             UiState.Success -> {
-                loadStationViaRoutes()
+                loadStationViaRoutes(activity)
             }
             UiState.Loading -> {
                 loadingView()
@@ -108,8 +120,16 @@ class StationDetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun loadStationViaRoutes() {
-
+    private fun loadStationViaRoutes(activity: Activity) {
+        val scrollState = binding.rvStationViaRouteList.layoutManager?.onSaveInstanceState()
+        binding.rvStationViaRouteList.adapter = StationViaRouteAdapter(
+            viewModel.viaRoutes,
+            viewModel.nextStations,
+            viewModel.busArrivals
+        )
+        binding.rvStationViaRouteList.layoutManager = LinearLayoutManager(activity)
+        binding.rvStationViaRouteList.layoutManager?.onRestoreInstanceState(scrollState)
+        toggleView(binding.rvStationViaRouteList)
     }
 
     private fun loadingView() {
@@ -174,7 +194,7 @@ class StationDetailActivity : AppCompatActivity() {
 
     private fun toggleView(view: View) {
         binding.pgbStationDetail.visibility = if (view == binding.pgbStationDetail) View.VISIBLE else View.GONE
-        binding.rvStationRouteList.visibility = if (view == binding.rvStationRouteList) View.VISIBLE else View.GONE
+        binding.rvStationViaRouteList.visibility = if (view == binding.rvStationViaRouteList) View.VISIBLE else View.GONE
         binding.llTimeout.visibility = if (view == binding.llTimeout) View.VISIBLE else View.GONE
         binding.llServiceError.visibility = if (view == binding.llServiceError) View.VISIBLE else View.GONE
     }

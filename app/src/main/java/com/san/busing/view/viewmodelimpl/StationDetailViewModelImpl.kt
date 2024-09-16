@@ -13,7 +13,7 @@ import com.san.busing.data.repository.RouteRepository
 import com.san.busing.data.repository.StationRepository
 import com.san.busing.data.vo.Id
 import com.san.busing.domain.model.BusArrivalModel
-import com.san.busing.domain.model.RouteStationModels
+import com.san.busing.domain.model.RouteStationModel
 import com.san.busing.domain.model.StationRecentSearchModel
 import com.san.busing.domain.model.StationViaRouteModels
 import com.san.busing.domain.state.UiState
@@ -38,10 +38,10 @@ class StationDetailViewModelImpl(
         get() = uiState
     private val uiState = MediatorLiveData<UiState>()
     private val viaRouteState = MutableLiveData<UiState>(UiState.Loading)
-    private val routeDirectionState = MutableLiveData<UiState>(UiState.Loading)
+    private val nextStationState = MutableLiveData<UiState>(UiState.Loading)
     private val busArrivalState = MutableLiveData<UiState>(UiState.Loading)
     override lateinit var viaRoutes: StationViaRouteModels
-    override val routeDirection = Stack<String>()
+    override val nextStations = Stack<RouteStationModel>()
     override val busArrivals = Stack<BusArrivalModel>()
 
     override val resetTimer: LiveData<Int>
@@ -67,6 +67,10 @@ class StationDetailViewModelImpl(
 
     override lateinit var error: String
 
+    init {
+        merge(uiState, viaRouteState, nextStationState, busArrivalState)
+    }
+
     override fun load() {
         loadingJob?.cancel()
 
@@ -74,12 +78,12 @@ class StationDetailViewModelImpl(
             withContext(Dispatchers.IO) {
                 loadViaRoutes()
                 if (viaRouteState.value == UiState.Success) {
-                    viaRoutes.get().flatMap {
-                        listOf(
-                            async { loadRouteDirection(it.routeSummary.id, it.sequenceNumber) },
-                            async { loadBusArrival(it.routeSummary.id, it.sequenceNumber) }
-                        )
+                    viaRoutes.get().map {
+                        async { loadRouteDirection(it.routeSummary.id, it.sequenceNumber)
+                            loadBusArrival(it.routeSummary.id, it.sequenceNumber) }
                     }.awaitAll()
+                    nextStationState.postValue(UiState.Success)
+                    busArrivalState.postValue(UiState.Success)
                 }
             }
         }
@@ -102,19 +106,14 @@ class StationDetailViewModelImpl(
         val result = routeRepository.getRouteStations(routeId)
 
         if (result is Success) {
-            val routeStations = result.data
-            val direction = if (!isLastStation(routeStations, stationSeq)) routeStations.get(stationSeq-1).name
-            else routeStations.first().name
-            routeDirection.push(direction)
+            val nextStation = result.data.getOrFirst(stationSeq - 1)
+            nextStations.push(nextStation)
         } else {
             error = (result as Error).message()
-            if (result.isTimeOut()) routeDirectionState.postValue(UiState.Timeout)
-            if (result.isCritical()) routeDirectionState.postValue(UiState.Error)
+            if (result.isTimeOut()) nextStationState.postValue(UiState.Timeout)
+            if (result.isCritical()) nextStationState.postValue(UiState.Error)
         }
     }
-
-    private fun isLastStation(stations: RouteStationModels, stationSeq: Int) =
-        stations.count() == stationSeq
 
     private suspend fun loadBusArrival(routeId: Id, stationSeq: Int) {
         val result = stationRepository.getBusArrival(stationId, routeId, stationSeq)
@@ -218,6 +217,44 @@ class StationDetailViewModelImpl(
     private fun loadBookMarkContent() {
         isBookMark.postValue(recentSearch.bookMark)
     }
+
+    private fun merge(
+        parent: MediatorLiveData<UiState>,
+        child1: MutableLiveData<UiState>,
+        child2: MutableLiveData<UiState>,
+        child3: MutableLiveData<UiState>
+    ) {
+        parent.addSource(child1) { parent.value =  state(it, child2.value!!, child3.value!!) }
+        parent.addSource(child2) { parent.value =  state(it, child1.value!!, child3.value!!) }
+        parent.addSource(child3) { parent.value =  state(it, child1.value!!, child2.value!!) }
+    }
+
+    private fun state(
+        state1: UiState, state2: UiState, state3: UiState
+    ): UiState {
+        return if (isSuccess(state1, state2, state3)) UiState.Success
+        else if (isLoading(state1, state2, state3)) UiState.Loading
+        else if (isTimeout(state1, state2, state3)) UiState.Timeout
+        else UiState.Error
+    }
+
+    private fun isSuccess(
+        state1: UiState, state2: UiState, state3: UiState
+    ) = state1 is UiState.Success && state2 is UiState.Success && state3 is UiState.Success
+
+    private fun isLoading(
+        state1: UiState, state2: UiState, state3: UiState
+    ) = !isTimeout(state1, state2, state3)
+            && (state1 is UiState.Loading || state2 is UiState.Loading || state3 is UiState.Loading)
+
+    private fun isTimeout(
+        state1: UiState, state2: UiState, state3: UiState,
+    ) = !isCritical(state1, state2, state3)
+            && (state1 is UiState.Timeout || state2 is UiState.Timeout || state3 is UiState.Timeout)
+
+    private fun isCritical(
+        state1: UiState, state2: UiState, state3: UiState
+    ) = state1 is UiState.Error || state2 is UiState.Error || state3 is UiState.Error
 
     companion object {
         private const val REMAIN_TOTAL_MILLIS: Long = 9999

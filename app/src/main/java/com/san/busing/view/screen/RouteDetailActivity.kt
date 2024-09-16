@@ -128,7 +128,7 @@ class RouteDetailActivity : AppCompatActivity() {
     }
 
     private fun loadRouteStation(routeType: RouteType, activity: Activity) {
-        val state = binding.rvBusRouteStationList.layoutManager?.onSaveInstanceState()
+        val scrollState = binding.rvBusRouteStationList.layoutManager?.onSaveInstanceState()
         binding.rvBusRouteStationList.adapter = RouteStationAdapter(
             routeType,
             viewModel.routeStations,
@@ -138,7 +138,7 @@ class RouteDetailActivity : AppCompatActivity() {
         )
         binding.rvBusRouteStationList.layoutManager = LinearLayoutManager(activity)
         binding.txtRouteBusCount.text = String.format(ROUTE_BUS_COUNT, viewModel.routeBuses.count())
-        binding.rvBusRouteStationList.layoutManager?.onRestoreInstanceState(state)
+        binding.rvBusRouteStationList.layoutManager?.onRestoreInstanceState(scrollState)
         toggleView(binding.rvBusRouteStationList)
         setBtnScrollToEndStation()
     }

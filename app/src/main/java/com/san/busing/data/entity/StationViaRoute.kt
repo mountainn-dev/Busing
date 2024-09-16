@@ -10,7 +10,7 @@ import com.tickaroo.tikxml.annotation.Xml
 @Xml(name = "busRouteList")
 data class StationViaRoute(
     @Element val routeSummary: RouteSummary,
-    @PropertyElement val stationSeq: Int
+    @PropertyElement(name = "staOrder") val stationSeq: Int
 ) {
     fun toStationViaRouteModel() = StationViaRouteModel(
         routeSummary.toRouteSummaryModel(),
@@ -18,6 +18,7 @@ data class StationViaRoute(
     )
 }
 
+@Xml
 data class StationViaRoutes(
     @Path("msgBody") @Element val stationViaRoutes: List<StationViaRoute>
 ) {

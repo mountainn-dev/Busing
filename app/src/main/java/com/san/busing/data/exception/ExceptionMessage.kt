@@ -30,4 +30,5 @@ object ExceptionMessage {
     const val WRONG_REMAIN_SEAT_VALUE_EXCEPTION = "차량 빈자리 수 값이 올바르지 않습니다."
     const val WRONG_TURNAROUND_VALUE_EXCEPTION = "회차점 여부 값이 올바르지 않습니다."
     const val WRONG_TIME_FORMAT_EXCEPTION = "노선 시간 형식이 올바르지 않습니다."
+    const val WRONG_STATION_SEQUENCE_FORMAT_EXCEPTION = "정류소 순번 형식이 올바르지 않습니다."
 }

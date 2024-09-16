@@ -41,7 +41,7 @@ class RouteRepositoryImpl(
     override suspend fun getRoutes(keyword: String): Result<RouteSummaryModels> {
         try {
             val response = routeService.getBusRouteList(BuildConfig.API_KEY, keyword)
-            return Result.success(response.body()!!.get())
+            return Result.success(response.body()!!.getAsRouteSummaryModels())
         } catch (e: ServiceException.ResultException) {
             return Result.success(RouteSummaryModels.instance())
         } catch (e: ServiceException.OptionalParameterException) {
