@@ -36,7 +36,7 @@ class StationRepositoryImpl(
         } catch (e: ServiceException.OptionalParameterException) {
             return Result.success(StationSummaryModels.instance())
         } catch (e: Exception) {
-            Log.e(ExceptionMessage.TAG_STATION_SUMMARY_EXCEPTION, e.message ?: e.toString())
+            Log.e(ExceptionMessage.TAG_STATION_SUMMARY_EXCEPTION, e.toString())
             return Result.error(e)
         }
     }
@@ -50,7 +50,7 @@ class StationRepositoryImpl(
         } catch (e: ServiceException.OptionalParameterException) {
             return Result.success(StationViaRouteModels.instance())
         } catch (e: Exception) {
-            Log.e(ExceptionMessage.TAG_STATION_VIA_ROUTE_EXCEPTION, e.message ?: e.toString())
+            Log.e(ExceptionMessage.TAG_STATION_VIA_ROUTE_EXCEPTION, e.toString())
             return Result.error(e)
         }
     }
@@ -66,7 +66,7 @@ class StationRepositoryImpl(
             )
             return Result.success(response.body()!!.get())
         } catch (e: Exception) {
-            Log.e(ExceptionMessage.TAG_BUS_ARRIVAL_EXCEPTION, e.message ?: e.toString())
+            Log.e(ExceptionMessage.TAG_BUS_ARRIVAL_EXCEPTION, e.toString())
             return Result.error(e)
         }
     }
@@ -78,7 +78,7 @@ class StationRepositoryImpl(
             }
             return Result.error(NoSuchElementException(""))
         } catch (e: Exception) {
-            Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.message ?: e.toString())
+            Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.toString())
             return Result.error(e)
         }
     }
@@ -88,7 +88,7 @@ class StationRepositoryImpl(
             val recentSearchModels = db.stationRecentSearchDao().getAllStationRecentSearches().map { it.toStationRecentSearchModel() }
             return Result.success(StationRecentSearchModels(recentSearchModels))
         } catch (e: Exception) {
-            Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.message ?: e.toString())
+            Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.toString())
             return Result.error(e)
         }
     }
@@ -99,7 +99,7 @@ class StationRepositoryImpl(
                 recentSearchModel.toStationRecentSearchEntity())
             return Result.success(true)
         } catch (e: Exception) {
-            Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.message ?: e.toString())
+            Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.toString())
             return Result.error(e)
         }
     }
@@ -110,7 +110,7 @@ class StationRepositoryImpl(
                 recentSearchModel.toStationRecentSearchEntity())
             return Result.success(true)
         } catch (e: Exception) {
-            Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.message ?: e.toString())
+            Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.toString())
             return Result.error(e)
         }
     }
@@ -121,7 +121,7 @@ class StationRepositoryImpl(
                 recentSearchModel.toStationRecentSearchEntity())
             return Result.success(true)
         } catch (e: Exception) {
-            Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.message ?: e.toString())
+            Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.toString())
             return Result.error(e)
         }
     }
@@ -131,7 +131,7 @@ class StationRepositoryImpl(
             db.stationRecentSearchDao().deleteAllStationRecentSearches()
             return Result.success(true)
         } catch (e: Exception) {
-            Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.message ?: e.toString())
+            Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.toString())
             return Result.error(e)
         }
     }
@@ -149,7 +149,7 @@ class StationRepositoryImpl(
             preference.edit().putLong(BuildConfig.STATION_PREFERENCE_KEY, newIdx).apply()
             return Result.success(true)
         } catch (e: Exception) {
-            Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.message ?: e.toString())
+            Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.toString())
             return Result.error(e)
         }
     }

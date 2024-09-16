@@ -33,7 +33,7 @@ class RouteRepositoryImpl(
             val response = routeService.getBusRouteInfoItem(BuildConfig.API_KEY, id.get())
             return Result.success(response.body()!!.get())
         } catch (e: Exception) {
-            Log.e(ExceptionMessage.TAG_ROUTE_INFO_EXCEPTION, e.message ?: e.toString())
+            Log.e(ExceptionMessage.TAG_ROUTE_INFO_EXCEPTION, e.toString())
             return Result.error(e)
         }
     }
@@ -47,7 +47,7 @@ class RouteRepositoryImpl(
         } catch (e: ServiceException.OptionalParameterException) {
             return Result.success(RouteSummaryModels.instance())
         } catch (e: Exception) {
-            Log.e(ExceptionMessage.TAG_ROUTE_SUMMARY_EXCEPTION, e.message ?: e.toString())
+            Log.e(ExceptionMessage.TAG_ROUTE_SUMMARY_EXCEPTION, e.toString())
             return Result.error(e)
         }
     }
@@ -61,7 +61,7 @@ class RouteRepositoryImpl(
         } catch (e: ServiceException.OptionalParameterException) {
             return Result.success(RouteStationModels.instance())
         } catch (e: Exception) {
-            Log.e(ExceptionMessage.TAG_ROUTE_STATION_EXCEPTION, e.message ?: e.toString())
+            Log.e(ExceptionMessage.TAG_ROUTE_STATION_EXCEPTION, e.toString())
             return Result.error(e)
         }
     }
@@ -75,7 +75,7 @@ class RouteRepositoryImpl(
         } catch (e: ServiceException.OptionalParameterException) {
             return Result.success(BusModels.instance())
         } catch (e: Exception) {
-            Log.e(ExceptionMessage.TAG_BUS_EXCEPTION, e.message ?: e.toString())
+            Log.e(ExceptionMessage.TAG_BUS_EXCEPTION, e.toString())
             return Result.error(e)
         }
     }
@@ -87,7 +87,7 @@ class RouteRepositoryImpl(
             }
             return Result.error(NoSuchElementException(""))
         } catch (e: Exception) {
-            Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.message ?: e.toString())
+            Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.toString())
             return Result.error(e)
         }
     }
@@ -97,7 +97,7 @@ class RouteRepositoryImpl(
             val recentSearchModels = db.routeRecentSearchDao().getAllRouteRecentSearches().map { it.toRouteRecentSearchModel() }
             return Result.success(RouteRecentSearchModels(recentSearchModels))
         } catch (e: Exception) {
-            Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.message ?: e.toString())
+            Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.toString())
             return Result.error(e)
         }
     }
@@ -108,7 +108,7 @@ class RouteRepositoryImpl(
                 recentSearchModel.toRouteRecentSearchEntity())
             return Result.success(true)
         } catch (e: Exception) {
-            Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.message ?: e.toString())
+            Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.toString())
             return Result.error(e)
         }
     }
@@ -119,7 +119,7 @@ class RouteRepositoryImpl(
                 recentSearchModel.toRouteRecentSearchEntity())
             return Result.success(true)
         } catch (e: Exception) {
-            Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.message ?: e.toString())
+            Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.toString())
             return Result.error(e)
         }
     }
@@ -130,7 +130,7 @@ class RouteRepositoryImpl(
                 recentSearchModel.toRouteRecentSearchEntity())
             return Result.success(true)
         } catch (e: Exception) {
-            Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.message ?: e.toString())
+            Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.toString())
             return Result.error(e)
         }
     }
@@ -140,7 +140,7 @@ class RouteRepositoryImpl(
             db.routeRecentSearchDao().deleteAllRouteRecentSearches()
             return Result.success(true)
         } catch (e: Exception) {
-            Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.message ?: e.toString())
+            Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.toString())
             return Result.error(e)
         }
     }
@@ -164,7 +164,7 @@ class RouteRepositoryImpl(
             preference.edit().putLong(BuildConfig.ROUTE_PREFERENCE_KEY, newIdx).apply()
             return Result.success(true)
         } catch (e: Exception) {
-            Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.message ?: e.toString())
+            Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.toString())
             return Result.error(e)
         }
     }
