@@ -1,9 +1,13 @@
 package com.san.busing.domain.model
 
+import com.san.busing.data.vo.Id
+
 data class StationViaRouteModel(
     val routeSummary: RouteSummaryModel,
     val sequenceNumber: Int
-)
+) {
+    fun isSame(id: Id) = routeSummary.id == id
+}
 
 data class StationViaRouteModels(
     private val data: List<StationViaRouteModel>

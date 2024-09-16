@@ -52,15 +52,13 @@ class RouteStationAdapter(
             binding.llBusInfo.visibility = View.VISIBLE
             binding.lineBusInfo.visibility = View.VISIBLE
             binding.imgBus.visibility = View.VISIBLE
-
             binding.txtPlateNumber.text = item.plateNumber
             binding.txtRemainSeat.text = remainSeatText(item.remainSeat)
         }
 
-        private fun remainSeatText(count: Int): String {
-            if (count == Const.NO_DATA) return NO_REMAIN_SEAT_COUNT
-            else return String.format(REMAIN_SEAT_COUNT, count)
-        }
+        private fun remainSeatText(count: Int) =
+            if (count != Const.NO_DATA) String.format(REMAIN_SEAT_COUNT, count)
+            else NO_REMAIN_SEAT_COUNT
 
         private fun unloadBusInfo() {
             binding.llBusInfo.visibility = View.GONE

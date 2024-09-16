@@ -33,7 +33,6 @@ class StationRecentSearchAdapter(
 
         private fun setBackground(position: Int) {
             val background = ContextCompat.getDrawable(activity, Utils.getBackgroundByBookMarkStatus(items.get(position).bookMark))
-
             binding.clStationRecentSearchItem.background = background
         }
 

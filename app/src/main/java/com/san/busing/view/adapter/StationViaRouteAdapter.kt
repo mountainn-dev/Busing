@@ -32,7 +32,7 @@ class StationViaRouteAdapter(
         }
 
         private fun loadNextStation(position: Int) {
-            val nextStationName = nextStations.find { it.id == routeItems.get(position).routeSummary.id }?.name
+            val nextStationName = nextStations.find { routeItems.get(position).isSame(it.id) }?.name
 
             if (nextStationName != null) {
                 loadNextStation(nextStationName)
@@ -50,7 +50,7 @@ class StationViaRouteAdapter(
         }
 
         private fun loadBusArrival(position: Int) {
-            val busArrival = busArrivals.find { it.id == routeItems.get(position).routeSummary.id }
+            val busArrival = busArrivals.find { routeItems.get(position).isSame(it.id) }
 
             binding.txtPredictTimeFirst.text = busArrivalPredictTimeMessage(busArrival?.predictTimeFirst)
             binding.txtPredictTimeSecond.text = busArrivalPredictTimeMessage(busArrival?.predictTimeSecond)
@@ -58,11 +58,13 @@ class StationViaRouteAdapter(
             binding.txtLocationSecond.text = busArrivalLocationMessage(busArrival?.locationSecond)
         }
 
-        private fun busArrivalPredictTimeMessage(time: Int?) = if (time != null) String.format(
-            REMAIN_BUS_ARRIVAL_TIME, time) else NO_REMAIN_BUS_ARRIVAL_TIME
+        private fun busArrivalPredictTimeMessage(time: Int?) =
+            if (time != null) String.format(REMAIN_BUS_ARRIVAL_TIME, time)
+            else NO_REMAIN_BUS_ARRIVAL_TIME
 
-        private fun busArrivalLocationMessage(location: Int?) = if (location != null) String.format(
-            REMAIN_BUS_ARRIVAL_LOCATION, location) else NO_REMAIN_BUS_ARRIVAL_LOCATION
+        private fun busArrivalLocationMessage(location: Int?) =
+            if (location != null) String.format(REMAIN_BUS_ARRIVAL_LOCATION, location)
+            else NO_REMAIN_BUS_ARRIVAL_LOCATION
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StationViaRouteViewHolder {

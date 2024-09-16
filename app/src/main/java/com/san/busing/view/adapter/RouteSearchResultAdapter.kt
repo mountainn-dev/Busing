@@ -34,6 +34,7 @@ class RouteSearchResultAdapter(
         private fun setContentColor(position: Int) {
             val color = ContextCompat.getColor(
                 context, Utils.getColorByRouteType(items.get(position).type))
+
             binding.txtRouteName.setTextColor(color)
             binding.txtRouteTypeTag.setTextColor(color)
         }

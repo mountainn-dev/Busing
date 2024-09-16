@@ -35,13 +35,11 @@ class RouteRecentSearchAdapter(
 
         private fun setBackground(position: Int) {
             val background = ContextCompat.getDrawable(activity, Utils.getBackgroundByBookMarkStatus(items.get(position).bookMark))
-
             binding.clRouteRecentSearchItem.background = background
         }
 
         private fun setContentColor(position: Int) {
             val color = ContextCompat.getColor(activity, Utils.getColorByRouteType(items.get(position).type))
-
             binding.txtRouteRecentSearchName.setTextColor(color)
         }
 
