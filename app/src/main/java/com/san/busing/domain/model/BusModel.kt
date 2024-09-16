@@ -19,7 +19,7 @@ data class BusModel(
 )
 
 data class BusModels(
-    private var data: List<BusModel>
+    private val data: List<BusModel>
 ) {
     private val models = data.sortedBy { it.sequenceNumber }
 

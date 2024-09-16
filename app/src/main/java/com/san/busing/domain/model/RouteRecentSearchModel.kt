@@ -27,7 +27,7 @@ data class RouteRecentSearchModel(
 }
 
 data class RouteRecentSearchModels(
-    private var data: List<RouteRecentSearchModel>
+    private val data: List<RouteRecentSearchModel>
 ) {
     private val models = data.sortedWith(
         compareByDescending<RouteRecentSearchModel> { it.bookMark }.thenByDescending { it.index })

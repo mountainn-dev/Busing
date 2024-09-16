@@ -19,11 +19,12 @@ data class RouteStationModel(
 )
 
 data class RouteStationModels(
-    private var data: List<RouteStationModel>
+    private val data: List<RouteStationModel>
 ) {
     private val models = data.sortedBy { it.sequenceNumber }
 
     fun get(index: Int) = models[index]
+    fun first() = models.first()
     fun count() = models.size
     fun turnaroundSeqNum() = models.find { it.isTurnaround }?.sequenceNumber
 

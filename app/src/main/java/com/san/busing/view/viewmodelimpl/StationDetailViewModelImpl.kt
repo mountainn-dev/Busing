@@ -13,7 +13,6 @@ import com.san.busing.data.repository.RouteRepository
 import com.san.busing.data.repository.StationRepository
 import com.san.busing.data.vo.Id
 import com.san.busing.domain.model.BusArrivalModel
-import com.san.busing.domain.model.BusArrivalModels
 import com.san.busing.domain.model.RouteStationModels
 import com.san.busing.domain.model.StationRecentSearchModel
 import com.san.busing.domain.model.StationViaRouteModels
@@ -25,6 +24,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.Stack
 
 class StationDetailViewModelImpl(
     private val stationRepository: StationRepository,
@@ -41,8 +41,8 @@ class StationDetailViewModelImpl(
     private val routeDirectionState = MutableLiveData<UiState>(UiState.Loading)
     private val busArrivalState = MutableLiveData<UiState>(UiState.Loading)
     override lateinit var viaRoutes: StationViaRouteModels
-    override lateinit var routeDirection: List<String>
-    override lateinit var busArrivals: List<BusArrivalModel>
+    override val routeDirection = Stack<String>()
+    override val busArrivals = Stack<BusArrivalModel>()
 
     override val resetTimer: LiveData<Int>
         get() = remainTime
@@ -74,10 +74,12 @@ class StationDetailViewModelImpl(
             withContext(Dispatchers.IO) {
                 loadViaRoutes()
                 if (viaRouteState.value == UiState.Success) {
-                    val directions = viaRoutes.get().map { async { getRouteDirection(it.routeSummary.id, it.sequenceNumber) } }
-                    val arrivals = viaRoutes.get().map { async { getBusArrival(it.routeSummary.id, it.sequenceNumber) } }
-                    directions.map { it.await() }
-                    arrivals.map { it.await() }
+                    viaRoutes.get().flatMap {
+                        listOf(
+                            async { loadRouteDirection(it.routeSummary.id, it.sequenceNumber) },
+                            async { loadBusArrival(it.routeSummary.id, it.sequenceNumber) }
+                        )
+                    }.awaitAll()
                 }
             }
         }
@@ -96,34 +98,33 @@ class StationDetailViewModelImpl(
         }
     }
 
-    private suspend fun getRouteDirection(routeId: Id, stationSeq: Int): String? {
+    private suspend fun loadRouteDirection(routeId: Id, stationSeq: Int) {
         val result = routeRepository.getRouteStations(routeId)
 
         if (result is Success) {
             val routeStations = result.data
-            return if(!isLastStation(routeStations, stationSeq)) routeStations.get(stationSeq-1).name
-            else routeStations.get(0).name
+            val direction = if (!isLastStation(routeStations, stationSeq)) routeStations.get(stationSeq-1).name
+            else routeStations.first().name
+            routeDirection.push(direction)
         } else {
             error = (result as Error).message()
             if (result.isTimeOut()) routeDirectionState.postValue(UiState.Timeout)
             if (result.isCritical()) routeDirectionState.postValue(UiState.Error)
-            return null
         }
     }
 
     private fun isLastStation(stations: RouteStationModels, stationSeq: Int) =
         stations.count() == stationSeq
 
-    private suspend fun getBusArrival(routeId: Id, stationSeq: Int): BusArrivalModel? {
+    private suspend fun loadBusArrival(routeId: Id, stationSeq: Int) {
         val result = stationRepository.getBusArrival(stationId, routeId, stationSeq)
 
         if (result is Success) {
-            return result.data
+            busArrivals.push(result.data)
         } else {
             error = (result as Error).message()
             if (result.isTimeOut()) busArrivalState.postValue(UiState.Timeout)
             if (result.isCritical()) busArrivalState.postValue(UiState.Error)
-            return null
         }
     }
 

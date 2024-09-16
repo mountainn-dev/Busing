@@ -17,7 +17,7 @@ data class RouteSummaryModel(
 )
 
 data class RouteSummaryModels(
-    private var data: List<RouteSummaryModel>
+    private val data: List<RouteSummaryModel>
 ) {
     private val models = data.sortedWith(compareBy<RouteSummaryModel>{ it.name }.thenBy { it.region })
 

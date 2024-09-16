@@ -28,7 +28,7 @@ data class StationRecentSearchModel(
 }
 
 data class StationRecentSearchModels(
-    private var data: List<StationRecentSearchModel>
+    private val data: List<StationRecentSearchModel>
 ) {
     private val models = data.sortedWith(
         compareByDescending<StationRecentSearchModel> { it.bookMark }.thenByDescending { it.index })
