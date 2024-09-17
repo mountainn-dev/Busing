@@ -44,8 +44,8 @@ class RouteStationAdapter(
         private fun loadBusInfo(position: Int) {
             val bus = busItems.getOrNullBySeq(position + 1)
 
-            if (bus != null) { loadBusInfo(bus) }
-            else { unloadBusInfo() }
+            if (bus != null) loadBusInfo(bus)
+            else unloadBusInfo()
         }
 
         private fun loadBusInfo(item: BusModel) {

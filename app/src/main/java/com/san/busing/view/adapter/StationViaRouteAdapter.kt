@@ -34,11 +34,8 @@ class StationViaRouteAdapter(
         private fun loadNextStation(position: Int) {
             val nextStationName = nextStations.find { routeItems.get(position).isSame(it.id) }?.name
 
-            if (nextStationName != null) {
-                loadNextStation(nextStationName)
-            } else {
-                unloadNextStation()
-            }
+            if (nextStationName != null) loadNextStation(nextStationName)
+            else unloadNextStation()
         }
 
         private fun loadNextStation(name: String) {

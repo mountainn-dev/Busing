@@ -63,7 +63,8 @@ class StationDetailViewModelImpl(
     private val isBookMark = MutableLiveData(false)
     private lateinit var recentSearch: StationRecentSearchModel
 
-    private var loadingJob: Job? = null
+    private var viaRouteLoadingJob: Job? = null
+    private var busLoadingJob: Job? = null
 
     override lateinit var error: String
 
@@ -72,19 +73,11 @@ class StationDetailViewModelImpl(
     }
 
     override fun load() {
-        loadingJob?.cancel()
+        viaRouteLoadingJob?.cancel()
 
-        loadingJob = viewModelScope.launch {
+        viaRouteLoadingJob = viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 loadViaRoutes()
-                if (viaRouteState.value == UiState.Success) {
-                    viaRoutes.get().map {
-                        async { loadRouteDirection(it.routeSummary.id, it.sequenceNumber)
-                            loadBusArrival(it.routeSummary.id, it.sequenceNumber) }
-                    }.awaitAll()
-                    nextStationState.postValue(UiState.Success)
-                    busArrivalState.postValue(UiState.Success)
-                }
             }
         }
     }
@@ -95,10 +88,31 @@ class StationDetailViewModelImpl(
         if (result is Success) {
             viaRoutes = result.data
             viaRouteState.postValue(UiState.Success)
+            loadRouteDirectionAndBusArrival()
         } else {
             error = (result as Error).message()
             if (result.isTimeOut()) viaRouteState.postValue(UiState.Timeout)
             if (result.isCritical()) viaRouteState.postValue(UiState.Error)
+        }
+    }
+
+    private fun loadRouteDirectionAndBusArrival() {
+        busLoadingJob?.cancel()
+        nextStations.clear()
+        busArrivals.clear()
+
+        busLoadingJob = viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                viaRoutes.get().flatMap {
+                    listOf(
+                        async { loadRouteDirection(it.routeSummary.id, it.sequenceNumber) },
+                        async { loadBusArrival(it.routeSummary.id, it.sequenceNumber) }
+                    )
+                }.awaitAll().let {
+                    nextStationState.postValue(UiState.Success)
+                    busArrivalState.postValue(UiState.Success)
+                }
+            }
         }
     }
 
