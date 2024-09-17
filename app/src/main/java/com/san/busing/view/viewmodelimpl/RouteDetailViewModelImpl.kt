@@ -229,27 +229,19 @@ class RouteDetailViewModelImpl(
     }
 
     private fun state(
-        state1: UiState, state2: UiState, state3: UiState
-    ): UiState {
-        return if (isSuccess(state1, state2, state3)) UiState.Success
-        else if (isLoading(state1, state2, state3)) UiState.Loading
-        else if (isTimeout(state1, state2, state3)) UiState.Timeout
-        else UiState.Error
-    }
-
-    private fun isSuccess(
-        state1: UiState, state2: UiState, state3: UiState
-    ) = state1 is UiState.Success && state2 is UiState.Success && state3 is UiState.Success
+        state1: UiState, state2: UiState, state3: UiState,
+    ) = if (isCritical(state1, state2, state3)) UiState.Error
+    else if (isTimeout(state1, state2, state3)) UiState.Timeout
+    else if (isLoading(state1, state2, state3)) UiState.Loading
+    else UiState.Success
 
     private fun isLoading(
         state1: UiState, state2: UiState, state3: UiState
-    ) = !isTimeout(state1, state2, state3)
-            && (state1 is UiState.Loading || state2 is UiState.Loading || state3 is UiState.Loading)
+    ) = state1 is UiState.Loading || state2 is UiState.Loading || state3 is UiState.Loading
 
     private fun isTimeout(
         state1: UiState, state2: UiState, state3: UiState,
-    ) = !isCritical(state1, state2, state3)
-            && (state1 is UiState.Timeout || state2 is UiState.Timeout || state3 is UiState.Timeout)
+    ) = state1 is UiState.Timeout || state2 is UiState.Timeout || state3 is UiState.Timeout
 
     private fun isCritical(
         state1: UiState, state2: UiState, state3: UiState
