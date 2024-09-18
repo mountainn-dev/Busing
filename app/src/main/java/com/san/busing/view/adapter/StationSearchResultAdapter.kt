@@ -4,7 +4,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.san.busing.databinding.ItemStationSearchResultBinding
-import com.san.busing.domain.model.StationSummaryModel
 import com.san.busing.domain.model.StationSummaryModels
 import com.san.busing.view.listener.ItemClickEventListener
 
@@ -23,7 +22,7 @@ class StationSearchResultAdapter(
         private fun loadContent(position: Int) {
             binding.txtStationName.text = items.get(position).name
             binding.txtStationMobileNo.text = items.get(position).mobileNo
-            binding.txtRegionName.text = items.get(position).regionName
+            binding.txtRegionName.text = items.get(position).region
         }
 
         private fun setItemClickEventListener(position: Int) {

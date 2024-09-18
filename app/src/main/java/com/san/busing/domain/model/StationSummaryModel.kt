@@ -12,13 +12,15 @@ data class StationSummaryModel(
     val id: Id,
     val mobileNo: String,
     val name: String,
-    val regionName: String
+    val region: String
 )
 
 data class StationSummaryModels(
     private val data: List<StationSummaryModel>
 ) {
-    private val models = data.sortedWith(compareBy<StationSummaryModel>{ it.name }.thenBy { it.regionName })
+    private val models = data.sortedWith(
+        compareBy<StationSummaryModel>{ it.name.length }.thenBy { it.name }.thenBy { it.region }
+    )
 
     fun get(index: Int) = models[index]
     fun count() = models.size

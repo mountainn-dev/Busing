@@ -19,15 +19,11 @@ import com.san.busing.data.source.remote.retrofit.BusArrivalService
 import com.san.busing.data.source.remote.retrofit.StationService
 import com.san.busing.data.vo.Id
 import com.san.busing.databinding.FragmentSearchStationBinding
-import com.san.busing.domain.model.RouteRecentSearchModel
-import com.san.busing.domain.model.StationRecentSearchModel
 import com.san.busing.domain.model.StationRecentSearchModels
-import com.san.busing.domain.model.StationSummaryModel
 import com.san.busing.domain.model.StationSummaryModels
 import com.san.busing.domain.state.UiState
 import com.san.busing.domain.utils.Const
 import com.san.busing.domain.utils.Utils
-import com.san.busing.view.adapter.RouteRecentSearchAdapter
 import com.san.busing.view.adapter.StationRecentSearchAdapter
 import com.san.busing.view.adapter.StationSearchResultAdapter
 import com.san.busing.view.listener.ItemClickEventListener
@@ -114,7 +110,7 @@ class SearchStationFragment : Fragment() {
         override fun onItemClickListener(position: Int) {
             sendUserToStationDetailScreen(
                 activity,
-                items.get(position).id, items.get(position).mobileNo, items.get(position).name, items.get(position).regionName
+                items.get(position).id, items.get(position).mobileNo, items.get(position).name, items.get(position).region
             )
         }
 
