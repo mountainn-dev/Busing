@@ -10,6 +10,7 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_padding_small"
         android:orientation="vertical"
         app:layout_constrainedWidth="true"
         app:layout_constraintStart_toStartOf="parent"
@@ -22,32 +23,42 @@
             android:id="@+id/txtRouteName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/text_large"
+            android:textSize="@dimen/text_size_detail_title"
             tools:text="routeName" />
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/route_next_station"
-                android:textSize="@dimen/text_small"/>
-
-            <TextView
                 android:id="@+id/txtNextStationName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/margin_padding_smallest"
                 android:textSize="@dimen/text_small"
-                android:layout_marginStart="@dimen/margin_padding_smallest"
                 android:maxLines="1"
                 android:ellipsize="marquee"
                 android:marqueeRepeatLimit="marquee_forever"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/txtNextStationTag"
+                app:layout_constraintHorizontal_bias="0"
                 tools:text="nextStationName"/>
 
-        </LinearLayout>
+            <TextView
+                android:id="@+id/txtNextStationTag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/next_station_tag"
+                android:textSize="@dimen/text_small"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </LinearLayout>
 
