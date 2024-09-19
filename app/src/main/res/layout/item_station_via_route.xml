@@ -51,49 +51,78 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent">
 
-        <LinearLayout
+        <FrameLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/txtPredictTimeFirst"
+            <LinearLayout
+                android:id="@+id/llArrivalFirst"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textStyle="bold"
-                tools:text="predictTimeFirst"/>
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/txtPredictTimeFirst"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    tools:text="predictTimeFirst"/>
+
+                <TextView
+                    android:id="@+id/txtLocationFirst"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_padding_smallest"
+                    android:textColor="@color/text_sub"
+                    tools:text="locationFirst"/>
+
+            </LinearLayout>
 
             <TextView
-                android:id="@+id/txtLocationFirst"
+                android:id="@+id/txtNoArrivalFirst"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_padding_smallest"
+                android:text="@string/no_arrival"
                 android:textColor="@color/text_sub"
-                tools:text="locationFirst"/>
+                android:visibility="gone"/>
 
-        </LinearLayout>
+        </FrameLayout>
 
-        <LinearLayout
+        <FrameLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/txtPredictTimeSecond"
+            <LinearLayout
+                android:id="@+id/llArrivalSecond"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textStyle="bold"
-                tools:text="predictTimeSecond"/>
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/txtPredictTimeSecond"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    tools:text="predictTimeSecond"/>
+
+                <TextView
+                    android:id="@+id/txtLocationSecond"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_padding_smallest"
+                    android:textColor="@color/text_sub"
+                    tools:text="locationSecond"/>
+
+            </LinearLayout>
 
             <TextView
-                android:id="@+id/txtLocationSecond"
+                android:id="@+id/txtNoArrivalSecond"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_padding_smallest"
-                android:textColor="@color/text_sub"
-                tools:text="locationSecond"/>
+                android:text="@string/no_arrival"
+                android:visibility="gone"/>
 
-        </LinearLayout>
+        </FrameLayout>
 
     </LinearLayout>
 

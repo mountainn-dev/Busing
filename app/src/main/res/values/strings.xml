@@ -34,5 +34,6 @@
 
         <!-- Detail -->
         <string name="route_next_station">다음 정류장</string>
+        <string name="no_arrival">도착 정보 없음</string>
 
 </resources>
