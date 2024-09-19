@@ -4,19 +4,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.san.busing.databinding.ItemStationViaRouteBinding
+import com.san.busing.databinding.ItemStationBusArrivalBinding
 import com.san.busing.domain.model.BusArrivalModel
 import com.san.busing.domain.model.RouteStationModel
 import com.san.busing.domain.model.StationViaRouteModels
 import com.san.busing.domain.utils.Const
 
-class StationViaRouteAdapter(
+class StationBusArrivalAdapter(
     private val routeItems: StationViaRouteModels,
     private val nextStations: List<RouteStationModel>,
     private val busArrivals: List<BusArrivalModel>
-) : RecyclerView.Adapter<StationViaRouteAdapter.StationViaRouteViewHolder>(){
-    inner class StationViaRouteViewHolder(
-        private val binding: ItemStationViaRouteBinding
+) : RecyclerView.Adapter<StationBusArrivalAdapter.StationBusArrivalViewHolder>(){
+    inner class StationBusArrivalViewHolder(
+        private val binding: ItemStationBusArrivalBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(position: Int) {
             loadContent(position)
@@ -86,23 +86,32 @@ class StationViaRouteAdapter(
         private fun busArrivalLocationMessage(location: Int) = String.format(REMAIN_BUS_ARRIVAL_LOCATION, location)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StationViaRouteViewHolder {
-        val binding = ItemStationViaRouteBinding.inflate(
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StationBusArrivalViewHolder {
+        val binding = ItemStationBusArrivalBinding.inflate(
             LayoutInflater.from(parent.context), parent, false
         )
+        initAnimEffect(binding)
 
-        return StationViaRouteViewHolder((binding))
+        return StationBusArrivalViewHolder((binding))
+    }
+
+    private fun initAnimEffect(binding: ItemStationBusArrivalBinding) {
+        initEllipsizeMarqueeEffect(binding)
+    }
+
+    private fun initEllipsizeMarqueeEffect(binding: ItemStationBusArrivalBinding) {
+        binding.txtNextStationName.setHorizontallyScrolling(true)
+        binding.txtNextStationName.isSelected = true
     }
 
     override fun getItemCount() = routeItems.count()
 
-    override fun onBindViewHolder(holder: StationViaRouteViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: StationBusArrivalViewHolder, position: Int) {
         holder.bind(position)
     }
 
     companion object {
         private const val REMAIN_BUS_ARRIVAL_TIME = "%d분"
         private const val REMAIN_BUS_ARRIVAL_LOCATION = "%d번째 전"
-        private const val NO_BUS_ARRIVAL = "도착 정보 없음"
     }
 }

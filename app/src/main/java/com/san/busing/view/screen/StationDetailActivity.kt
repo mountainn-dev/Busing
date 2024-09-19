@@ -22,7 +22,7 @@ import com.san.busing.databinding.ActivityStationDetailBinding
 import com.san.busing.domain.state.UiState
 import com.san.busing.domain.utils.Const
 import com.san.busing.domain.utils.Utils
-import com.san.busing.view.adapter.StationViaRouteAdapter
+import com.san.busing.view.adapter.StationBusArrivalAdapter
 import com.san.busing.view.viewmodel.StationDetailViewModel
 import com.san.busing.view.viewmodelfactory.StationDetailViewModelFactory
 import com.san.busing.view.viewmodelimpl.StationDetailViewModelImpl
@@ -57,10 +57,21 @@ class StationDetailActivity : AppCompatActivity() {
                 stationId, stationMobileNo, stationName, regionName
             )
         ).get(StationDetailViewModelImpl::class.java)
+
         viewModel.updateRecentSearch(this)
+        initAnimEffect()
         initToolbar(stationName, stationMobileNo, regionName)
         initObserver(this)
         initListener(this)
+    }
+
+    private fun initAnimEffect() {
+        initEllipsizeMarqueeEffect()
+    }
+
+    private fun initEllipsizeMarqueeEffect() {
+        binding.txtTitle.setHorizontallyScrolling(true)
+        binding.txtTitle.isSelected = true
     }
 
     private fun initToolbar(
@@ -68,7 +79,6 @@ class StationDetailActivity : AppCompatActivity() {
     ) {
         setTitle(name)
         setContent(name, mobileNo, regionName)
-        startEllipsizeMarqueeEffect()
     }
 
     private fun setTitle(stationName: String) {
@@ -81,11 +91,6 @@ class StationDetailActivity : AppCompatActivity() {
         binding.txtStationName.text = name
         binding.txtStationMobileNo.text = mobileNo
         binding.txtRegionName.text = regionName
-    }
-
-    private fun startEllipsizeMarqueeEffect() {
-        binding.txtTitle.setHorizontallyScrolling(true)
-        binding.txtTitle.isSelected = true
     }
 
     private fun initObserver(activity: Activity) {
@@ -122,7 +127,7 @@ class StationDetailActivity : AppCompatActivity() {
 
     private fun loadStationViaRoutes(activity: Activity) {
         val scrollState = binding.rvStationViaRouteList.layoutManager?.onSaveInstanceState()
-        binding.rvStationViaRouteList.adapter = StationViaRouteAdapter(
+        binding.rvStationViaRouteList.adapter = StationBusArrivalAdapter(
             viewModel.viaRoutes,
             viewModel.nextStations,
             viewModel.busArrivals

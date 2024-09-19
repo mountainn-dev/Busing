@@ -25,7 +25,7 @@
     <dimen name="height_search_layout">128dp</dimen>
 
         <!-- Recent Search -->
-        <dimen name="max_width_item_recent_search">120dp</dimen>
+        <dimen name="max_width_item_recent_search">100dp</dimen>
         <dimen name="size_icon_delete">20dp</dimen>
 
         <!-- Search Result -->
@@ -46,6 +46,6 @@
                 <dimen name="text_size_bus_info">12sp</dimen>
                 <dimen name="text_size_station_number">12sp</dimen>
 
-            <!-- Info -->
-            <dimen name="icon_size_range">20dp</dimen>
+                    <!-- Info -->
+                    <dimen name="icon_size_range">20dp</dimen>
 </resources>

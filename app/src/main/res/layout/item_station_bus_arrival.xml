@@ -11,16 +11,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        app:layout_constrainedWidth="true"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/llBusArrival"
+        app:layout_constraintHorizontal_bias="0">
 
         <TextView
             android:id="@+id/txtRouteName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_size_detail_title"
-            tools:text="routeName"/>
+            tools:text="routeName" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -37,6 +40,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_padding_smallest"
+                android:maxLines="1"
+                android:ellipsize="marquee"
+                android:marqueeRepeatLimit="marquee_forever"
                 tools:text="nextStationName"/>
 
         </LinearLayout>
@@ -44,9 +50,11 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/llBusArrival"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:gravity="end"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent">
@@ -90,7 +98,8 @@
 
         <FrameLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_padding_extremely_small">
 
             <LinearLayout
                 android:id="@+id/llArrivalSecond"

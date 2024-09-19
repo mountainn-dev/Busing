@@ -13,10 +13,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/margin_padding_default"
-        android:textSize="@dimen/text_large"
+        android:textSize="@dimen/text_default"
+        android:maxLines="1"
+        android:ellipsize="marquee"
+        app:layout_constrainedWidth="true"
+        android:marqueeRepeatLimit="marquee_forever"
         app:layout_constraintBottom_toTopOf="@id/txtStationMobileNo"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/txtRegionName"
+        app:layout_constraintHorizontal_bias="0"
         tools:text="stationName" />
 
     <TextView
