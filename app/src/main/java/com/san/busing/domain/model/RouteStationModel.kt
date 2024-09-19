@@ -16,7 +16,15 @@ data class RouteStationModel(
     val isTurnaround: Boolean,
     val positionX: Double,
     val positionY: Double
-)
+) {
+    private var routeId = Id.instance()
+
+    fun setViaRouteId(id: Id) {
+        routeId = id
+    }
+
+    fun getViaRouteId() = routeId
+}
 
 data class RouteStationModels(
     private val data: List<RouteStationModel>

@@ -38,7 +38,7 @@ class StationBusArrivalAdapter(
         }
 
         private fun loadNextStation(position: Int) {
-            val nextStationName = nextStations.find { routeItems.get(position).isSame(it.id) }?.name
+            val nextStationName = nextStations.find { routeItems.get(position).isSame(it.getViaRouteId()) }?.name
 
             if (nextStationName != null) loadNextStation(nextStationName)
             else unloadNextStation()

@@ -120,7 +120,8 @@ class StationDetailViewModelImpl(
         val result = routeRepository.getRouteStations(routeId)
 
         if (result is Success) {
-            val nextStation = result.data.getOrFirst(stationSeq - 1)
+            val nextStation = result.data.getOrFirst(stationSeq)
+            nextStation.setViaRouteId(routeId)
             nextStations.push(nextStation)
         } else {
             error = (result as Error).message()

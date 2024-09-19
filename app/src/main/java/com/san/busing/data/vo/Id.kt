@@ -7,8 +7,12 @@ data class Id(
     private val value: Int
 ) : Serializable {
     init {
-        require(value > 0) { ExceptionMessage.WRONG_ID_FORMAT_EXCEPTION }
+        require(value >= 0) { ExceptionMessage.WRONG_ID_FORMAT_EXCEPTION }
     }
 
     fun get() = value
+
+    companion object {
+        fun instance() = Id(0)
+    }
 }
