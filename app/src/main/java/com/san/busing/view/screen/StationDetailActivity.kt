@@ -130,7 +130,8 @@ class StationDetailActivity : AppCompatActivity() {
         binding.rvStationViaRouteList.adapter = StationBusArrivalAdapter(
             viewModel.viaRoutes,
             viewModel.nextStations,
-            viewModel.busArrivals
+            viewModel.busArrivals,
+            activity
         )
         binding.rvStationViaRouteList.layoutManager = LinearLayoutManager(activity)
         binding.rvStationViaRouteList.layoutManager?.onRestoreInstanceState(scrollState)

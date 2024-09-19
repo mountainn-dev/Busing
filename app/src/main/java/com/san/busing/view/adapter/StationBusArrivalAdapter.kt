@@ -1,25 +1,30 @@
 package com.san.busing.view.adapter
 
+import android.app.Activity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.san.busing.databinding.ItemStationBusArrivalBinding
 import com.san.busing.domain.model.BusArrivalModel
 import com.san.busing.domain.model.RouteStationModel
 import com.san.busing.domain.model.StationViaRouteModels
 import com.san.busing.domain.utils.Const
+import com.san.busing.domain.utils.Utils
 
 class StationBusArrivalAdapter(
     private val routeItems: StationViaRouteModels,
     private val nextStations: List<RouteStationModel>,
-    private val busArrivals: List<BusArrivalModel>
+    private val busArrivals: List<BusArrivalModel>,
+    private val activity: Activity
 ) : RecyclerView.Adapter<StationBusArrivalAdapter.StationBusArrivalViewHolder>(){
     inner class StationBusArrivalViewHolder(
         private val binding: ItemStationBusArrivalBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(position: Int) {
             loadContent(position)
+            setContentColor(position)
         }
 
         private fun loadContent(position: Int) {
@@ -80,6 +85,13 @@ class StationBusArrivalAdapter(
         private fun unloadBusArrivalSecond() {
             binding.llArrivalSecond.visibility = View.GONE
             binding.txtNoArrivalSecond.visibility = View.VISIBLE
+        }
+
+        private fun setContentColor(position: Int) {
+            val color = ContextCompat.getColor(
+                activity, Utils.getColorByRouteType(routeItems.get(position).routeSummary.type))
+
+            binding.txtRouteName.setTextColor(color)
         }
 
         private fun busArrivalPredictTimeMessage(time: Int) = String.format(REMAIN_BUS_ARRIVAL_TIME, time)
