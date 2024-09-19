@@ -55,6 +55,12 @@ class StationRepositoryImpl(
         }
     }
 
+    /**
+     * getBusArrival
+     *
+     * 버스 도착 정보 호출 api
+     * ServiceException$ResultException == "버스 도착 정보 없음"
+     */
     override suspend fun getBusArrival(
         stationId: Id,
         routeId: Id,

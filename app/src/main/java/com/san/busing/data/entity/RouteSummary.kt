@@ -6,6 +6,7 @@ import com.san.busing.domain.model.RouteSummaryModel
 import com.san.busing.domain.model.RouteSummaryModels
 import com.san.busing.domain.model.StationViaRouteModel
 import com.san.busing.domain.model.StationViaRouteModels
+import com.san.busing.domain.utils.Const
 import com.san.busing.domain.utils.Utils
 import com.tickaroo.tikxml.annotation.Element
 import com.tickaroo.tikxml.annotation.Path
@@ -25,14 +26,14 @@ data class RouteSummary(
     @PropertyElement val routeTypeCd: Int,
     @PropertyElement val routeTypeName: String,
     @PropertyElement val districtCd: Int,
-    @PropertyElement val regionName: String,
+    @PropertyElement val regionName: String?,
     @PropertyElement(name = "staOrder") val stationSeq: Int?
 ) {
     fun toRouteSummaryModel() = RouteSummaryModel(
         Id(routeId),
         Utils.getRouteType(routeTypeCd),
         routeName,
-        regionName
+        regionName(regionName)
     )
 
     fun toStationViaRouteModel() = StationViaRouteModel(
@@ -40,10 +41,15 @@ data class RouteSummary(
             Id(routeId),
             Utils.getRouteType(routeTypeCd),
             routeName,
-            regionName
+            regionName(regionName)
         ),
         stationSeq(stationSeq)
     )
+
+    private fun regionName(name: String?) = when(name != null) {
+        true -> name
+        false -> Const.EMPTY_TEXT
+    }
 
     private fun stationSeq(stationSeq: Int?) = when(stationSeq != null) {
         true -> stationSeq
