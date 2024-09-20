@@ -20,7 +20,6 @@ class RouteStationAdapter(
     private val stationItems: RouteStationModels,
     private val busItems: BusModels,
     private val itemClickEventListener: ItemClickEventListener,
-    private val context: Activity
 ) : RecyclerView.Adapter<RouteStationAdapter.RouteStationViewHolder>() {
     inner class RouteStationViewHolder(
         private val binding: ItemRouteStationBinding

@@ -11,7 +11,7 @@ data class RouteModelImpl(
     override val type: RouteType,
     override val name: String,
     override val regionName: String,
-) : Stoppable {
+) : RouteModel, Stoppable {
     override val stationSequence: Int
         get() = sequenceNumber
     private var sequenceNumber = Const.ZERO
@@ -22,9 +22,9 @@ data class RouteModelImpl(
     }
 }
 
-data class RouteModels(private val data: List<Stoppable>) {
+data class RouteModels(private val data: List<RouteModel>) {
     private val models = data.sortedWith(
-        compareBy<Stoppable>{ it.name.length }.thenBy { it.name }.thenBy { it.regionName }
+        compareBy<RouteModel>{ it.name.length }.thenBy { it.name }.thenBy { it.regionName }
     )
 
     fun get() = models

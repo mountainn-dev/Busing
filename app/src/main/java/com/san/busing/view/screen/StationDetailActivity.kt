@@ -1,6 +1,7 @@
 package com.san.busing.view.screen
 
 import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -19,10 +20,13 @@ import com.san.busing.data.source.remote.retrofit.RouteService
 import com.san.busing.data.source.remote.retrofit.StationService
 import com.san.busing.data.vo.Id
 import com.san.busing.databinding.ActivityStationDetailBinding
+import com.san.busing.domain.model.RouteModel
+import com.san.busing.domain.modelimpl.RouteModels
 import com.san.busing.domain.state.UiState
 import com.san.busing.domain.utils.Const
 import com.san.busing.domain.utils.Utils
 import com.san.busing.view.adapter.StationBusArrivalAdapter
+import com.san.busing.view.listener.ItemClickEventListener
 import com.san.busing.view.viewmodel.StationDetailViewModel
 import com.san.busing.view.viewmodelfactory.StationDetailViewModelFactory
 import com.san.busing.view.viewmodelimpl.StationDetailViewModelImpl
@@ -131,11 +135,30 @@ class StationDetailActivity : AppCompatActivity() {
             viewModel.viaRoutes,
             viewModel.nextStations,
             viewModel.busArrivals,
+            stationBusArrivalClickEventListener(viewModel.viaRoutes, activity),
             activity
         )
         binding.rvStationViaRouteList.layoutManager = LinearLayoutManager(activity)
         binding.rvStationViaRouteList.layoutManager?.onRestoreInstanceState(scrollState)
         toggleView(binding.rvStationViaRouteList)
+    }
+
+    private fun stationBusArrivalClickEventListener(
+        items: RouteModels,
+        activity: Activity
+    ) = object : ItemClickEventListener {
+        override fun onItemClickListener(position: Int) {
+            sendUserToRouteDetailScreen(items.get(position), activity)
+        }
+
+        override fun onDeleteButtonClickListener(position: Int) {}
+    }
+
+    private fun sendUserToRouteDetailScreen(item: RouteModel, activity: Activity) {
+        val intent = Intent(activity, RouteDetailActivity::class.java)
+        intent.putExtra(Const.TAG_ROUTE, item)
+
+        startActivity(intent)
     }
 
     private fun loadingView() {

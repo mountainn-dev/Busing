@@ -12,6 +12,7 @@ import com.san.busing.data.Success
 import com.san.busing.data.repository.RouteRepository
 import com.san.busing.data.repository.StationRepository
 import com.san.busing.data.vo.Id
+import com.san.busing.domain.model.Stoppable
 import com.san.busing.domain.modelimpl.BusArrivalModel
 import com.san.busing.domain.modelimpl.RouteModels
 import com.san.busing.domain.modelimpl.RouteStationModel
@@ -105,8 +106,8 @@ class StationDetailViewModelImpl(
             withContext(Dispatchers.IO) {
                 viaRoutes.get().flatMap {
                     listOf(
-                        async { loadNextStation(it.id, it.stationSequence) },
-                        async { loadBusArrival(it.id, it.stationSequence) }
+                        async { loadNextStation(it.id, (it as Stoppable).stationSequence) },
+                        async { loadBusArrival(it.id, (it as Stoppable).stationSequence) }
                     )
                 }.awaitAll().let {
                     nextStationState.postValue(UiState.Success)

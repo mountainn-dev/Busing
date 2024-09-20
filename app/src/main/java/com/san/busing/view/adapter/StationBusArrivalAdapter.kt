@@ -12,11 +12,13 @@ import com.san.busing.domain.modelimpl.RouteModels
 import com.san.busing.domain.modelimpl.RouteStationModel
 import com.san.busing.domain.utils.Const
 import com.san.busing.domain.utils.Utils
+import com.san.busing.view.listener.ItemClickEventListener
 
 class StationBusArrivalAdapter(
     private val routeItems: RouteModels,
     private val nextStations: List<RouteStationModel>,
     private val busArrivals: List<BusArrivalModel>,
+    private val itemClickEventListener: ItemClickEventListener,
     private val activity: Activity
 ) : RecyclerView.Adapter<StationBusArrivalAdapter.StationBusArrivalViewHolder>(){
     inner class StationBusArrivalViewHolder(
@@ -25,6 +27,7 @@ class StationBusArrivalAdapter(
         fun bind(position: Int) {
             loadContent(position)
             setContentColor(position)
+            setItemClickEventListener(position)
         }
 
         private fun loadContent(position: Int) {
@@ -91,6 +94,12 @@ class StationBusArrivalAdapter(
             val color = ContextCompat.getColor(activity, Utils.getColorByRouteType(routeItems.get(position).type))
 
             binding.txtRouteName.setTextColor(color)
+        }
+
+        private fun setItemClickEventListener(position: Int) {
+            binding.clStationBusArrivalItem.setOnClickListener {
+                itemClickEventListener.onItemClickListener(position)
+            }
         }
 
         private fun busArrivalPredictTimeMessage(time: Int) = String.format(REMAIN_BUS_ARRIVAL_TIME, time)
