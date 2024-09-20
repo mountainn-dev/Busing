@@ -155,10 +155,12 @@ class StationDetailActivity : AppCompatActivity() {
     private fun resetTimerObserver() = Observer<Int> {
         if (it == Const.ZERO) {
             binding.fabRefresh.setImageResource(R.drawable.ic_refresh)
+            binding.fabRefresh.isClickable = true
             binding.fabTime.visibility = View.GONE
         } else {
             if (binding.fabTime.visibility == View.GONE) {
                 binding.fabTime.visibility = View.VISIBLE
+                binding.fabRefresh.isClickable = false
                 binding.fabRefresh.setImageResource(android.R.color.transparent)
             }
             binding.fabTime.text = it.toString()

@@ -126,7 +126,6 @@ class StationDetailViewModelImpl(
         } else {
             error = (result as Error).message()
             if (result.isTimeOut()) nextStationState.postValue(UiState.Timeout)
-            if (result.isCritical()) nextStationState.postValue(UiState.Error)
         }
     }
 

@@ -33,7 +33,7 @@
     <string name="station_no_recent_search">최근 조회한 정류장이 없습니다.</string>
 
         <!-- Detail -->
-        <string name="next_station_tag">방면</string>
+        <string name="next_station_tag">Next</string>
         <string name="no_arrival">도착 정보 없음</string>
 
 </resources>

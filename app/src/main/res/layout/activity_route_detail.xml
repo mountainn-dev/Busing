@@ -339,7 +339,7 @@
                 android:textSize="@dimen/text_size_fab_time"
                 android:textColor="@color/white"
                 android:textStyle="bold"
-                android:visibility="gone"/>
+                android:visibility="gone" />
 
         </FrameLayout>
 

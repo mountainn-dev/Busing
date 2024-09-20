@@ -44,14 +44,14 @@ class RouteDetailViewModelImpl(
     override val resetTimer: LiveData<Int>
         get() = remainTime
     private val remainTime = MutableLiveData<Int>()
-    private var isLoadable = false
+    private var isLoadable = true
     private val timer = object: CountDownTimer(REMAIN_TOTAL_MILLIS, TIMER_INTERVAL_MILLIS) {
         override fun onTick(time: Long) {
-            if (!isLoadable) isLoadable = true
+            if (isLoadable) isLoadable = false
             remainTime.postValue((time/ TIMER_INTERVAL_MILLIS).toInt())
         }
         override fun onFinish() {
-            isLoadable = false
+            isLoadable = true
         }
     }
 
@@ -122,7 +122,7 @@ class RouteDetailViewModelImpl(
     }
 
     override fun loadWithTimer() {
-        if (!isLoadable) {
+        if (isLoadable) {
             timer.start()
             load()
         }

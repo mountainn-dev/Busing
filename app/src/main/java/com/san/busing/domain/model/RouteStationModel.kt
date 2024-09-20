@@ -17,13 +17,13 @@ data class RouteStationModel(
     val positionX: Double,
     val positionY: Double
 ) {
-    private var routeId = Id.instance()
+    private var viaRouteId = Id.instance()
 
     fun setViaRouteId(id: Id) {
-        routeId = id
+        viaRouteId = id
     }
 
-    fun getViaRouteId() = routeId
+    fun getViaRouteId() = viaRouteId
 }
 
 data class RouteStationModels(
