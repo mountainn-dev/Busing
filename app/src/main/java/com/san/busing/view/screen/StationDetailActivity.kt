@@ -21,6 +21,7 @@ import com.san.busing.data.source.remote.retrofit.StationService
 import com.san.busing.data.vo.Id
 import com.san.busing.databinding.ActivityStationDetailBinding
 import com.san.busing.domain.model.RouteModel
+import com.san.busing.domain.model.StationModel
 import com.san.busing.domain.modelimpl.RouteModels
 import com.san.busing.domain.state.UiState
 import com.san.busing.domain.utils.Const
@@ -51,20 +52,14 @@ class StationDetailActivity : AppCompatActivity() {
             Utils.getRetrofit(BuildConfig.LOCATION_URL).create(BusLocationService::class.java),
             this.applicationContext
         )
-        val stationId = intent.getSerializableExtra(Const.TAG_STATION_ID) as Id
-        val stationMobileNo = intent.getStringExtra(Const.TAG_STATION_MOBILE_NUMBER) ?: Const.EMPTY_TEXT
-        val stationName = intent.getStringExtra(Const.TAG_STATION_NAME) ?: Const.EMPTY_TEXT
-        val regionName = intent.getStringExtra(Const.TAG_REGION_NAME) ?: Const.EMPTY_TEXT
+        val station = intent.getSerializableExtra(Const.TAG_STATION) as StationModel
         viewModel = ViewModelProvider(
-            this, StationDetailViewModelFactory(
-                stationRepository, routeRepository,
-                stationId, stationMobileNo, stationName, regionName
-            )
+            this, StationDetailViewModelFactory(stationRepository, routeRepository, station)
         ).get(StationDetailViewModelImpl::class.java)
 
         viewModel.updateRecentSearch(this)
         initAnimEffect()
-        initToolbar(stationName, stationMobileNo, regionName)
+        initToolbar(station)
         initObserver(this)
         initListener(this)
     }
@@ -78,23 +73,19 @@ class StationDetailActivity : AppCompatActivity() {
         binding.txtTitle.isSelected = true
     }
 
-    private fun initToolbar(
-        name: String, mobileNo: String, regionName: String
-    ) {
-        setTitle(name)
-        setContent(name, mobileNo, regionName)
+    private fun initToolbar(station: StationModel) {
+        setTitle(station.name)
+        setContent(station)
     }
 
     private fun setTitle(stationName: String) {
         binding.txtTitle.text = stationName
     }
 
-    private fun setContent(
-        name: String, mobileNo: String, regionName: String
-    ) {
-        binding.txtStationName.text = name
-        binding.txtStationMobileNo.text = mobileNo
-        binding.txtRegionName.text = regionName
+    private fun setContent(station: StationModel) {
+        binding.txtStationName.text = station.name
+        binding.txtStationMobileNo.text = station.mobileNo
+        binding.txtRegionName.text = station.regionName
     }
 
     private fun initObserver(activity: Activity) {

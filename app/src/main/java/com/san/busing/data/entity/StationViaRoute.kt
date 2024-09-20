@@ -1,5 +1,6 @@
 package com.san.busing.data.entity
 
+import android.util.Log
 import com.san.busing.data.vo.Id
 import com.san.busing.domain.modelimpl.RouteModelImpl
 import com.san.busing.domain.modelimpl.RouteModels
@@ -10,6 +11,11 @@ import com.tickaroo.tikxml.annotation.Path
 import com.tickaroo.tikxml.annotation.PropertyElement
 import com.tickaroo.tikxml.annotation.Xml
 
+/**
+ * StationViaRoute
+ *
+ * 정류장을 경유하는 노선 정보를 담는 클래스
+ */
 @Xml(name = "busRouteList")
 data class StationViaRoute(
     @PropertyElement(name = "routeId") val id: Int,
@@ -23,16 +29,11 @@ data class StationViaRoute(
         Utils.getRouteType(typeCd),
         name,
         regionName(regionName)
-    ).also { it.setStationSequence(stationSeq(stationSeq)) }
+    ).also { it.setStationSequence(stationSeq) }
 
     private fun regionName(name: String?) = when(name != null) {
         true -> name
         false -> Const.EMPTY_TEXT
-    }
-
-    private fun stationSeq(stationSeq: Int?) = when(stationSeq != null) {
-        true -> stationSeq
-        false -> Const.ZERO
     }
 }
 

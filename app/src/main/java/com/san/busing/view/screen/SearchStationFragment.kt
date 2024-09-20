@@ -19,8 +19,9 @@ import com.san.busing.data.source.remote.retrofit.BusArrivalService
 import com.san.busing.data.source.remote.retrofit.StationService
 import com.san.busing.data.vo.Id
 import com.san.busing.databinding.FragmentSearchStationBinding
+import com.san.busing.domain.model.StationModel
 import com.san.busing.domain.modelimpl.StationRecentSearchModels
-import com.san.busing.domain.modelimpl.StationSummaryModels
+import com.san.busing.domain.modelimpl.StationModels
 import com.san.busing.domain.state.UiState
 import com.san.busing.domain.utils.Const
 import com.san.busing.domain.utils.Utils
@@ -76,7 +77,7 @@ class SearchStationFragment : Fragment() {
     private fun stateObserver(activity: Activity) = Observer<UiState> {
         when (it) {
             UiState.Success -> {
-                if (viewModel.stationSummaries.isEmpty()) noSearchResultView()
+                if (viewModel.stations.isEmpty()) noSearchResultView()
                 else loadSearchResult(activity)
             }
             UiState.Loading -> {
@@ -97,36 +98,27 @@ class SearchStationFragment : Fragment() {
 
     private fun loadSearchResult(activity: Activity) {
         binding.rvSearchResult.adapter = StationSearchResultAdapter(
-            viewModel.stationSummaries,
-            searchResultItemClickEventListener(viewModel.stationSummaries, activity),
+            viewModel.stations,
+            searchResultItemClickEventListener(viewModel.stations, activity),
         )
         binding.rvSearchResult.layoutManager = LinearLayoutManager(context)
         toggleView(binding.rvSearchResult)
     }
 
     private fun searchResultItemClickEventListener(
-        items: StationSummaryModels,
+        items: StationModels,
         activity: Activity
     ) = object : ItemClickEventListener {
         override fun onItemClickListener(position: Int) {
-            sendUserToStationDetailScreen(
-                activity,
-                items.get(position).id, items.get(position).mobileNo, items.get(position).name, items.get(position).region
-            )
+            sendUserToStationDetailScreen(activity, items.get(position))
         }
 
         override fun onDeleteButtonClickListener(position: Int) {}
     }
 
-    private fun sendUserToStationDetailScreen(
-        activity: Activity,
-        id: Id, mobileNo: String, name: String, regionName: String
-    ) {
+    private fun sendUserToStationDetailScreen(activity: Activity, station: StationModel) {
         val intent = Intent(activity, StationDetailActivity::class.java)
-        intent.putExtra(Const.TAG_STATION_ID, id)
-        intent.putExtra(Const.TAG_STATION_MOBILE_NUMBER, mobileNo)
-        intent.putExtra(Const.TAG_STATION_NAME, name)
-        intent.putExtra(Const.TAG_REGION_NAME, regionName)
+        intent.putExtra(Const.TAG_STATION, station)
 
         startActivity(intent)
     }
@@ -171,10 +163,7 @@ class SearchStationFragment : Fragment() {
         activity: Activity
     ) = object : ItemClickEventListener {
         override fun onItemClickListener(position: Int) {
-            sendUserToStationDetailScreen(
-                activity,
-                items.get(position).id, items.get(position).mobileNo, items.get(position).name, items.get(position).regionName
-            )
+            sendUserToStationDetailScreen(activity, items.get(position))
         }
 
         override fun onDeleteButtonClickListener(position: Int) {

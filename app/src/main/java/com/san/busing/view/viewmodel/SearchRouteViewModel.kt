@@ -9,7 +9,7 @@ import com.san.busing.domain.state.UiState
 interface SearchRouteViewModel {
     val state: LiveData<UiState>
     val recentSearchContentReady: LiveData<Boolean>
-    var routeSummaries: RouteModels
+    var routes: RouteModels
     var routeRecentSearches: RouteRecentSearchModels
     var keyword: String
     var error: String

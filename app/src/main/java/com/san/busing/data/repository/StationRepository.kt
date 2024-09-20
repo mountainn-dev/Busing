@@ -7,10 +7,10 @@ import com.san.busing.domain.modelimpl.BusArrivalModel
 import com.san.busing.domain.modelimpl.RouteModels
 import com.san.busing.domain.modelimpl.StationRecentSearchModel
 import com.san.busing.domain.modelimpl.StationRecentSearchModels
-import com.san.busing.domain.modelimpl.StationSummaryModels
+import com.san.busing.domain.modelimpl.StationModels
 
 interface StationRepository {
-    suspend fun getStations(keyword: String): Result<StationSummaryModels>
+    suspend fun getStations(keyword: String): Result<StationModels>
     suspend fun getStationViaRoutes(id: Id): Result<RouteModels>
     suspend fun getBusArrival(stationId: Id, routeId: Id, stationSeq: Int): Result<BusArrivalModel>
     suspend fun getRecentSearch(id: Id): Result<StationRecentSearchModel>

@@ -4,13 +4,13 @@ import android.app.Activity
 import androidx.lifecycle.LiveData
 import com.san.busing.domain.modelimpl.BusModels
 import com.san.busing.domain.modelimpl.RouteInfoModel
-import com.san.busing.domain.modelimpl.RouteStationModels
+import com.san.busing.domain.modelimpl.StationModels
 import com.san.busing.domain.state.UiState
 
 interface RouteDetailViewModel {
     val state: LiveData<UiState>
     val routeInfo: RouteInfoModel
-    val routeStations: RouteStationModels
+    val routeStations: StationModels
     val routeBuses: BusModels
     val resetTimer: LiveData<Int>
     val bookMark: LiveData<Boolean>

@@ -15,10 +15,10 @@ import com.san.busing.data.source.remote.retrofit.RouteService
 import com.san.busing.data.vo.Id
 import com.san.busing.domain.modelimpl.BusModels
 import com.san.busing.domain.modelimpl.RouteInfoModel
+import com.san.busing.domain.modelimpl.RouteModels
 import com.san.busing.domain.modelimpl.RouteRecentSearchModel
 import com.san.busing.domain.modelimpl.RouteRecentSearchModels
-import com.san.busing.domain.modelimpl.RouteStationModels
-import com.san.busing.domain.modelimpl.RouteModels
+import com.san.busing.domain.modelimpl.StationModels
 
 class RouteRepositoryImpl(
     private val routeService: RouteService,
@@ -52,14 +52,14 @@ class RouteRepositoryImpl(
         }
     }
 
-    override suspend fun getRouteStations(id: Id): Result<RouteStationModels> {
+    override suspend fun getRouteStations(id: Id): Result<StationModels> {
         try {
             val response = routeService.getBusStationList(BuildConfig.API_KEY, id.get())
             return Result.success(response.body()!!.get())
         } catch (e: ServiceException.ResultException) {
-            return Result.success(RouteStationModels.instance())
+            return Result.success(StationModels.instance())
         } catch (e: ServiceException.OptionalParameterException) {
-            return Result.success(RouteStationModels.instance())
+            return Result.success(StationModels.instance())
         } catch (e: Exception) {
             Log.e(ExceptionMessage.TAG_ROUTE_STATION_EXCEPTION, e.toString())
             return Result.error(e)

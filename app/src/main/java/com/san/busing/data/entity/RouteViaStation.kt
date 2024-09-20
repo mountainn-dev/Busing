@@ -2,42 +2,46 @@ package com.san.busing.data.entity
 
 import com.san.busing.data.exception.ExceptionMessage
 import com.san.busing.data.vo.Id
-import com.san.busing.domain.modelimpl.RouteStationModel
-import com.san.busing.domain.modelimpl.RouteStationModels
+import com.san.busing.domain.modelimpl.StationModelImpl
+import com.san.busing.domain.modelimpl.StationModels
+import com.san.busing.domain.utils.Const
 import com.tickaroo.tikxml.annotation.Element
 import com.tickaroo.tikxml.annotation.Path
 import com.tickaroo.tikxml.annotation.PropertyElement
 import com.tickaroo.tikxml.annotation.Xml
 
 /**
- * RouteStation
+ * RouteViaStation
  *
- * 노선 상세 화면의 정류장 아이템 정보를 담는 클래스
- * 노선 상세 화면 컨텐츠를 구성한다.
+ * 노선이 경유하는 정류장 정보를 담는 클래스
  */
 @Xml(name = "busRouteStationList")
-data class RouteStation(
-    @PropertyElement val stationId: Int,
+data class RouteViaStation(
+    @PropertyElement(name = "stationId") val id: Int,
     @PropertyElement val mobileNo: String?,
-    @PropertyElement val stationName: String,
+    @PropertyElement(name = "stationName") val name: String,
+    @PropertyElement val regionName: String?,
     @PropertyElement val stationSeq: Int,
     @PropertyElement val turnYn: String,
-    @PropertyElement(name = "x") val positionX: Double,
-    @PropertyElement(name = "y") val positionY: Double
 ) {
-    fun toRouteStationModel() = RouteStationModel(
-        Id(stationId),
+    fun toStationModel() = StationModelImpl(
+        Id(id),
         mobileNo(mobileNo),
-        stationName,
-        stationSeq,
-        isTurnaround(turnYn),
-        positionX,
-        positionY
-    )
+        name,
+        regionName(regionName)
+    ).also {
+        it.setStationSequence(stationSeq)
+        it.setIsTurnaround(isTurnaround(turnYn))
+    }
 
     private fun mobileNo(mobileNo: String?) = when(mobileNo.isNullOrBlank()) {
         true -> NO_MOBILE_NUMBER
         false -> mobileNo
+    }
+
+    private fun regionName(name: String?) = when(name != null) {
+        true -> name
+        false -> Const.EMPTY_TEXT
     }
 
     private fun isTurnaround(turnYn: String) = when(turnYn) {
@@ -54,10 +58,10 @@ data class RouteStation(
 }
 
 @Xml
-data class RouteStations(
-    @Path("msgBody") @Element val routeStations: List<RouteStation>
+data class RouteViaStations(
+    @Path("msgBody") @Element val routeViaStations: List<RouteViaStation>
 ) {
-    fun get(): RouteStationModels {
-        return RouteStationModels(routeStations.map { it.toRouteStationModel() })
+    fun get(): StationModels {
+        return StationModels(routeViaStations.map { it.toStationModel() })
     }
 }

@@ -22,7 +22,9 @@ data class RouteModelImpl(
     }
 }
 
-data class RouteModels(private val data: List<RouteModel>) {
+data class RouteModels(
+    private val data: List<RouteModel>
+) {
     private val models = data.sortedWith(
         compareBy<RouteModel>{ it.name.length }.thenBy { it.name }.thenBy { it.regionName }
     )

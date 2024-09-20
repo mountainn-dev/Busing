@@ -1,6 +1,6 @@
 package com.san.busing.view.adapter
 
-import android.app.Activity
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,16 +8,17 @@ import androidx.recyclerview.widget.RecyclerView
 import com.san.busing.R
 import com.san.busing.databinding.ItemRouteStationBinding
 import com.san.busing.domain.enums.RouteType
+import com.san.busing.domain.model.Passable
 import com.san.busing.domain.modelimpl.BusModel
 import com.san.busing.domain.modelimpl.BusModels
-import com.san.busing.domain.modelimpl.RouteStationModels
+import com.san.busing.domain.modelimpl.StationModels
 import com.san.busing.domain.utils.Const
 import com.san.busing.domain.utils.Utils
 import com.san.busing.view.listener.ItemClickEventListener
 
 class RouteStationAdapter(
     private val routeType: RouteType,
-    private val stationItems: RouteStationModels,
+    private val stationItems: StationModels,
     private val busItems: BusModels,
     private val itemClickEventListener: ItemClickEventListener,
 ) : RecyclerView.Adapter<RouteStationAdapter.RouteStationViewHolder>() {
@@ -37,7 +38,7 @@ class RouteStationAdapter(
 
         private fun loadStationInfo(position: Int) {
             binding.txtRouteStationName.text = stationItems.get(position).name
-            binding.txtRouteStationNumber.text = stationItems.get(position).number
+            binding.txtRouteStationNumber.text = stationItems.get(position).mobileNo
         }
 
         private fun loadBusInfo(position: Int) {
@@ -66,7 +67,7 @@ class RouteStationAdapter(
         }
 
         private fun loadTurnaround(position: Int) {
-            if (stationItems.get(position).isTurnaround) loadTurnaround()
+            if ((stationItems.get(position) as Passable).isTurnaround) loadTurnaround()
             else unloadTurnaround()
         }
 

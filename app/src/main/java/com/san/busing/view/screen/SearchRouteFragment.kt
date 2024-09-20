@@ -87,7 +87,7 @@ class SearchRouteFragment : Fragment() {
     private fun uiStateObserver(activity: Activity) = Observer<UiState> {
         when (it) {
             UiState.Success -> {
-                if (viewModel.routeSummaries.isEmpty()) noSearchResultView()
+                if (viewModel.routes.isEmpty()) noSearchResultView()
                 else loadSearchResult(activity)
             }
             UiState.Loading -> {
@@ -108,8 +108,8 @@ class SearchRouteFragment : Fragment() {
 
     private fun loadSearchResult(context: Activity) {
         binding.rvSearchResult.adapter = RouteSearchResultAdapter(
-            viewModel.routeSummaries,
-            searchResultItemClickEventListener(viewModel.routeSummaries, context),
+            viewModel.routes,
+            searchResultItemClickEventListener(viewModel.routes, context),
             context
         )
         binding.rvSearchResult.layoutManager = LinearLayoutManager(context)

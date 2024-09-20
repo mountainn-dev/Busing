@@ -17,7 +17,7 @@ import com.san.busing.domain.modelimpl.StationRecentSearchModel
 data class StationRecentSearch(
     @PrimaryKey val id: Int,
     val mobileNo: String,
-    val stationName: String,
+    val name: String,
     val regionName: String,
     val index: Long,
     val bookMark: Boolean
@@ -25,7 +25,7 @@ data class StationRecentSearch(
     fun toStationRecentSearchModel() = StationRecentSearchModel(
         Id(id),
         mobileNo,
-        stationName,
+        name,
         regionName,
         index,
         bookMark

@@ -25,7 +25,7 @@ class SearchRouteViewModelImpl(
     override val state: LiveData<UiState>
         get() = viewModelState
     private val viewModelState = MutableLiveData<UiState>()
-    override lateinit var routeSummaries: RouteModels
+    override lateinit var routes: RouteModels
 
     override val recentSearchContentReady: LiveData<Boolean>
         get() = recentSearchContentLoaded
@@ -53,7 +53,7 @@ class SearchRouteViewModelImpl(
         val result = repository.getRoutes(keyword)
 
         if (result is Success) {
-            routeSummaries = result.data
+            routes = result.data
             viewModelState.postValue(UiState.Success)
         } else {
             error = (result as Error).message()

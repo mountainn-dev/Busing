@@ -10,7 +10,7 @@ import com.san.busing.data.Success
 import com.san.busing.data.repository.StationRepository
 import com.san.busing.domain.modelimpl.StationRecentSearchModel
 import com.san.busing.domain.modelimpl.StationRecentSearchModels
-import com.san.busing.domain.modelimpl.StationSummaryModels
+import com.san.busing.domain.modelimpl.StationModels
 import com.san.busing.domain.state.UiState
 import com.san.busing.domain.utils.Const
 import com.san.busing.view.viewmodel.SearchStationViewModel
@@ -25,7 +25,7 @@ class SearchStationViewModelImpl(
     override val state: LiveData<UiState>
         get() = viewModelState
     private val viewModelState = MutableLiveData<UiState>()
-    override lateinit var stationSummaries: StationSummaryModels
+    override lateinit var stations: StationModels
 
     override val recentSearchContentReady: LiveData<Boolean>
         get() = recentSearchContentLoaded
@@ -53,7 +53,7 @@ class SearchStationViewModelImpl(
         val result = repository.getStations(keyword)
 
         if (result is Success) {
-            stationSummaries = result.data
+            stations = result.data
             viewModelState.postValue(UiState.Success)
         } else {
             error = (result as Error).message()

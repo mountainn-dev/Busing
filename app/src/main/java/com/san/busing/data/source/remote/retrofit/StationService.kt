@@ -1,7 +1,8 @@
 package com.san.busing.data.source.remote.retrofit
 
 import com.san.busing.data.entity.Routes
-import com.san.busing.data.entity.StationSummaries
+import com.san.busing.data.entity.StationViaRoutes
+import com.san.busing.data.entity.Stations
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -11,11 +12,11 @@ interface StationService {
     suspend fun getBusStationList(
         @Query("serviceKey") key: String,
         @Query("keyword") keyword: String
-    ): Response<StationSummaries>
+    ): Response<Stations>
 
     @GET("getBusStationViaRouteList")
     suspend fun getBusStationViaRouteList(
         @Query("serviceKey") key: String,
         @Query("stationId") id: Int
-    ): Response<Routes>
+    ): Response<StationViaRoutes>
 }

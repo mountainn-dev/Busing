@@ -16,11 +16,12 @@ import com.san.busing.R
 import com.san.busing.data.repositoryimpl.RouteRepositoryImpl
 import com.san.busing.data.source.remote.retrofit.BusLocationService
 import com.san.busing.data.source.remote.retrofit.RouteService
-import com.san.busing.data.vo.Id
 import com.san.busing.databinding.ActivityRouteDetailBinding
 import com.san.busing.domain.enums.RouteType
+import com.san.busing.domain.model.Passable
 import com.san.busing.domain.model.RouteModel
-import com.san.busing.domain.modelimpl.RouteStationModels
+import com.san.busing.domain.model.StationModel
+import com.san.busing.domain.modelimpl.StationModels
 import com.san.busing.domain.state.UiState
 import com.san.busing.domain.utils.Const
 import com.san.busing.domain.utils.Utils
@@ -129,7 +130,7 @@ class RouteDetailActivity : AppCompatActivity() {
             routeType,
             viewModel.routeStations,
             viewModel.routeBuses,
-            routeStationClickEventListener(viewModel.routeStations)
+            routeStationClickEventListener(viewModel.routeStations, activity)
         )
         binding.rvBusRouteStationList.layoutManager = LinearLayoutManager(activity)
         binding.txtRouteBusCount.text = String.format(ROUTE_BUS_COUNT, viewModel.routeBuses.count())
@@ -139,13 +140,21 @@ class RouteDetailActivity : AppCompatActivity() {
     }
 
     private fun routeStationClickEventListener(
-        items: RouteStationModels
+        items: StationModels,
+        activity: Activity
     ) = object: ItemClickEventListener {
         override fun onItemClickListener(position: Int) {
-
+            sendUserToStationDetailScreen(items.get(position), activity)
         }
 
         override fun onDeleteButtonClickListener(position: Int) {}
+    }
+
+    private fun sendUserToStationDetailScreen(item: StationModel, activity: Activity) {
+        val intent = Intent(activity, StationDetailActivity::class.java)
+        intent.putExtra(Const.TAG_STATION, item)
+
+        startActivity(intent)
     }
 
     private fun setBtnScrollToEndStation() {
@@ -158,7 +167,7 @@ class RouteDetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun turnaroundIndex() = viewModel.routeStations.turnaroundSeqNum() ?: DEFAULT_TURNAROUND_INDEX
+    private fun turnaroundIndex() = viewModel.routeStations.turnaroundSequence() ?: DEFAULT_TURNAROUND_INDEX
 
     private fun unloadRouteInfo() {
         binding.txtRouteStartStation.text = Const.EMPTY_TEXT

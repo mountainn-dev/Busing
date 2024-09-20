@@ -17,7 +17,7 @@ import com.san.busing.domain.modelimpl.BusArrivalModel
 import com.san.busing.domain.modelimpl.RouteModels
 import com.san.busing.domain.modelimpl.StationRecentSearchModel
 import com.san.busing.domain.modelimpl.StationRecentSearchModels
-import com.san.busing.domain.modelimpl.StationSummaryModels
+import com.san.busing.domain.modelimpl.StationModels
 
 class StationRepositoryImpl(
     private val stationService: StationService,
@@ -27,14 +27,16 @@ class StationRepositoryImpl(
     private val db = Room.databaseBuilder(
         this.context, RecentSearchDatabase::class.java, "recentSearch").build()
 
-    override suspend fun getStations(keyword: String): Result<StationSummaryModels> {
+    override suspend fun getStations(keyword: String): Result<StationModels> {
         try {
             val response = stationService.getBusStationList(BuildConfig.API_KEY, keyword)
-            return Result.success(response.body()!!.get())
+            val stations = response.body()!!.get()
+            stations.sort()
+            return Result.success(stations)
         } catch (e: ServiceException.ResultException) {
-            return Result.success(StationSummaryModels.instance())
+            return Result.success(StationModels.instance())
         } catch (e: ServiceException.OptionalParameterException) {
-            return Result.success(StationSummaryModels.instance())
+            return Result.success(StationModels.instance())
         } catch (e: Exception) {
             Log.e(ExceptionMessage.TAG_STATION_SUMMARY_EXCEPTION, e.toString())
             return Result.error(e)

@@ -7,13 +7,13 @@ import com.san.busing.domain.modelimpl.BusModels
 import com.san.busing.domain.modelimpl.RouteInfoModel
 import com.san.busing.domain.modelimpl.RouteRecentSearchModel
 import com.san.busing.domain.modelimpl.RouteRecentSearchModels
-import com.san.busing.domain.modelimpl.RouteStationModels
 import com.san.busing.domain.modelimpl.RouteModels
+import com.san.busing.domain.modelimpl.StationModels
 
 interface RouteRepository {
     suspend fun getRouteInfo(id: Id): Result<RouteInfoModel>
     suspend fun getRoutes(keyword: String): Result<RouteModels>
-    suspend fun getRouteStations(id: Id): Result<RouteStationModels>
+    suspend fun getRouteStations(id: Id): Result<StationModels>
     suspend fun getBusLocations(id: Id): Result<BusModels>
     suspend fun getRecentSearch(id: Id): Result<RouteRecentSearchModel>
     suspend fun getAllRecentSearch(): Result<RouteRecentSearchModels>

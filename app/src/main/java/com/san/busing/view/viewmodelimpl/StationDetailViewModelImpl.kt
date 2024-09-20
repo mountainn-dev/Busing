@@ -12,10 +12,11 @@ import com.san.busing.data.Success
 import com.san.busing.data.repository.RouteRepository
 import com.san.busing.data.repository.StationRepository
 import com.san.busing.data.vo.Id
+import com.san.busing.domain.model.Passable
+import com.san.busing.domain.model.StationModel
 import com.san.busing.domain.model.Stoppable
 import com.san.busing.domain.modelimpl.BusArrivalModel
 import com.san.busing.domain.modelimpl.RouteModels
-import com.san.busing.domain.modelimpl.RouteStationModel
 import com.san.busing.domain.modelimpl.StationRecentSearchModel
 import com.san.busing.domain.state.UiState
 import com.san.busing.view.viewmodel.StationDetailViewModel
@@ -30,10 +31,7 @@ import java.util.Stack
 class StationDetailViewModelImpl(
     private val stationRepository: StationRepository,
     private val routeRepository: RouteRepository,
-    private val stationId: Id,
-    private val stationMobileNo: String,
-    private val stationName: String,
-    private val regionName: String
+    private val station: StationModel
 ) : StationDetailViewModel, ViewModel() {
     override val state: LiveData<UiState>
         get() = uiState
@@ -42,7 +40,7 @@ class StationDetailViewModelImpl(
     private val nextStationState = MutableLiveData<UiState>(UiState.Loading)
     private val busArrivalState = MutableLiveData<UiState>(UiState.Loading)
     override lateinit var viaRoutes: RouteModels
-    override val nextStations = Stack<RouteStationModel>()
+    override val nextStations = Stack<StationModel>()
     override val busArrivals = Stack<BusArrivalModel>()
 
     override val resetTimer: LiveData<Int>
@@ -84,7 +82,7 @@ class StationDetailViewModelImpl(
     }
 
     private suspend fun loadViaRoutes() {
-        val result = stationRepository.getStationViaRoutes(stationId)
+        val result = stationRepository.getStationViaRoutes(station.id)
 
         if (result is Success) {
             viaRoutes = result.data
@@ -122,7 +120,7 @@ class StationDetailViewModelImpl(
 
         if (result is Success) {
             val nextStation = result.data.getOrFirst(stationSeq)
-            nextStation.setViaRouteId(routeId)
+            (nextStation as Passable).setVehicleId(routeId)
             nextStations.push(nextStation)
         } else {
             error = (result as Error).message()
@@ -131,7 +129,7 @@ class StationDetailViewModelImpl(
     }
 
     private suspend fun loadBusArrival(routeId: Id, stationSeq: Int) {
-        val result = stationRepository.getBusArrival(stationId, routeId, stationSeq)
+        val result = stationRepository.getBusArrival(station.id, routeId, stationSeq)
 
         if (result is Success) {
             busArrivals.push(result.data)
@@ -162,7 +160,7 @@ class StationDetailViewModelImpl(
     }
 
     private suspend fun loadRecentSearch(activity: Activity) {
-        val result = stationRepository.getRecentSearch(stationId)
+        val result = stationRepository.getRecentSearch(station.id)
 
         if (result is Success) {
             val model = result.data
@@ -173,7 +171,7 @@ class StationDetailViewModelImpl(
         }
         else {
             recentSearch = StationRecentSearchModel(
-                stationId, stationMobileNo, stationName, regionName,
+                station.id, station.mobileNo, station.name, station.regionName,
                 nextRecentSearchIndex(activity), false)
             isBookMark.postValue(false)
             error = (result as Error).message()

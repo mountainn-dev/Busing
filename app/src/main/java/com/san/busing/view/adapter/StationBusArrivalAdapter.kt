@@ -7,16 +7,18 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.san.busing.databinding.ItemStationBusArrivalBinding
+import com.san.busing.domain.model.Passable
+import com.san.busing.domain.model.StationModel
 import com.san.busing.domain.modelimpl.BusArrivalModel
 import com.san.busing.domain.modelimpl.RouteModels
-import com.san.busing.domain.modelimpl.RouteStationModel
+import com.san.busing.domain.modelimpl.StationModels
 import com.san.busing.domain.utils.Const
 import com.san.busing.domain.utils.Utils
 import com.san.busing.view.listener.ItemClickEventListener
 
 class StationBusArrivalAdapter(
     private val routeItems: RouteModels,
-    private val nextStations: List<RouteStationModel>,
+    private val nextStations: List<StationModel>,
     private val busArrivals: List<BusArrivalModel>,
     private val itemClickEventListener: ItemClickEventListener,
     private val activity: Activity
@@ -41,7 +43,7 @@ class StationBusArrivalAdapter(
         }
 
         private fun loadNextStation(position: Int) {
-            val nextStationName = nextStations.find { routeItems.get(position).isSame(it.getViaRouteId()) }?.name
+            val nextStationName = nextStations.find { routeItems.get(position).isSame((it as Passable).vehicleId) }?.name
 
             if (nextStationName != null) loadNextStation(nextStationName)
             else unloadNextStation()

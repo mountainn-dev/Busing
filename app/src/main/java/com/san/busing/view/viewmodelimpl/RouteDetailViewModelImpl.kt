@@ -14,7 +14,7 @@ import com.san.busing.domain.model.RouteModel
 import com.san.busing.domain.modelimpl.BusModels
 import com.san.busing.domain.modelimpl.RouteInfoModel
 import com.san.busing.domain.modelimpl.RouteRecentSearchModel
-import com.san.busing.domain.modelimpl.RouteStationModels
+import com.san.busing.domain.modelimpl.StationModels
 import com.san.busing.domain.state.UiState
 import com.san.busing.view.viewmodel.RouteDetailViewModel
 import kotlinx.coroutines.Dispatchers
@@ -35,7 +35,7 @@ class RouteDetailViewModelImpl(
     private val routeStationState = MutableLiveData<UiState>(UiState.Loading)
     private val routeBusState = MutableLiveData<UiState>(UiState.Loading)
     override lateinit var routeInfo: RouteInfoModel
-    override lateinit var routeStations: RouteStationModels
+    override lateinit var routeStations: StationModels
     override lateinit var routeBuses: BusModels
 
     override val resetTimer: LiveData<Int>
