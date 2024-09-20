@@ -11,36 +11,30 @@ import com.tickaroo.tikxml.annotation.PropertyElement
 import com.tickaroo.tikxml.annotation.Xml
 
 @Xml(name = "busRouteList")
-data class StationViaRoute(
+data class Route(
     @PropertyElement(name = "routeId") val id: Int,
     @PropertyElement(name = "routeTypeCd") val typeCd: Int,
     @PropertyElement(name = "routeName") val name: String,
     @PropertyElement val regionName: String?,
-    @PropertyElement(name = "staOrder") val stationSeq: Int
 ) {
     fun toRouteModel() = RouteModelImpl(
         Id(id),
         Utils.getRouteType(typeCd),
         name,
         regionName(regionName)
-    ).also { it.setStationSequence(stationSeq(stationSeq)) }
+    )
 
     private fun regionName(name: String?) = when(name != null) {
         true -> name
         false -> Const.EMPTY_TEXT
     }
-
-    private fun stationSeq(stationSeq: Int?) = when(stationSeq != null) {
-        true -> stationSeq
-        false -> Const.ZERO
-    }
 }
 
 @Xml
-data class StationViaRoutes(
-    @Path("msgBody") @Element val stationViaRoutes: List<StationViaRoute>
+data class Routes(
+    @Path("msgBody") @Element val routes: List<Route>
 ) {
     fun get(): RouteModels {
-        return RouteModels(stationViaRoutes.map { it.toRouteModel() })
+        return RouteModels(routes.map { it.toRouteModel() })
     }
 }

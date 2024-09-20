@@ -1,7 +1,7 @@
 package com.san.busing.data.source.remote.retrofit
 
 import com.san.busing.data.entity.RouteInfoItem
-import com.san.busing.data.entity.RouteSummaries
+import com.san.busing.data.entity.Routes
 import com.san.busing.data.entity.RouteStations
 import retrofit2.Response
 import retrofit2.http.*
@@ -11,7 +11,7 @@ interface RouteService {
     suspend fun getBusRouteList(
         @Query("serviceKey") key: String,
         @Query("keyword") keyword: String
-    ): Response<RouteSummaries>
+    ): Response<Routes>
 
     @GET("getBusRouteInfoItem")
     suspend fun getBusRouteInfoItem(

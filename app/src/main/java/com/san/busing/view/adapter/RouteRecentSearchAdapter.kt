@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.san.busing.databinding.ItemRouteRecentSearchBinding
-import com.san.busing.domain.model.RouteRecentSearchModels
+import com.san.busing.domain.modelimpl.RouteRecentSearchModels
 import com.san.busing.domain.utils.Utils
 import com.san.busing.view.listener.ItemClickEventListener
 

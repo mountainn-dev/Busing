@@ -13,11 +13,11 @@ import com.san.busing.data.source.local.database.RecentSearchDatabase
 import com.san.busing.data.source.remote.retrofit.BusArrivalService
 import com.san.busing.data.source.remote.retrofit.StationService
 import com.san.busing.data.vo.Id
-import com.san.busing.domain.model.BusArrivalModel
-import com.san.busing.domain.model.StationRecentSearchModel
-import com.san.busing.domain.model.StationRecentSearchModels
-import com.san.busing.domain.model.StationSummaryModels
-import com.san.busing.domain.model.StationViaRouteModels
+import com.san.busing.domain.modelimpl.BusArrivalModel
+import com.san.busing.domain.modelimpl.RouteModels
+import com.san.busing.domain.modelimpl.StationRecentSearchModel
+import com.san.busing.domain.modelimpl.StationRecentSearchModels
+import com.san.busing.domain.modelimpl.StationSummaryModels
 
 class StationRepositoryImpl(
     private val stationService: StationService,
@@ -41,14 +41,14 @@ class StationRepositoryImpl(
         }
     }
 
-    override suspend fun getStationViaRoutes(id: Id): Result<StationViaRouteModels> {
+    override suspend fun getStationViaRoutes(id: Id): Result<RouteModels> {
         try {
             val response = stationService.getBusStationViaRouteList(BuildConfig.API_KEY, id.get())
-            return Result.success(response.body()!!.getAsStationViaRouteModels())
+            return Result.success(response.body()!!.get())
         } catch (e: ServiceException.ResultException) {
-            return Result.success(StationViaRouteModels.instance())
+            return Result.success(RouteModels.instance())
         } catch (e: ServiceException.OptionalParameterException) {
-            return Result.success(StationViaRouteModels.instance())
+            return Result.success(RouteModels.instance())
         } catch (e: Exception) {
             Log.e(ExceptionMessage.TAG_STATION_VIA_ROUTE_EXCEPTION, e.toString())
             return Result.error(e)

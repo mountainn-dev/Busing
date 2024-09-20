@@ -1,4 +1,4 @@
-package com.san.busing.domain.model
+package com.san.busing.domain.modelimpl
 
 import com.san.busing.data.vo.Id
 import com.san.busing.domain.enums.PlateType

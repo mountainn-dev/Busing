@@ -2,8 +2,8 @@ package com.san.busing.data.entity
 
 import com.san.busing.data.exception.ExceptionMessage
 import com.san.busing.data.vo.Id
-import com.san.busing.domain.model.RouteStationModel
-import com.san.busing.domain.model.RouteStationModels
+import com.san.busing.domain.modelimpl.RouteStationModel
+import com.san.busing.domain.modelimpl.RouteStationModels
 import com.tickaroo.tikxml.annotation.Element
 import com.tickaroo.tikxml.annotation.Path
 import com.tickaroo.tikxml.annotation.PropertyElement

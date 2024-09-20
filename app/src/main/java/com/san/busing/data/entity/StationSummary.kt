@@ -1,8 +1,8 @@
 package com.san.busing.data.entity
 
 import com.san.busing.data.vo.Id
-import com.san.busing.domain.model.StationSummaryModel
-import com.san.busing.domain.model.StationSummaryModels
+import com.san.busing.domain.modelimpl.StationSummaryModel
+import com.san.busing.domain.modelimpl.StationSummaryModels
 import com.tickaroo.tikxml.annotation.Element
 import com.tickaroo.tikxml.annotation.Path
 import com.tickaroo.tikxml.annotation.PropertyElement

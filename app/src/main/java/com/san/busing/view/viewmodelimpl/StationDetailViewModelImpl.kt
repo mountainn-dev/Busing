@@ -12,10 +12,10 @@ import com.san.busing.data.Success
 import com.san.busing.data.repository.RouteRepository
 import com.san.busing.data.repository.StationRepository
 import com.san.busing.data.vo.Id
-import com.san.busing.domain.model.BusArrivalModel
-import com.san.busing.domain.model.RouteStationModel
-import com.san.busing.domain.model.StationRecentSearchModel
-import com.san.busing.domain.model.StationViaRouteModels
+import com.san.busing.domain.modelimpl.BusArrivalModel
+import com.san.busing.domain.modelimpl.RouteModels
+import com.san.busing.domain.modelimpl.RouteStationModel
+import com.san.busing.domain.modelimpl.StationRecentSearchModel
 import com.san.busing.domain.state.UiState
 import com.san.busing.view.viewmodel.StationDetailViewModel
 import kotlinx.coroutines.Dispatchers
@@ -40,7 +40,7 @@ class StationDetailViewModelImpl(
     private val viaRouteState = MutableLiveData<UiState>(UiState.Loading)
     private val nextStationState = MutableLiveData<UiState>(UiState.Loading)
     private val busArrivalState = MutableLiveData<UiState>(UiState.Loading)
-    override lateinit var viaRoutes: StationViaRouteModels
+    override lateinit var viaRoutes: RouteModels
     override val nextStations = Stack<RouteStationModel>()
     override val busArrivals = Stack<BusArrivalModel>()
 
@@ -105,8 +105,8 @@ class StationDetailViewModelImpl(
             withContext(Dispatchers.IO) {
                 viaRoutes.get().flatMap {
                     listOf(
-                        async { loadNextStation(it.routeSummary.id, it.sequenceNumber) },
-                        async { loadBusArrival(it.routeSummary.id, it.sequenceNumber) }
+                        async { loadNextStation(it.id, it.stationSequence) },
+                        async { loadBusArrival(it.id, it.stationSequence) }
                     )
                 }.awaitAll().let {
                     nextStationState.postValue(UiState.Success)

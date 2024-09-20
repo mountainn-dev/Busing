@@ -19,7 +19,8 @@ import com.san.busing.data.source.remote.retrofit.RouteService
 import com.san.busing.data.vo.Id
 import com.san.busing.databinding.ActivityRouteDetailBinding
 import com.san.busing.domain.enums.RouteType
-import com.san.busing.domain.model.RouteStationModels
+import com.san.busing.domain.model.RouteModel
+import com.san.busing.domain.modelimpl.RouteStationModels
 import com.san.busing.domain.state.UiState
 import com.san.busing.domain.utils.Const
 import com.san.busing.domain.utils.Utils
@@ -44,27 +45,22 @@ class RouteDetailActivity : AppCompatActivity() {
             Utils.getRetrofit(BuildConfig.LOCATION_URL).create(BusLocationService::class.java),
             this.applicationContext
         )
-        val routeId = intent.getSerializableExtra(Const.TAG_ROUTE_ID) as Id
-        val routeName = intent.getStringExtra(Const.TAG_ROUTE_NAME) ?: Const.EMPTY_TEXT
-        val routeType = intent.getSerializableExtra(Const.TAG_ROUTE_TYPE) as RouteType
+        val route = intent.getSerializableExtra(Const.TAG_ROUTE) as RouteModel
         viewModel = ViewModelProvider(
             this, RouteDetailViewModelFactory(
-                busRouteRepository, routeId, routeName, routeType
+                busRouteRepository, route
             )
         ).get(RouteDetailViewModelImpl::class.java)
 
         viewModel.updateRecentSearch(this)
-        initToolbar(routeName, routeType, this)
-        initObserver(routeType, this)
+        initToolbar(route, this)
+        initObserver(route, this)
         initListener(this)
     }
 
-    private fun initToolbar(
-        routeName: String, routeType: RouteType,
-        activity: Activity
-    ) {
-        setTitle(routeName)
-        setBgColor(routeType, activity)
+    private fun initToolbar(route: RouteModel, activity: Activity) {
+        setTitle(route.name)
+        setBgColor(route.type, activity)
         startEllipsizeMarqueeEffect()
     }
 
@@ -84,10 +80,10 @@ class RouteDetailActivity : AppCompatActivity() {
         binding.txtTitle.isSelected = true
     }
 
-    private fun initObserver(routeType: RouteType, activity: Activity) {
+    private fun initObserver(route: RouteModel, activity: Activity) {
         viewModel.state.observe(
             activity as LifecycleOwner,
-            uiStateObserver(routeType, activity)
+            uiStateObserver(route.type, activity)
         )
         viewModel.resetTimer.observe(
             activity as LifecycleOwner,
@@ -150,9 +146,7 @@ class RouteDetailActivity : AppCompatActivity() {
 
         }
 
-        override fun onDeleteButtonClickListener(position: Int) {
-
-        }
+        override fun onDeleteButtonClickListener(position: Int) {}
     }
 
     private fun setBtnScrollToEndStation() {

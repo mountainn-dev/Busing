@@ -16,23 +16,21 @@ import com.san.busing.BuildConfig
 import com.san.busing.data.repositoryimpl.RouteRepositoryImpl
 import com.san.busing.data.source.remote.retrofit.BusLocationService
 import com.san.busing.data.source.remote.retrofit.RouteService
-import com.san.busing.data.vo.Id
 import com.san.busing.databinding.FragmentSearchRouteBinding
-import com.san.busing.domain.enums.RouteType
-import com.san.busing.domain.model.RouteRecentSearchModel
-import com.san.busing.domain.model.RouteRecentSearchModels
-import com.san.busing.domain.model.RouteSummaryModel
-import com.san.busing.domain.model.RouteSummaryModels
+import com.san.busing.domain.model.RouteModel
+import com.san.busing.domain.modelimpl.RouteModels
+import com.san.busing.domain.modelimpl.RouteRecentSearchModels
 import com.san.busing.domain.state.UiState
 import com.san.busing.domain.utils.Const
 import com.san.busing.domain.utils.Utils
-import com.san.busing.view.viewmodel.SearchRouteViewModel
-import com.san.busing.view.viewmodelfactory.SearchRouteViewModelFactory
-import com.san.busing.view.viewmodelimpl.SearchRouteViewModelImpl
 import com.san.busing.view.adapter.RouteRecentSearchAdapter
 import com.san.busing.view.adapter.RouteSearchResultAdapter
 import com.san.busing.view.listener.ItemClickEventListener
 import com.san.busing.view.listener.RecyclerViewScrollListener
+import com.san.busing.view.viewmodel.SearchRouteViewModel
+import com.san.busing.view.viewmodelfactory.SearchRouteViewModelFactory
+import com.san.busing.view.viewmodelimpl.SearchRouteViewModelImpl
+import com.san.busing.view.widget.ErrorToast
 
 class SearchRouteFragment : Fragment() {
     private lateinit var binding: FragmentSearchRouteBinding
@@ -86,11 +84,11 @@ class SearchRouteFragment : Fragment() {
         )
     }
 
-    private fun uiStateObserver(context: Activity) = Observer<UiState> {
+    private fun uiStateObserver(activity: Activity) = Observer<UiState> {
         when (it) {
             UiState.Success -> {
                 if (viewModel.routeSummaries.isEmpty()) noSearchResultView()
-                else loadSearchResult(context)
+                else loadSearchResult(activity)
             }
             UiState.Loading -> {
                 loadingView()
@@ -99,7 +97,7 @@ class SearchRouteFragment : Fragment() {
                 timeoutView()
             }
             UiState.Error -> {
-                errorView()
+                errorView(activity)
             }
         }
     }
@@ -119,26 +117,19 @@ class SearchRouteFragment : Fragment() {
     }
 
     private fun searchResultItemClickEventListener(
-        items: RouteSummaryModels,
+        items: RouteModels,
         activity: Activity
     ) = object : ItemClickEventListener {
         override fun onItemClickListener(position: Int) {
-            sendUserToRouteDetailScreen(
-                activity, items.get(position).id, items.get(position).name, items.get(position).type
-            )
+            sendUserToRouteDetailScreen(activity, items.get(position))
         }
 
         override fun onDeleteButtonClickListener(position: Int) {}
     }
 
-    private fun sendUserToRouteDetailScreen(
-        activity: Activity,
-        id: Id, name: String, type: RouteType
-    ) {
+    private fun sendUserToRouteDetailScreen(activity: Activity, route: RouteModel) {
         val intent = Intent(activity, RouteDetailActivity::class.java)
-        intent.putExtra(Const.TAG_ROUTE_ID, id)
-        intent.putExtra(Const.TAG_ROUTE_NAME, name)
-        intent.putExtra(Const.TAG_ROUTE_TYPE, type)
+        intent.putExtra(Const.TAG_ROUTE, route)
 
         activity.startActivity(intent)
     }
@@ -151,8 +142,10 @@ class SearchRouteFragment : Fragment() {
         toggleView(binding.llTimeout)
     }
 
-    private fun errorView() {
+    private fun errorView(activity: Activity) {
         toggleView(binding.llServiceError)
+        val toast = ErrorToast(activity, viewModel.error)
+        if (toast.previousFinished()) toast.show()
     }
 
     private fun recentSearchContentReadyObserver(context: Activity) = Observer<Boolean> {
@@ -181,10 +174,7 @@ class SearchRouteFragment : Fragment() {
         activity: Activity
     ) = object : ItemClickEventListener {
         override fun onItemClickListener(position: Int) {
-            sendUserToRouteDetailScreen(
-                activity,
-                items.get(position).id, items.get(position).name, items.get(position).type
-            )
+            sendUserToRouteDetailScreen(activity, items.get(position))
         }
 
         override fun onDeleteButtonClickListener(position: Int) {

@@ -8,11 +8,9 @@ import androidx.lifecycle.viewModelScope
 import com.san.busing.data.Error
 import com.san.busing.data.Success
 import com.san.busing.data.repository.StationRepository
-import com.san.busing.domain.model.RouteRecentSearchModel
-import com.san.busing.domain.model.StationRecentSearchModel
-import com.san.busing.domain.model.StationRecentSearchModels
-import com.san.busing.domain.model.StationSummaryModel
-import com.san.busing.domain.model.StationSummaryModels
+import com.san.busing.domain.modelimpl.StationRecentSearchModel
+import com.san.busing.domain.modelimpl.StationRecentSearchModels
+import com.san.busing.domain.modelimpl.StationSummaryModels
 import com.san.busing.domain.state.UiState
 import com.san.busing.domain.utils.Const
 import com.san.busing.view.viewmodel.SearchStationViewModel

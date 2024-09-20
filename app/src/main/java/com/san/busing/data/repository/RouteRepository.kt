@@ -3,18 +3,16 @@ package com.san.busing.data.repository
 import android.app.Activity
 import com.san.busing.data.Result
 import com.san.busing.data.vo.Id
-import com.san.busing.domain.model.BusModels
-import com.san.busing.domain.model.RouteInfoModel
-import com.san.busing.domain.model.RouteSummaryModel
-import com.san.busing.domain.model.RouteRecentSearchModel
-import com.san.busing.domain.model.RouteRecentSearchModels
-import com.san.busing.domain.model.RouteStationModel
-import com.san.busing.domain.model.RouteStationModels
-import com.san.busing.domain.model.RouteSummaryModels
+import com.san.busing.domain.modelimpl.BusModels
+import com.san.busing.domain.modelimpl.RouteInfoModel
+import com.san.busing.domain.modelimpl.RouteRecentSearchModel
+import com.san.busing.domain.modelimpl.RouteRecentSearchModels
+import com.san.busing.domain.modelimpl.RouteStationModels
+import com.san.busing.domain.modelimpl.RouteModels
 
 interface RouteRepository {
     suspend fun getRouteInfo(id: Id): Result<RouteInfoModel>
-    suspend fun getRoutes(keyword: String): Result<RouteSummaryModels>
+    suspend fun getRoutes(keyword: String): Result<RouteModels>
     suspend fun getRouteStations(id: Id): Result<RouteStationModels>
     suspend fun getBusLocations(id: Id): Result<BusModels>
     suspend fun getRecentSearch(id: Id): Result<RouteRecentSearchModel>

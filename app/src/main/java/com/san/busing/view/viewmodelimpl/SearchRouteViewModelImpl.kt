@@ -8,10 +8,9 @@ import androidx.lifecycle.viewModelScope
 import com.san.busing.data.Error
 import com.san.busing.data.Success
 import com.san.busing.data.repository.RouteRepository
-import com.san.busing.domain.model.RouteRecentSearchModel
-import com.san.busing.domain.model.RouteRecentSearchModels
-import com.san.busing.domain.model.RouteSummaryModel
-import com.san.busing.domain.model.RouteSummaryModels
+import com.san.busing.domain.modelimpl.RouteRecentSearchModel
+import com.san.busing.domain.modelimpl.RouteRecentSearchModels
+import com.san.busing.domain.modelimpl.RouteModels
 import com.san.busing.domain.state.UiState
 import com.san.busing.domain.utils.Const
 import com.san.busing.view.viewmodel.SearchRouteViewModel
@@ -26,7 +25,7 @@ class SearchRouteViewModelImpl(
     override val state: LiveData<UiState>
         get() = viewModelState
     private val viewModelState = MutableLiveData<UiState>()
-    override lateinit var routeSummaries: RouteSummaryModels
+    override lateinit var routeSummaries: RouteModels
 
     override val recentSearchContentReady: LiveData<Boolean>
         get() = recentSearchContentLoaded

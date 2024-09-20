@@ -6,9 +6,7 @@ object Const {
     const val NO_DATA = -1
 
     // Intent Tag
-    const val TAG_ROUTE_ID = "routeId"
-    const val TAG_ROUTE_NAME = "routeName"
-    const val TAG_ROUTE_TYPE = "routeType"
+    const val TAG_ROUTE = "route"
     const val TAG_ROUTE_INFO = "routeInfo"
     const val TAG_STATION_ID = "stationId"
     const val TAG_STATION_MOBILE_NUMBER = "stationMobileNo"

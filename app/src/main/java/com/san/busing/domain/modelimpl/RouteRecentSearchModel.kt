@@ -1,8 +1,9 @@
-package com.san.busing.domain.model
+package com.san.busing.domain.modelimpl
 
 import com.san.busing.data.entity.RouteRecentSearch
 import com.san.busing.data.vo.Id
 import com.san.busing.domain.enums.RouteType
+import com.san.busing.domain.model.RouteModel
 
 /**
  * RouteRecentSearchModel
@@ -11,16 +12,20 @@ import com.san.busing.domain.enums.RouteType
  * 버스 노선 검색 화면 상단에 위치한 최근 검색 아이템을 구성한다.
  */
 data class RouteRecentSearchModel(
-    val id: Id,
-    val name: String,
-    val type: RouteType,
+    override val id: Id,
+    override val type: RouteType,
+    override val name: String,
+    override val regionName: String,
     val index: Long,
     val bookMark: Boolean
-) {
+) : RouteModel {
+    override fun isSame(id: Id) = this.id == id
+
     fun toRouteRecentSearchEntity() = RouteRecentSearch(
         id.get(),
-        name,
         type.code,
+        name,
+        regionName,
         index,
         bookMark
     )

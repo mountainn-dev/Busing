@@ -3,7 +3,7 @@ package com.san.busing.data.entity
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.san.busing.data.vo.Id
-import com.san.busing.domain.model.StationRecentSearchModel
+import com.san.busing.domain.modelimpl.StationRecentSearchModel
 
 /**
  * StationRecentSearch

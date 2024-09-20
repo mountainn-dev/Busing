@@ -2,10 +2,8 @@ package com.san.busing.view.viewmodel
 
 import android.app.Activity
 import androidx.lifecycle.LiveData
-import com.san.busing.domain.model.StationRecentSearchModel
-import com.san.busing.domain.model.StationRecentSearchModels
-import com.san.busing.domain.model.StationSummaryModel
-import com.san.busing.domain.model.StationSummaryModels
+import com.san.busing.domain.modelimpl.StationRecentSearchModels
+import com.san.busing.domain.modelimpl.StationSummaryModels
 import com.san.busing.domain.state.UiState
 
 interface SearchStationViewModel {

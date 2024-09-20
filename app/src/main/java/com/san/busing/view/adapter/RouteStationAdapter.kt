@@ -8,9 +8,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.san.busing.R
 import com.san.busing.databinding.ItemRouteStationBinding
 import com.san.busing.domain.enums.RouteType
-import com.san.busing.domain.model.BusModel
-import com.san.busing.domain.model.BusModels
-import com.san.busing.domain.model.RouteStationModels
+import com.san.busing.domain.modelimpl.BusModel
+import com.san.busing.domain.modelimpl.BusModels
+import com.san.busing.domain.modelimpl.RouteStationModels
 import com.san.busing.domain.utils.Const
 import com.san.busing.domain.utils.Utils
 import com.san.busing.view.listener.ItemClickEventListener

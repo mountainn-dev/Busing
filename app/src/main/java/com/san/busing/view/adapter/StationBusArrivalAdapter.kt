@@ -7,14 +7,14 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.san.busing.databinding.ItemStationBusArrivalBinding
-import com.san.busing.domain.model.BusArrivalModel
-import com.san.busing.domain.model.RouteStationModel
-import com.san.busing.domain.model.StationViaRouteModels
+import com.san.busing.domain.modelimpl.BusArrivalModel
+import com.san.busing.domain.modelimpl.RouteModels
+import com.san.busing.domain.modelimpl.RouteStationModel
 import com.san.busing.domain.utils.Const
 import com.san.busing.domain.utils.Utils
 
 class StationBusArrivalAdapter(
-    private val routeItems: StationViaRouteModels,
+    private val routeItems: RouteModels,
     private val nextStations: List<RouteStationModel>,
     private val busArrivals: List<BusArrivalModel>,
     private val activity: Activity
@@ -34,7 +34,7 @@ class StationBusArrivalAdapter(
         }
 
         private fun loadViaRouteInfo(position: Int) {
-            binding.txtRouteName.text = routeItems.get(position).routeSummary.name
+            binding.txtRouteName.text = routeItems.get(position).name
         }
 
         private fun loadNextStation(position: Int) {
@@ -88,8 +88,7 @@ class StationBusArrivalAdapter(
         }
 
         private fun setContentColor(position: Int) {
-            val color = ContextCompat.getColor(
-                activity, Utils.getColorByRouteType(routeItems.get(position).routeSummary.type))
+            val color = ContextCompat.getColor(activity, Utils.getColorByRouteType(routeItems.get(position).type))
 
             binding.txtRouteName.setTextColor(color)
         }

@@ -3,8 +3,7 @@ package com.san.busing.data.entity
 import com.san.busing.data.exception.ExceptionMessage
 import com.san.busing.data.vo.Id
 import com.san.busing.domain.enums.ArrivalFlag
-import com.san.busing.domain.model.BusArrivalModel
-import com.san.busing.domain.model.BusArrivalModels
+import com.san.busing.domain.modelimpl.BusArrivalModel
 import com.tickaroo.tikxml.annotation.Element
 import com.tickaroo.tikxml.annotation.Path
 import com.tickaroo.tikxml.annotation.PropertyElement

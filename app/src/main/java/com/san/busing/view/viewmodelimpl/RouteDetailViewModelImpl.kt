@@ -10,12 +10,11 @@ import androidx.lifecycle.viewModelScope
 import com.san.busing.data.Error
 import com.san.busing.data.Success
 import com.san.busing.data.repository.RouteRepository
-import com.san.busing.data.vo.Id
-import com.san.busing.domain.enums.RouteType
-import com.san.busing.domain.model.BusModels
-import com.san.busing.domain.model.RouteInfoModel
-import com.san.busing.domain.model.RouteRecentSearchModel
-import com.san.busing.domain.model.RouteStationModels
+import com.san.busing.domain.model.RouteModel
+import com.san.busing.domain.modelimpl.BusModels
+import com.san.busing.domain.modelimpl.RouteInfoModel
+import com.san.busing.domain.modelimpl.RouteRecentSearchModel
+import com.san.busing.domain.modelimpl.RouteStationModels
 import com.san.busing.domain.state.UiState
 import com.san.busing.view.viewmodel.RouteDetailViewModel
 import kotlinx.coroutines.Dispatchers
@@ -27,9 +26,7 @@ import kotlinx.coroutines.withContext
 
 class RouteDetailViewModelImpl(
     private val routeRepository: RouteRepository,
-    private val routeId: Id,
-    private val routeName: String,
-    private val routeType: RouteType,
+    private val route: RouteModel
 ) : RouteDetailViewModel, ViewModel() {
     override val state: LiveData<UiState>
         get() = uiState
@@ -83,7 +80,7 @@ class RouteDetailViewModelImpl(
     }
 
     private suspend fun loadRouteInfo() {
-        val result = routeRepository.getRouteInfo(routeId)
+        val result = routeRepository.getRouteInfo(route.id)
 
         if (result is Success) {
             routeInfo = result.data
@@ -96,7 +93,7 @@ class RouteDetailViewModelImpl(
     }
 
     private suspend fun loadRouteStations() {
-        val result = routeRepository.getRouteStations(routeId)
+        val result = routeRepository.getRouteStations(route.id)
 
         if (result is Success) {
             routeStations = result.data
@@ -109,7 +106,7 @@ class RouteDetailViewModelImpl(
     }
 
     private suspend fun loadBusLocations() {
-        val result = routeRepository.getBusLocations(routeId)
+        val result = routeRepository.getBusLocations(route.id)
 
         if (result is Success) {
             routeBuses = result.data
@@ -142,18 +139,18 @@ class RouteDetailViewModelImpl(
     }
 
     private suspend fun loadRecentSearch(activity: Activity) {
-        val result = routeRepository.getRecentSearch(routeId)
+        val result = routeRepository.getRecentSearch(route.id)
 
         if (result is Success) {
             val model = result.data
             recentSearch = RouteRecentSearchModel(
-                model.id, model.name, model.type,
+                model.id, model.type, model.name, model.regionName,
                 if (model.bookMark) model.index else nextRecentSearchIndex(activity),
                 model.bookMark)
         }
         else {
             recentSearch = RouteRecentSearchModel(
-                routeId, routeName, routeType,
+                route.id, route.type, route.name, route.regionName,
                 nextRecentSearchIndex(activity), false)
             isBookMark.postValue(false)
             error = (result as Error).message()
@@ -203,7 +200,7 @@ class RouteDetailViewModelImpl(
 
     private fun changeBookMarkStatus() {
         recentSearch = RouteRecentSearchModel(
-            recentSearch.id, recentSearch.name, recentSearch.type,
+            recentSearch.id, recentSearch.type, recentSearch.name, recentSearch.regionName,
             recentSearch.index, !recentSearch.bookMark
         )
     }

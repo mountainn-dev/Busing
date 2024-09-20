@@ -6,12 +6,12 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.san.busing.databinding.ItemRouteSearchResultBinding
-import com.san.busing.domain.model.RouteSummaryModels
+import com.san.busing.domain.modelimpl.RouteModels
 import com.san.busing.domain.utils.Utils
 import com.san.busing.view.listener.ItemClickEventListener
 
 class RouteSearchResultAdapter(
-    private val items: RouteSummaryModels,
+    private val items: RouteModels,
     private val itemClickEventListener: ItemClickEventListener,
     private val activity: Activity
 ) : RecyclerView.Adapter<RouteSearchResultAdapter.RouteSearchResultViewHolder>() {
@@ -27,7 +27,7 @@ class RouteSearchResultAdapter(
         private fun loadContent(position: Int) {
             binding.txtRouteName.text = items.get(position).name
             binding.txtRouteTypeTag.text = items.get(position).type.tag
-            binding.txtRegion.text = items.get(position).region
+            binding.txtRegion.text = items.get(position).regionName
         }
 
         private fun setContentColor(position: Int) {

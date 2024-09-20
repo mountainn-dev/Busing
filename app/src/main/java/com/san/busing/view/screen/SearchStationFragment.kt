@@ -19,8 +19,8 @@ import com.san.busing.data.source.remote.retrofit.BusArrivalService
 import com.san.busing.data.source.remote.retrofit.StationService
 import com.san.busing.data.vo.Id
 import com.san.busing.databinding.FragmentSearchStationBinding
-import com.san.busing.domain.model.StationRecentSearchModels
-import com.san.busing.domain.model.StationSummaryModels
+import com.san.busing.domain.modelimpl.StationRecentSearchModels
+import com.san.busing.domain.modelimpl.StationSummaryModels
 import com.san.busing.domain.state.UiState
 import com.san.busing.domain.utils.Const
 import com.san.busing.domain.utils.Utils
@@ -31,6 +31,7 @@ import com.san.busing.view.listener.RecyclerViewScrollListener
 import com.san.busing.view.viewmodel.SearchStationViewModel
 import com.san.busing.view.viewmodelfactory.SearchStationViewModelFactory
 import com.san.busing.view.viewmodelimpl.SearchStationViewModelImpl
+import com.san.busing.view.widget.ErrorToast
 
 class SearchStationFragment : Fragment() {
     private lateinit var binding: FragmentSearchStationBinding
@@ -85,7 +86,7 @@ class SearchStationFragment : Fragment() {
                 timeoutView()
             }
             UiState.Error -> {
-                errorView()
+                errorView(activity)
             }
         }
     }
@@ -138,8 +139,10 @@ class SearchStationFragment : Fragment() {
         toggleView(binding.llTimeout)
     }
 
-    private fun errorView() {
+    private fun errorView(activity: Activity) {
         toggleView(binding.llServiceError)
+        val toast = ErrorToast(activity, viewModel.error)
+        if (toast.previousFinished()) toast.show()
     }
 
     private fun recentSearchContentReadyObserver(activity: Activity) = Observer<Boolean> {

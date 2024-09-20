@@ -7,8 +7,7 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.san.busing.databinding.ItemStationRecentSearchBinding
-import com.san.busing.domain.model.StationRecentSearchModel
-import com.san.busing.domain.model.StationRecentSearchModels
+import com.san.busing.domain.modelimpl.StationRecentSearchModels
 import com.san.busing.domain.utils.Utils
 import com.san.busing.view.listener.ItemClickEventListener
 

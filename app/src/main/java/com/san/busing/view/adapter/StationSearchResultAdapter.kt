@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.san.busing.databinding.ItemStationSearchResultBinding
-import com.san.busing.domain.model.StationSummaryModels
+import com.san.busing.domain.modelimpl.StationSummaryModels
 import com.san.busing.view.listener.ItemClickEventListener
 
 class StationSearchResultAdapter(
