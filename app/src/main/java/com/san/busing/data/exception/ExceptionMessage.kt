@@ -8,7 +8,9 @@ object ExceptionMessage {
     const val TAG_ROUTE_STATION_EXCEPTION = "Route Station Exception"
     const val TAG_ROUTE_RECENT_SEARCH_EXCEPTION = "Route Recent Search Exception"
     const val TAG_BUS_EXCEPTION = "Bus Exception"
+    const val TAG_BUS_ARRIVAL_EXCEPTION = "Bus Arrival Exception"
     const val TAG_STATION_SUMMARY_EXCEPTION = "Station Summary Exception"
+    const val TAG_STATION_VIA_ROUTE_EXCEPTION = "Station Via Route Exception"
 
     // Service Exception Message
     const val NO_SERVICE_RESULT_EXCEPTION = "서비스 결과 코드가 존재하지 않습니다."
@@ -28,4 +30,5 @@ object ExceptionMessage {
     const val WRONG_REMAIN_SEAT_VALUE_EXCEPTION = "차량 빈자리 수 값이 올바르지 않습니다."
     const val WRONG_TURNAROUND_VALUE_EXCEPTION = "회차점 여부 값이 올바르지 않습니다."
     const val WRONG_TIME_FORMAT_EXCEPTION = "노선 시간 형식이 올바르지 않습니다."
+    const val WRONG_STATION_SEQUENCE_FORMAT_EXCEPTION = "정류소 순번 형식이 올바르지 않습니다."
 }

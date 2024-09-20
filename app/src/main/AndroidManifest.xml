@@ -15,6 +15,9 @@
         android:theme="@style/Theme.Busing"
         tools:targetApi="31">
         <activity
+            android:name=".view.screen.StationDetailActivity"
+            android:exported="false" />
+        <activity
             android:name=".view.screen.RouteInfoActivity"
             android:exported="false" />
         <activity

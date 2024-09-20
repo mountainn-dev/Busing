@@ -6,14 +6,14 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.san.busing.databinding.ItemRouteSearchResultBinding
-import com.san.busing.domain.model.RouteSummaryModel
+import com.san.busing.domain.modelimpl.RouteModels
 import com.san.busing.domain.utils.Utils
 import com.san.busing.view.listener.ItemClickEventListener
 
 class RouteSearchResultAdapter(
-    private val items: List<RouteSummaryModel>,
+    private val items: RouteModels,
     private val itemClickEventListener: ItemClickEventListener,
-    private val context: Activity
+    private val activity: Activity
 ) : RecyclerView.Adapter<RouteSearchResultAdapter.RouteSearchResultViewHolder>() {
     inner class RouteSearchResultViewHolder(
         private val binding: ItemRouteSearchResultBinding
@@ -25,14 +25,15 @@ class RouteSearchResultAdapter(
         }
 
         private fun loadContent(position: Int) {
-            binding.txtRouteName.text = items[position].name
-            binding.txtRouteTypeTag.text = items[position].type.tag
-            binding.txtRegion.text = items[position].region
+            binding.txtRouteName.text = items.get(position).name
+            binding.txtRouteTypeTag.text = items.get(position).type.tag
+            binding.txtRegion.text = items.get(position).regionName
         }
 
         private fun setContentColor(position: Int) {
             val color = ContextCompat.getColor(
-                context, Utils.getColorByRouteType(items[position].type))
+                activity, Utils.getColorByRouteType(items.get(position).type))
+
             binding.txtRouteName.setTextColor(color)
             binding.txtRouteTypeTag.setTextColor(color)
         }
@@ -53,7 +54,7 @@ class RouteSearchResultAdapter(
         return RouteSearchResultViewHolder(binding)
     }
 
-    override fun getItemCount() = items.size
+    override fun getItemCount() = items.count()
 
     override fun onBindViewHolder(holder: RouteSearchResultViewHolder, position: Int) {
         holder.bind(position)

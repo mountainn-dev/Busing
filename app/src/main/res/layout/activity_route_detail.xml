@@ -48,6 +48,8 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.3"
+                        android:maxLines="2"
+                        android:ellipsize="end"
                         android:textAlignment="center"
                         android:textColor="@color/white"
                         tools:text="startStation"/>
@@ -171,7 +173,10 @@
                     android:layout_height="wrap_content"
                     android:textColor="@color/white"
                     android:textStyle="bold"
-                    android:textSize="@dimen/text_size_detail_title"/>
+                    android:textSize="@dimen/text_size_detail_title"
+                    android:maxLines="1"
+                    android:ellipsize="marquee"
+                    android:marqueeRepeatLimit="marquee_forever" />
 
             </androidx.appcompat.widget.Toolbar>
 
@@ -334,7 +339,7 @@
                 android:textSize="@dimen/text_size_fab_time"
                 android:textColor="@color/white"
                 android:textStyle="bold"
-                android:visibility="gone"/>
+                android:visibility="gone" />
 
         </FrameLayout>
 

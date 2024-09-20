@@ -10,116 +10,137 @@ import androidx.lifecycle.viewModelScope
 import com.san.busing.data.Error
 import com.san.busing.data.Success
 import com.san.busing.data.repository.RouteRepository
-import com.san.busing.domain.model.RouteModel
-import com.san.busing.domain.modelimpl.BusModels
-import com.san.busing.domain.modelimpl.RouteInfoModel
-import com.san.busing.domain.modelimpl.RouteRecentSearchModel
-import com.san.busing.domain.modelimpl.StationModels
+import com.san.busing.data.repository.StationRepository
+import com.san.busing.data.vo.Id
+import com.san.busing.domain.model.Passable
+import com.san.busing.domain.model.StationModel
+import com.san.busing.domain.model.Stoppable
+import com.san.busing.domain.modelimpl.BusArrivalModel
+import com.san.busing.domain.modelimpl.RouteModels
+import com.san.busing.domain.modelimpl.StationRecentSearchModel
 import com.san.busing.domain.state.UiState
-import com.san.busing.view.viewmodel.RouteDetailViewModel
+import com.san.busing.view.viewmodel.StationDetailViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.Stack
 
-class RouteDetailViewModelImpl(
+class StationDetailViewModelImpl(
+    private val stationRepository: StationRepository,
     private val routeRepository: RouteRepository,
-    private val route: RouteModel
-) : RouteDetailViewModel, ViewModel() {
+    private val station: StationModel
+) : StationDetailViewModel, ViewModel() {
     override val state: LiveData<UiState>
         get() = uiState
     private val uiState = MediatorLiveData<UiState>()
-    private val routeInfoState = MutableLiveData<UiState>(UiState.Loading)
-    private val routeStationState = MutableLiveData<UiState>(UiState.Loading)
-    private val routeBusState = MutableLiveData<UiState>(UiState.Loading)
-    override lateinit var routeInfo: RouteInfoModel
-    override lateinit var routeStations: StationModels
-    override lateinit var routeBuses: BusModels
+    private val viaRouteState = MutableLiveData<UiState>(UiState.Loading)
+    private val nextStationState = MutableLiveData<UiState>(UiState.Loading)
+    private val busArrivalState = MutableLiveData<UiState>(UiState.Loading)
+    override lateinit var viaRoutes: RouteModels
+    override val nextStations = Stack<StationModel>()
+    override val busArrivals = Stack<BusArrivalModel>()
 
     override val resetTimer: LiveData<Int>
         get() = remainTime
     private val remainTime = MutableLiveData<Int>()
-    private var isLoadable = true
+    private var isLoadable = false
     private val timer = object: CountDownTimer(REMAIN_TOTAL_MILLIS, TIMER_INTERVAL_MILLIS) {
         override fun onTick(time: Long) {
-            if (isLoadable) isLoadable = false
+            if (!isLoadable) isLoadable = true
             remainTime.postValue((time/ TIMER_INTERVAL_MILLIS).toInt())
         }
         override fun onFinish() {
-            isLoadable = true
+            isLoadable = false
         }
     }
 
     override val bookMark: LiveData<Boolean>
         get() = isBookMark
     private val isBookMark = MutableLiveData(false)
-    private lateinit var recentSearch: RouteRecentSearchModel
+    private lateinit var recentSearch: StationRecentSearchModel
 
-    private var loadingJob: Job? = null
+    private var viaRouteLoadingJob: Job? = null
+    private var busLoadingJob: Job? = null
 
     override lateinit var error: String
 
     init {
-        merge(uiState, routeInfoState, routeStationState, routeBusState)
+        merge(uiState, viaRouteState, nextStationState, busArrivalState)
     }
 
     override fun load() {
-        loadingJob?.cancel()
+        viaRouteLoadingJob?.cancel()
 
-        loadingJob = viewModelScope.launch {
+        viaRouteLoadingJob = viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                awaitAll(
-                    async { loadRouteInfo() },
-                    async { loadRouteStations() },
-                    async { loadBusLocations() }
-                )
+                loadViaRoutes()
             }
         }
     }
 
-    private suspend fun loadRouteInfo() {
-        val result = routeRepository.getRouteInfo(route.id)
+    private suspend fun loadViaRoutes() {
+        val result = stationRepository.getStationViaRoutes(station.id)
 
         if (result is Success) {
-            routeInfo = result.data
-            routeInfoState.postValue(UiState.Success)
+            viaRoutes = result.data
+            viaRouteState.postValue(UiState.Success)
+            loadRouteDirectionAndBusArrival()
         } else {
             error = (result as Error).message()
-            if (result.isTimeOut()) routeInfoState.postValue(UiState.Timeout)
-            if (result.isCritical()) routeInfoState.postValue(UiState.Error)
+            if (result.isTimeOut()) viaRouteState.postValue(UiState.Timeout)
+            if (result.isCritical()) viaRouteState.postValue(UiState.Error)
         }
     }
 
-    private suspend fun loadRouteStations() {
-        val result = routeRepository.getRouteStations(route.id)
+    private fun loadRouteDirectionAndBusArrival() {
+        busLoadingJob?.cancel()
+        nextStations.clear()
+        busArrivals.clear()
 
-        if (result is Success) {
-            routeStations = result.data
-            routeStationState.postValue(UiState.Success)
-        } else {
-            error = (result as Error).message()
-            if (result.isTimeOut()) routeStationState.postValue(UiState.Timeout)
-            if (result.isCritical()) routeStationState.postValue(UiState.Error)
+        busLoadingJob = viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                viaRoutes.get().flatMap {
+                    listOf(
+                        async { loadNextStation(it.id, (it as Stoppable).stationSequence) },
+                        async { loadBusArrival(it.id, (it as Stoppable).stationSequence) }
+                    )
+                }.awaitAll().let {
+                    nextStationState.postValue(UiState.Success)
+                    busArrivalState.postValue(UiState.Success)
+                }
+            }
         }
     }
 
-    private suspend fun loadBusLocations() {
-        val result = routeRepository.getBusLocations(route.id)
+    private suspend fun loadNextStation(routeId: Id, stationSeq: Int) {
+        val result = routeRepository.getRouteStations(routeId)
 
         if (result is Success) {
-            routeBuses = result.data
-            routeBusState.postValue(UiState.Success)
+            val nextStation = result.data.getOrFirst(stationSeq)
+            (nextStation as Passable).setVehicleId(routeId)
+            nextStations.push(nextStation)
         } else {
             error = (result as Error).message()
-            if (result.isTimeOut()) routeBusState.postValue(UiState.Timeout)
-            if (result.isCritical()) routeBusState.postValue(UiState.Error)
+            if (result.isTimeOut()) nextStationState.postValue(UiState.Timeout)
+        }
+    }
+
+    private suspend fun loadBusArrival(routeId: Id, stationSeq: Int) {
+        val result = stationRepository.getBusArrival(station.id, routeId, stationSeq)
+
+        if (result is Success) {
+            busArrivals.push(result.data)
+        } else {
+            error = (result as Error).message()
+            if (result.isTimeOut()) busArrivalState.postValue(UiState.Timeout)
         }
     }
 
     override fun loadWithTimer() {
-        if (isLoadable) {
+        if (!isLoadable) {
             timer.start()
             load()
         }
@@ -139,18 +160,18 @@ class RouteDetailViewModelImpl(
     }
 
     private suspend fun loadRecentSearch(activity: Activity) {
-        val result = routeRepository.getRecentSearch(route.id)
+        val result = stationRepository.getRecentSearch(station.id)
 
         if (result is Success) {
             val model = result.data
-            recentSearch = RouteRecentSearchModel(
-                model.id, model.type, model.name, model.regionName,
+            recentSearch = StationRecentSearchModel(
+                model.id, model.mobileNo, model.name, model.regionName,
                 if (model.bookMark) model.index else nextRecentSearchIndex(activity),
                 model.bookMark)
         }
         else {
-            recentSearch = RouteRecentSearchModel(
-                route.id, route.type, route.name, route.regionName,
+            recentSearch = StationRecentSearchModel(
+                station.id, station.mobileNo, station.name, station.regionName,
                 nextRecentSearchIndex(activity), false)
             isBookMark.postValue(false)
             error = (result as Error).message()
@@ -165,25 +186,25 @@ class RouteDetailViewModelImpl(
     }
 
     private fun previousRecentSearchIndex(activity: Activity): Long {
-        val result = routeRepository.getRecentSearchIndex(activity)
+        val result = stationRepository.getRecentSearchIndex(activity)
 
         return (result as Success).data
     }
 
     private fun updateRecentSearchIndex(activity: Activity, newIdx: Long) {
-        val result = routeRepository.updateRecentSearchIndex(activity, newIdx)
+        val result = stationRepository.updateRecentSearchIndex(activity, newIdx)
 
         if (result is Error) error = result.message()
     }
 
     private suspend fun insertRecentSearch() {
-        val result = routeRepository.insertRecentSearch(recentSearch)
+        val result = stationRepository.insertRecentSearch(recentSearch)
 
         if (result is Error) error = result.message()
     }
 
     private suspend fun updateRecentSearch() {
-        val result = routeRepository.updateRecentSearch(recentSearch)
+        val result = stationRepository.updateRecentSearch(recentSearch)
 
         if (result is Error) error = result.message()
     }
@@ -199,8 +220,8 @@ class RouteDetailViewModelImpl(
     }
 
     private fun changeBookMarkStatus() {
-        recentSearch = RouteRecentSearchModel(
-            recentSearch.id, recentSearch.type, recentSearch.name, recentSearch.regionName,
+        recentSearch = StationRecentSearchModel(
+            recentSearch.id, recentSearch.mobileNo, recentSearch.name, recentSearch.regionName,
             recentSearch.index, !recentSearch.bookMark
         )
     }
@@ -209,11 +230,6 @@ class RouteDetailViewModelImpl(
         isBookMark.postValue(recentSearch.bookMark)
     }
 
-    /**
-     * private fun merge(parent, child1, ...)
-     *
-     * Ui State 상호작용을 위한 LiveData merge()
-     */
     private fun merge(
         parent: MediatorLiveData<UiState>,
         child1: MutableLiveData<UiState>,

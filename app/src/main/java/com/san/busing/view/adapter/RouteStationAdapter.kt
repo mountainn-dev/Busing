@@ -1,6 +1,6 @@
 package com.san.busing.view.adapter
 
-import android.app.Activity
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,20 +8,21 @@ import androidx.recyclerview.widget.RecyclerView
 import com.san.busing.R
 import com.san.busing.databinding.ItemRouteStationBinding
 import com.san.busing.domain.enums.RouteType
-import com.san.busing.domain.model.BusModel
-import com.san.busing.domain.model.RouteStationModel
+import com.san.busing.domain.model.Passable
+import com.san.busing.domain.modelimpl.BusModel
+import com.san.busing.domain.modelimpl.BusModels
+import com.san.busing.domain.modelimpl.StationModels
 import com.san.busing.domain.utils.Const
 import com.san.busing.domain.utils.Utils
 import com.san.busing.view.listener.ItemClickEventListener
 
 class RouteStationAdapter(
     private val routeType: RouteType,
-    private val stationItems: List<RouteStationModel>,
-    private val busItems: List<BusModel>,
+    private val stationItems: StationModels,
+    private val busItems: BusModels,
     private val itemClickEventListener: ItemClickEventListener,
-    private val context: Activity
-) : RecyclerView.Adapter<RouteStationAdapter.BusRouteStationViewHolder>() {
-    inner class BusRouteStationViewHolder(
+) : RecyclerView.Adapter<RouteStationAdapter.RouteStationViewHolder>() {
+    inner class RouteStationViewHolder(
         private val binding: ItemRouteStationBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(position: Int) {
@@ -36,41 +37,28 @@ class RouteStationAdapter(
         }
 
         private fun loadStationInfo(position: Int) {
-            binding.txtRouteStationName.text = stationItems[position].name
-            binding.txtRouteStationNumber.text = stationItems[position].number
+            binding.txtRouteStationName.text = stationItems.get(position).name
+            binding.txtRouteStationNumber.text = stationItems.get(position).mobileNo
         }
 
         private fun loadBusInfo(position: Int) {
-            val busIdx = getBusIndex(position)
+            val bus = busItems.getOrNullBySeq(position + 1)
 
-            if (busIdx != NO_MATCH_BUS) {   // 정류소 순번과 일치하는 버스가 존재하는 경우
-                loadBusInfo(busItems[busIdx])
-            } else { unloadBusInfo() }
-        }
-
-        private fun getBusIndex(position: Int): Int {
-            var idx = NO_MATCH_BUS
-
-            for (i in busItems.indices) {
-                if (busItems[i].sequenceNumber == position+1) idx = i
-            }
-
-            return idx
+            if (bus != null) loadBusInfo(bus)
+            else unloadBusInfo()
         }
 
         private fun loadBusInfo(item: BusModel) {
             binding.llBusInfo.visibility = View.VISIBLE
             binding.lineBusInfo.visibility = View.VISIBLE
             binding.imgBus.visibility = View.VISIBLE
-
             binding.txtPlateNumber.text = item.plateNumber
             binding.txtRemainSeat.text = remainSeatText(item.remainSeat)
         }
 
-        private fun remainSeatText(count: Int): String {
-            if (count == Const.NO_DATA) return NO_REMAIN_SEAT_COUNT
-            else return String.format(REMAIN_SEAT_COUNT, count)
-        }
+        private fun remainSeatText(count: Int) =
+            if (count != Const.NO_DATA) String.format(REMAIN_SEAT_COUNT, count)
+            else NO_REMAIN_SEAT_COUNT
 
         private fun unloadBusInfo() {
             binding.llBusInfo.visibility = View.GONE
@@ -79,7 +67,7 @@ class RouteStationAdapter(
         }
 
         private fun loadTurnaround(position: Int) {
-            if (stationItems[position].isTurnaround) loadTurnaround()
+            if ((stationItems.get(position) as Passable).isTurnaround) loadTurnaround()
             else unloadTurnaround()
         }
 
@@ -98,12 +86,12 @@ class RouteStationAdapter(
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BusRouteStationViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RouteStationViewHolder {
         val binding = ItemRouteStationBinding.inflate(
             LayoutInflater.from(parent.context), parent, false
         )
         setContentColor(binding, routeType)
-        return BusRouteStationViewHolder(binding)
+        return RouteStationViewHolder(binding)
     }
 
     private fun setContentColor(binding: ItemRouteStationBinding, type: RouteType) {
@@ -112,14 +100,13 @@ class RouteStationAdapter(
         )
     }
 
-    override fun getItemCount() = stationItems.size
+    override fun getItemCount() = stationItems.count()
 
-    override fun onBindViewHolder(holder: BusRouteStationViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: RouteStationViewHolder, position: Int) {
         holder.bind(position)
     }
 
     companion object {
-        private const val NO_MATCH_BUS = -1
         private const val REMAIN_SEAT_COUNT = "%d석"
         private const val NO_REMAIN_SEAT_COUNT = "-석"
     }

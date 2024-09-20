@@ -8,9 +8,9 @@ import androidx.lifecycle.viewModelScope
 import com.san.busing.data.Error
 import com.san.busing.data.Success
 import com.san.busing.data.repository.StationRepository
-import com.san.busing.domain.model.RouteRecentSearchModel
-import com.san.busing.domain.model.StationRecentSearchModel
-import com.san.busing.domain.model.StationSummaryModel
+import com.san.busing.domain.modelimpl.StationRecentSearchModel
+import com.san.busing.domain.modelimpl.StationRecentSearchModels
+import com.san.busing.domain.modelimpl.StationModels
 import com.san.busing.domain.state.UiState
 import com.san.busing.domain.utils.Const
 import com.san.busing.view.viewmodel.SearchStationViewModel
@@ -25,16 +25,17 @@ class SearchStationViewModelImpl(
     override val state: LiveData<UiState>
         get() = viewModelState
     private val viewModelState = MutableLiveData<UiState>()
-    override lateinit var stationSummaries: List<StationSummaryModel>
+    override lateinit var stations: StationModels
 
     override val recentSearchContentReady: LiveData<Boolean>
         get() = recentSearchContentLoaded
     private val recentSearchContentLoaded = MutableLiveData<Boolean>()
-    override lateinit var stationRecentSearches: List<StationRecentSearchModel>
+    override lateinit var stationRecentSearches: StationRecentSearchModels
 
     override var keyword = Const.EMPTY_TEXT
-    override lateinit var error: String
     private var searchingJob: Job? = null
+
+    override lateinit var error: String
 
     override fun search(keyword: String) {
         searchingJob?.cancel()
@@ -52,8 +53,7 @@ class SearchStationViewModelImpl(
         val result = repository.getStations(keyword)
 
         if (result is Success) {
-            // 검색 결과 출력 시 노선 번호, 운행 지역 순으로 출력
-            stationSummaries = result.data.sortedWith(compareBy({it.name}, {it.regionName}))
+            stations = result.data
             viewModelState.postValue(UiState.Success)
         } else {
             error = (result as Error).message()
@@ -65,7 +65,7 @@ class SearchStationViewModelImpl(
     override fun deleteRecentSearch(itemIdx: Int) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                delete(stationRecentSearches[itemIdx])
+                delete(stationRecentSearches.get(itemIdx))
                 loadRecentSearchContent()
             }
         }
@@ -83,8 +83,7 @@ class SearchStationViewModelImpl(
         if (result is Success) {
             if (result.data.isEmpty()) recentSearchContentLoaded.postValue(false)
             else {
-                stationRecentSearches = result.data.sortedWith(
-                    compareByDescending<StationRecentSearchModel> { it.bookMark }.thenByDescending { it.index })
+                stationRecentSearches = result.data
                 recentSearchContentLoaded.postValue(true)
             }
         } else {

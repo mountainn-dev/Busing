@@ -3,19 +3,20 @@ package com.san.busing.view.viewmodelfactory
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.san.busing.data.repository.RouteRepository
+import com.san.busing.data.repository.StationRepository
 import com.san.busing.data.vo.Id
-import com.san.busing.domain.enums.RouteType
-import com.san.busing.domain.model.RouteModel
-import com.san.busing.view.viewmodelimpl.RouteDetailViewModelImpl
+import com.san.busing.domain.model.StationModel
+import com.san.busing.view.viewmodelimpl.StationDetailViewModelImpl
 
-class RouteDetailViewModelFactory(
+class StationDetailViewModelFactory(
+    private val stationRepository: StationRepository,
     private val routeRepository: RouteRepository,
-    private val route: RouteModel
+    private val station: StationModel
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(RouteDetailViewModelImpl::class.java)) {
+        if (modelClass.isAssignableFrom(StationDetailViewModelImpl::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return RouteDetailViewModelImpl(routeRepository, route) as T
+            return StationDetailViewModelImpl(stationRepository, routeRepository, station) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

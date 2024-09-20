@@ -10,29 +10,71 @@ import com.san.busing.data.exception.ExceptionMessage
 import com.san.busing.data.exception.ServiceException
 import com.san.busing.data.repository.StationRepository
 import com.san.busing.data.source.local.database.RecentSearchDatabase
+import com.san.busing.data.source.remote.retrofit.BusArrivalService
 import com.san.busing.data.source.remote.retrofit.StationService
 import com.san.busing.data.vo.Id
-import com.san.busing.domain.model.RouteRecentSearchModel
-import com.san.busing.domain.model.StationRecentSearchModel
-import com.san.busing.domain.model.StationSummaryModel
+import com.san.busing.domain.modelimpl.BusArrivalModel
+import com.san.busing.domain.modelimpl.RouteModels
+import com.san.busing.domain.modelimpl.StationRecentSearchModel
+import com.san.busing.domain.modelimpl.StationRecentSearchModels
+import com.san.busing.domain.modelimpl.StationModels
 
 class StationRepositoryImpl(
-    private val service: StationService,
+    private val stationService: StationService,
+    private val busArrivalService: BusArrivalService,
     private val context: Context
 ) : StationRepository {
     private val db = Room.databaseBuilder(
         this.context, RecentSearchDatabase::class.java, "recentSearch").build()
 
-    override suspend fun getStations(keyword: String): Result<List<StationSummaryModel>> {
+    override suspend fun getStations(keyword: String): Result<StationModels> {
         try {
-            val response = service.getBusStationList(BuildConfig.API_KEY, keyword)
+            val response = stationService.getBusStationList(BuildConfig.API_KEY, keyword)
+            val stations = response.body()!!.get()
+            stations.sort()
+            return Result.success(stations)
+        } catch (e: ServiceException.ResultException) {
+            return Result.success(StationModels.instance())
+        } catch (e: ServiceException.OptionalParameterException) {
+            return Result.success(StationModels.instance())
+        } catch (e: Exception) {
+            Log.e(ExceptionMessage.TAG_STATION_SUMMARY_EXCEPTION, e.toString())
+            return Result.error(e)
+        }
+    }
+
+    override suspend fun getStationViaRoutes(id: Id): Result<RouteModels> {
+        try {
+            val response = stationService.getBusStationViaRouteList(BuildConfig.API_KEY, id.get())
             return Result.success(response.body()!!.get())
         } catch (e: ServiceException.ResultException) {
-            return Result.success(listOf())
+            return Result.success(RouteModels.instance())
         } catch (e: ServiceException.OptionalParameterException) {
-            return Result.success(listOf())
+            return Result.success(RouteModels.instance())
         } catch (e: Exception) {
-            Log.e(ExceptionMessage.TAG_STATION_SUMMARY_EXCEPTION, e.message ?: e.toString())
+            Log.e(ExceptionMessage.TAG_STATION_VIA_ROUTE_EXCEPTION, e.toString())
+            return Result.error(e)
+        }
+    }
+
+    /**
+     * getBusArrival
+     *
+     * 버스 도착 정보 호출 api
+     * ServiceException$ResultException == "버스 도착 정보 없음"
+     */
+    override suspend fun getBusArrival(
+        stationId: Id,
+        routeId: Id,
+        stationSeq: Int
+    ): Result<BusArrivalModel> {
+        try {
+            val response = busArrivalService.getBusArrivalItem(
+                BuildConfig.API_KEY, stationId.get(), routeId.get(), stationSeq
+            )
+            return Result.success(response.body()!!.get())
+        } catch (e: Exception) {
+            Log.e(ExceptionMessage.TAG_BUS_ARRIVAL_EXCEPTION, e.toString())
             return Result.error(e)
         }
     }
@@ -44,16 +86,17 @@ class StationRepositoryImpl(
             }
             return Result.error(NoSuchElementException(""))
         } catch (e: Exception) {
-            Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.message ?: e.toString())
+            Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.toString())
             return Result.error(e)
         }
     }
 
-    override suspend fun getAllRecentSearch(): Result<List<StationRecentSearchModel>> {
+    override suspend fun getAllRecentSearch(): Result<StationRecentSearchModels> {
         try {
-            return Result.success(db.stationRecentSearchDao().getAllStationRecentSearches().map { it.toStationRecentSearchModel() })
+            val recentSearchModels = db.stationRecentSearchDao().getAllStationRecentSearches().map { it.toStationRecentSearchModel() }
+            return Result.success(StationRecentSearchModels(recentSearchModels))
         } catch (e: Exception) {
-            Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.message ?: e.toString())
+            Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.toString())
             return Result.error(e)
         }
     }
@@ -64,7 +107,7 @@ class StationRepositoryImpl(
                 recentSearchModel.toStationRecentSearchEntity())
             return Result.success(true)
         } catch (e: Exception) {
-            Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.message ?: e.toString())
+            Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.toString())
             return Result.error(e)
         }
     }
@@ -75,7 +118,7 @@ class StationRepositoryImpl(
                 recentSearchModel.toStationRecentSearchEntity())
             return Result.success(true)
         } catch (e: Exception) {
-            Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.message ?: e.toString())
+            Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.toString())
             return Result.error(e)
         }
     }
@@ -86,7 +129,7 @@ class StationRepositoryImpl(
                 recentSearchModel.toStationRecentSearchEntity())
             return Result.success(true)
         } catch (e: Exception) {
-            Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.message ?: e.toString())
+            Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.toString())
             return Result.error(e)
         }
     }
@@ -96,7 +139,7 @@ class StationRepositoryImpl(
             db.stationRecentSearchDao().deleteAllStationRecentSearches()
             return Result.success(true)
         } catch (e: Exception) {
-            Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.message ?: e.toString())
+            Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.toString())
             return Result.error(e)
         }
     }
@@ -114,7 +157,7 @@ class StationRepositoryImpl(
             preference.edit().putLong(BuildConfig.STATION_PREFERENCE_KEY, newIdx).apply()
             return Result.success(true)
         } catch (e: Exception) {
-            Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.message ?: e.toString())
+            Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.toString())
             return Result.error(e)
         }
     }

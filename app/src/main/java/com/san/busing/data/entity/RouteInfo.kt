@@ -2,8 +2,9 @@ package com.san.busing.data.entity
 
 import com.san.busing.data.exception.ExceptionMessage
 import com.san.busing.data.vo.Id
-import com.san.busing.domain.model.RouteInfoModel
+import com.san.busing.domain.modelimpl.RouteInfoModel
 import com.san.busing.domain.utils.Const
+import com.san.busing.domain.utils.Utils
 import com.tickaroo.tikxml.annotation.Element
 import com.tickaroo.tikxml.annotation.Path
 import com.tickaroo.tikxml.annotation.PropertyElement
@@ -15,16 +16,16 @@ import java.time.format.DateTimeParseException
 /**
  * RouteInfo
  *
- * 특정 노선의 상세 정보를 담는 클래스
+ * 노선의 상세 정보를 담는 클래스
  * 노선 상세 및 노선 정보 화면 컨텐츠를 구성한다.
  */
 @Xml(name = "busRouteInfoItem")
 data class RouteInfo(
     // up - 기점, down - 종점
-    @PropertyElement val routeId: Int,
-    @PropertyElement val routeName: String,
-    @PropertyElement val routeTypeCd: Int,
-    @PropertyElement val routeTypeName: String,
+    @PropertyElement(name = "routeId") val id: Int,
+    @PropertyElement(name = "routeTypeCd") val typeCd: Int,
+    @PropertyElement(name = "routeName") val routeName: String,
+    @PropertyElement val regionName: String?,
     @PropertyElement val startStationId: Int,
     @PropertyElement val startStationName: String,
     @PropertyElement val endStationId: Int,
@@ -36,8 +37,10 @@ data class RouteInfo(
     @PropertyElement(name = "nPeekAlloc") val maxPeekAlloc: Int?
 ) {
     fun toRouteInfoModel() = RouteInfoModel(
-        Id(routeId),
+        Id(id),
+        Utils.getRouteType(typeCd),
         routeName,
+        regionName(regionName),
         Id(startStationId),
         startStationName,
         Id(endStationId),
@@ -48,6 +51,11 @@ data class RouteInfo(
         localTime(endLastTime),
         maxPeekAlloc ?: Const.ZERO
     )
+
+    private fun regionName(name: String?) = when(name != null) {
+        true -> name
+        false -> Const.EMPTY_TEXT
+    }
 
     private fun localTime(time: String?): LocalTime? {
         if (time == null) return null

@@ -3,7 +3,7 @@ package com.san.busing.data.entity
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.san.busing.data.vo.Id
-import com.san.busing.domain.model.RouteRecentSearchModel
+import com.san.busing.domain.modelimpl.RouteRecentSearchModel
 import com.san.busing.domain.utils.Utils
 
 /**
@@ -18,15 +18,17 @@ import com.san.busing.domain.utils.Utils
 @Entity
 data class RouteRecentSearch(
     @PrimaryKey val id: Int,
-    val routeName: String,
-    val routeTypeCd: Int,
+    val typeCd: Int,
+    val name: String,
+    val regionName: String,
     val index: Long,
     val bookMark: Boolean
 ) {
     fun toRouteRecentSearchModel() = RouteRecentSearchModel(
         Id(id),
-        routeName,
-        Utils.getRouteType(routeTypeCd),
+        Utils.getRouteType(typeCd),
+        name,
+        regionName,
         index,
         bookMark
     )

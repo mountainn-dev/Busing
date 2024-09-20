@@ -7,14 +7,14 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.san.busing.databinding.ItemRouteRecentSearchBinding
-import com.san.busing.domain.model.RouteRecentSearchModel
+import com.san.busing.domain.modelimpl.RouteRecentSearchModels
 import com.san.busing.domain.utils.Utils
 import com.san.busing.view.listener.ItemClickEventListener
 
 class RouteRecentSearchAdapter(
-    private val items: List<RouteRecentSearchModel>,
+    private val items: RouteRecentSearchModels,
     private val itemClickEventListener: ItemClickEventListener,
-    private val context: Activity
+    private val activity: Activity
 ) : RecyclerView.Adapter<RouteRecentSearchAdapter.RouteRecentSearchViewHolder>() {
 
     inner class RouteRecentSearchViewHolder(
@@ -29,19 +29,17 @@ class RouteRecentSearchAdapter(
         }
 
         private fun loadContent(position: Int) {
-            binding.txtRouteRecentSearchName.text = items[position].name
-            binding.btnDeleteRecentSearch.visibility = if (items[position].bookMark) View.GONE else View.VISIBLE
+            binding.txtRouteRecentSearchName.text = items.get(position).name
+            binding.btnDeleteRecentSearch.visibility = if (items.get(position).bookMark) View.GONE else View.VISIBLE
         }
 
         private fun setBackground(position: Int) {
-            val background = ContextCompat.getDrawable(context, Utils.getBackgroundByBookMarkStatus(items[position].bookMark))
-
+            val background = ContextCompat.getDrawable(activity, Utils.getBackgroundByBookMarkStatus(items.get(position).bookMark))
             binding.clRouteRecentSearchItem.background = background
         }
 
         private fun setContentColor(position: Int) {
-            val color = ContextCompat.getColor(context, Utils.getColorByRouteType(items[position].type))
-
+            val color = ContextCompat.getColor(activity, Utils.getColorByRouteType(items.get(position).type))
             binding.txtRouteRecentSearchName.setTextColor(color)
         }
 
@@ -64,7 +62,7 @@ class RouteRecentSearchAdapter(
         return RouteRecentSearchViewHolder(binding)
     }
 
-    override fun getItemCount() = items.size
+    override fun getItemCount() = items.count()
 
     override fun onBindViewHolder(holder: RouteRecentSearchViewHolder, position: Int) {
         holder.bind(position)

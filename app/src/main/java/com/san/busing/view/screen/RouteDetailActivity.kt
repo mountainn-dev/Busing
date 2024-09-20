@@ -13,14 +13,15 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.san.busing.BuildConfig
 import com.san.busing.R
-import com.san.busing.data.repositoryimpl.BusLocationRepositoryImpl
 import com.san.busing.data.repositoryimpl.RouteRepositoryImpl
 import com.san.busing.data.source.remote.retrofit.BusLocationService
 import com.san.busing.data.source.remote.retrofit.RouteService
-import com.san.busing.data.vo.Id
 import com.san.busing.databinding.ActivityRouteDetailBinding
 import com.san.busing.domain.enums.RouteType
-import com.san.busing.domain.model.RouteStationModel
+import com.san.busing.domain.model.Passable
+import com.san.busing.domain.model.RouteModel
+import com.san.busing.domain.model.StationModel
+import com.san.busing.domain.modelimpl.StationModels
 import com.san.busing.domain.state.UiState
 import com.san.busing.domain.utils.Const
 import com.san.busing.domain.utils.Utils
@@ -42,32 +43,26 @@ class RouteDetailActivity : AppCompatActivity() {
 
         val busRouteRepository = RouteRepositoryImpl(
             Utils.getRetrofit(BuildConfig.ROUTES_URL).create(RouteService::class.java),
+            Utils.getRetrofit(BuildConfig.LOCATION_URL).create(BusLocationService::class.java),
             this.applicationContext
         )
-        val busLocationRepository = BusLocationRepositoryImpl(
-            Utils.getRetrofit(BuildConfig.LOCATION_URL).create(BusLocationService::class.java)
-        )
-        val routeId = intent.getSerializableExtra(Const.TAG_ROUTE_ID) as Id
-        val routeName = intent.getStringExtra(Const.TAG_ROUTE_NAME) ?: Const.EMPTY_TEXT
-        val routeType = intent.getSerializableExtra(Const.TAG_ROUTE_TYPE) as RouteType
+        val route = intent.getSerializableExtra(Const.TAG_ROUTE) as RouteModel
         viewModel = ViewModelProvider(
             this, RouteDetailViewModelFactory(
-                busRouteRepository, busLocationRepository, routeId, routeName, routeType
+                busRouteRepository, route
             )
         ).get(RouteDetailViewModelImpl::class.java)
 
         viewModel.updateRecentSearch(this)
-        initToolbar(routeName, routeType, this)
-        initObserver(routeType, this)
+        initToolbar(route, this)
+        initObserver(route, this)
         initListener(this)
     }
 
-    private fun initToolbar(
-        routeName: String, routeType: RouteType,
-        activity: Activity
-    ) {
-        setTitle(routeName)
-        setBgColor(routeType, activity)
+    private fun initToolbar(route: RouteModel, activity: Activity) {
+        setTitle(route.name)
+        setBgColor(route.type, activity)
+        startEllipsizeMarqueeEffect()
     }
 
     private fun setTitle(routeName: String) {
@@ -81,10 +76,15 @@ class RouteDetailActivity : AppCompatActivity() {
         binding.ctbRouteDetail.setBackgroundColor(color)
     }
 
-    private fun initObserver(routeType: RouteType, activity: Activity) {
+    private fun startEllipsizeMarqueeEffect() {
+        binding.txtTitle.setHorizontallyScrolling(true)
+        binding.txtTitle.isSelected = true
+    }
+
+    private fun initObserver(route: RouteModel, activity: Activity) {
         viewModel.state.observe(
             activity as LifecycleOwner,
-            uiStateObserver(routeType, activity)
+            uiStateObserver(route.type, activity)
         )
         viewModel.resetTimer.observe(
             activity as LifecycleOwner,
@@ -125,31 +125,36 @@ class RouteDetailActivity : AppCompatActivity() {
     }
 
     private fun loadRouteStation(routeType: RouteType, activity: Activity) {
-        val state = binding.rvBusRouteStationList.layoutManager?.onSaveInstanceState()
+        val scrollState = binding.rvBusRouteStationList.layoutManager?.onSaveInstanceState()
         binding.rvBusRouteStationList.adapter = RouteStationAdapter(
             routeType,
             viewModel.routeStations,
             viewModel.routeBuses,
-            routeStationClickEventListener(viewModel.routeStations),
-            activity
+            routeStationClickEventListener(viewModel.routeStations, activity)
         )
         binding.rvBusRouteStationList.layoutManager = LinearLayoutManager(activity)
-        binding.txtRouteBusCount.text = String.format(ROUTE_BUS_COUNT, viewModel.routeBuses.size)
-        binding.rvBusRouteStationList.layoutManager?.onRestoreInstanceState(state)
+        binding.txtRouteBusCount.text = String.format(ROUTE_BUS_COUNT, viewModel.routeBuses.count())
+        binding.rvBusRouteStationList.layoutManager?.onRestoreInstanceState(scrollState)
         toggleView(binding.rvBusRouteStationList)
         setBtnScrollToEndStation()
     }
 
     private fun routeStationClickEventListener(
-        items: List<RouteStationModel>
+        items: StationModels,
+        activity: Activity
     ) = object: ItemClickEventListener {
         override fun onItemClickListener(position: Int) {
-
+            sendUserToStationDetailScreen(items.get(position), activity)
         }
 
-        override fun onDeleteButtonClickListener(position: Int) {
+        override fun onDeleteButtonClickListener(position: Int) {}
+    }
 
-        }
+    private fun sendUserToStationDetailScreen(item: StationModel, activity: Activity) {
+        val intent = Intent(activity, StationDetailActivity::class.java)
+        intent.putExtra(Const.TAG_STATION, item)
+
+        startActivity(intent)
     }
 
     private fun setBtnScrollToEndStation() {
@@ -162,7 +167,7 @@ class RouteDetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun turnaroundIndex() = viewModel.routeStations.find { it.isTurnaround }?.sequenceNumber ?: DEFAULT_TURNAROUND_INDEX
+    private fun turnaroundIndex() = viewModel.routeStations.turnaroundSequence() ?: DEFAULT_TURNAROUND_INDEX
 
     private fun unloadRouteInfo() {
         binding.txtRouteStartStation.text = Const.EMPTY_TEXT
@@ -189,10 +194,12 @@ class RouteDetailActivity : AppCompatActivity() {
     private fun resetTimerObserver() = Observer<Int> {
         if (it == Const.ZERO) {
             binding.fabRefresh.setImageResource(R.drawable.ic_refresh)
+            binding.fabRefresh.isClickable = true
             binding.fabTime.visibility = View.GONE
         } else {
             if (binding.fabTime.visibility == View.GONE) {
                 binding.fabTime.visibility = View.VISIBLE
+                binding.fabRefresh.isClickable = false
                 binding.fabRefresh.setImageResource(android.R.color.transparent)
             }
             binding.fabTime.text = it.toString()
@@ -263,11 +270,6 @@ class RouteDetailActivity : AppCompatActivity() {
         binding.fabRefresh.setOnClickListener { viewModel.loadWithTimer() }
     }
 
-    /**
-     * fun onResume()
-     *
-     * 액티비티 전환 혹은 포커스가 다시 잡힐 때 호출
-     */
     override fun onResume() {
         viewModel.load()
         super.onResume()

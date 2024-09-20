@@ -3,7 +3,7 @@ package com.san.busing.view.screen
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.san.busing.databinding.ActivityRouteInfoBinding
-import com.san.busing.domain.model.RouteInfoModel
+import com.san.busing.domain.modelimpl.RouteInfoModel
 import com.san.busing.domain.utils.Const
 
 class RouteInfoActivity : AppCompatActivity() {

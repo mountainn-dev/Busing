@@ -10,15 +10,19 @@ import com.san.busing.data.exception.ExceptionMessage
 import com.san.busing.data.exception.ServiceException
 import com.san.busing.data.repository.RouteRepository
 import com.san.busing.data.source.local.database.RecentSearchDatabase
+import com.san.busing.data.source.remote.retrofit.BusLocationService
 import com.san.busing.data.source.remote.retrofit.RouteService
 import com.san.busing.data.vo.Id
-import com.san.busing.domain.model.RouteInfoModel
-import com.san.busing.domain.model.RouteRecentSearchModel
-import com.san.busing.domain.model.RouteStationModel
-import com.san.busing.domain.model.RouteSummaryModel
+import com.san.busing.domain.modelimpl.BusModels
+import com.san.busing.domain.modelimpl.RouteInfoModel
+import com.san.busing.domain.modelimpl.RouteModels
+import com.san.busing.domain.modelimpl.RouteRecentSearchModel
+import com.san.busing.domain.modelimpl.RouteRecentSearchModels
+import com.san.busing.domain.modelimpl.StationModels
 
 class RouteRepositoryImpl(
-    private val service: RouteService,
+    private val routeService: RouteService,
+    private val busLocationService: BusLocationService,
     private val context: Context
 ) : RouteRepository {
     private val db = Room.databaseBuilder(
@@ -26,38 +30,54 @@ class RouteRepositoryImpl(
 
     override suspend fun getRouteInfo(id: Id): Result<RouteInfoModel> {
         try {
-            val response = service.getBusRouteInfoItem(BuildConfig.API_KEY, id.get())
+            val response = routeService.getBusRouteInfoItem(BuildConfig.API_KEY, id.get())
             return Result.success(response.body()!!.get())
         } catch (e: Exception) {
-            Log.e(ExceptionMessage.TAG_ROUTE_INFO_EXCEPTION, e.message ?: e.toString())
+            Log.e(ExceptionMessage.TAG_ROUTE_INFO_EXCEPTION, e.toString())
             return Result.error(e)
         }
     }
 
-    override suspend fun getRoutes(keyword: String): Result<List<RouteSummaryModel>> {
+    override suspend fun getRoutes(keyword: String): Result<RouteModels> {
         try {
-            val response = service.getBusRouteList(BuildConfig.API_KEY, keyword)
-            return Result.success(response.body()!!.get())
+            val response = routeService.getBusRouteList(BuildConfig.API_KEY, keyword)
+            val routes = response.body()!!.get()
+            routes.sort()
+            return Result.success(routes)
         } catch (e: ServiceException.ResultException) {
-            return Result.success(listOf())
+            return Result.success(RouteModels.instance())
         } catch (e: ServiceException.OptionalParameterException) {
-            return Result.success(listOf())
+            return Result.success(RouteModels.instance())
         } catch (e: Exception) {
-            Log.e(ExceptionMessage.TAG_ROUTE_SUMMARY_EXCEPTION, e.message ?: e.toString())
+            Log.e(ExceptionMessage.TAG_ROUTE_SUMMARY_EXCEPTION, e.toString())
             return Result.error(e)
         }
     }
 
-    override suspend fun getRouteStations(id: Id): Result<List<RouteStationModel>> {
+    override suspend fun getRouteStations(id: Id): Result<StationModels> {
         try {
-            val response = service.getBusStationList(BuildConfig.API_KEY, id.get())
+            val response = routeService.getBusStationList(BuildConfig.API_KEY, id.get())
             return Result.success(response.body()!!.get())
         } catch (e: ServiceException.ResultException) {
-            return Result.success(listOf())
+            return Result.success(StationModels.instance())
         } catch (e: ServiceException.OptionalParameterException) {
-            return Result.success(listOf())
+            return Result.success(StationModels.instance())
         } catch (e: Exception) {
-            Log.e(ExceptionMessage.TAG_ROUTE_STATION_EXCEPTION, e.message ?: e.toString())
+            Log.e(ExceptionMessage.TAG_ROUTE_STATION_EXCEPTION, e.toString())
+            return Result.error(e)
+        }
+    }
+
+    override suspend fun getBusLocations(id: Id): Result<BusModels> {
+        try {
+            val response = busLocationService.getBusLocationList(BuildConfig.API_KEY, id.get())
+            return Result.success(response.body()!!.get())
+        } catch (e: ServiceException.ResultException) {
+            return Result.success(BusModels.instance())
+        } catch (e: ServiceException.OptionalParameterException) {
+            return Result.success(BusModels.instance())
+        } catch (e: Exception) {
+            Log.e(ExceptionMessage.TAG_BUS_EXCEPTION, e.toString())
             return Result.error(e)
         }
     }
@@ -69,16 +89,17 @@ class RouteRepositoryImpl(
             }
             return Result.error(NoSuchElementException(""))
         } catch (e: Exception) {
-            Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.message ?: e.toString())
+            Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.toString())
             return Result.error(e)
         }
     }
 
-    override suspend fun getAllRecentSearch(): Result<List<RouteRecentSearchModel>> {
+    override suspend fun getAllRecentSearch(): Result<RouteRecentSearchModels> {
         try {
-            return Result.success(db.routeRecentSearchDao().getAllRouteRecentSearches().map { it.toRouteRecentSearchModel() })
+            val recentSearchModels = db.routeRecentSearchDao().getAllRouteRecentSearches().map { it.toRouteRecentSearchModel() }
+            return Result.success(RouteRecentSearchModels(recentSearchModels))
         } catch (e: Exception) {
-            Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.message ?: e.toString())
+            Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.toString())
             return Result.error(e)
         }
     }
@@ -89,7 +110,7 @@ class RouteRepositoryImpl(
                 recentSearchModel.toRouteRecentSearchEntity())
             return Result.success(true)
         } catch (e: Exception) {
-            Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.message ?: e.toString())
+            Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.toString())
             return Result.error(e)
         }
     }
@@ -100,7 +121,7 @@ class RouteRepositoryImpl(
                 recentSearchModel.toRouteRecentSearchEntity())
             return Result.success(true)
         } catch (e: Exception) {
-            Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.message ?: e.toString())
+            Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.toString())
             return Result.error(e)
         }
     }
@@ -111,7 +132,7 @@ class RouteRepositoryImpl(
                 recentSearchModel.toRouteRecentSearchEntity())
             return Result.success(true)
         } catch (e: Exception) {
-            Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.message ?: e.toString())
+            Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.toString())
             return Result.error(e)
         }
     }
@@ -121,7 +142,7 @@ class RouteRepositoryImpl(
             db.routeRecentSearchDao().deleteAllRouteRecentSearches()
             return Result.success(true)
         } catch (e: Exception) {
-            Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.message ?: e.toString())
+            Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.toString())
             return Result.error(e)
         }
     }
@@ -145,7 +166,7 @@ class RouteRepositoryImpl(
             preference.edit().putLong(BuildConfig.ROUTE_PREFERENCE_KEY, newIdx).apply()
             return Result.success(true)
         } catch (e: Exception) {
-            Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.message ?: e.toString())
+            Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.toString())
             return Result.error(e)
         }
     }
