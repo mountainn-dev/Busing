@@ -22,13 +22,18 @@ data class RouteModelImpl(
     }
 }
 
+// TODO: 노선 검색, 정류장 경유 노선이 RouteModels 를 공유하는데 sorting 관련해서 리팩토링 필요
+// 우선은 sort() 를 별도로 만들어서 repo 에서 노선 검색 결과를 받아오는 경우에만 sorting 을 실행
 data class RouteModels(
     private val data: List<RouteModel>
 ) {
-    private val models = data.sortedWith(
-        compareBy<RouteModel>{ it.name.length }.thenBy { it.name }.thenBy { it.regionName }
-    )
+    private var models = data
 
+    fun sort() {
+        models = data.sortedWith(
+            compareBy<RouteModel>{ it.name.length }.thenBy { it.name }.thenBy { it.regionName }
+        )
+    }
     fun get() = models
     fun get(index: Int) = models[index]
     fun count() = models.size

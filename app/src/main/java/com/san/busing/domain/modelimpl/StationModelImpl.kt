@@ -33,6 +33,8 @@ data class StationModelImpl(
     }
 }
 
+// TODO: 정류장 검색, 노선 경유 정류장이 StationModels 를 공유하는데 sorting 관련해서 리팩토링 필요
+// 우선은 sort() 를 별도로 만들어서 repo 에서 정류장 검색 결과를 받아오는 경우에만 sorting 을 실행
 data class StationModels(
     private val data: List<StationModel>
 ) {
