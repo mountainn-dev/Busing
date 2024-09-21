@@ -5,6 +5,7 @@ import com.san.busing.domain.enums.RouteType
 import com.san.busing.domain.model.route.RouteModel
 import com.san.busing.domain.model.Stoppable
 import com.san.busing.domain.utils.Const
+import kotlin.math.absoluteValue
 
 data class RouteModelImpl(
     override val id: Id,
@@ -29,9 +30,10 @@ data class RouteModels(
 ) {
     private var models = data
 
-    fun sort() {
+    fun sort(keyword: String) {
         models = data.sortedWith(
-            compareBy<RouteModel>{ it.name.length }.thenBy { it.name }.thenBy { it.regionName }
+            compareBy<RouteModel> { it.name.compareTo(keyword).absoluteValue }.thenBy { it.name }
+                .thenBy { it.name.length }.thenBy { it.regionName }
         )
     }
     fun get() = models

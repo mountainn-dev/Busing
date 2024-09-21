@@ -4,6 +4,7 @@ import com.san.busing.data.vo.Id
 import com.san.busing.domain.model.Passable
 import com.san.busing.domain.model.station.StationModel
 import com.san.busing.domain.utils.Const
+import kotlin.math.absoluteValue
 
 data class StationModelImpl(
     override val id: Id,
@@ -40,9 +41,10 @@ data class StationModels(
 ) {
     private var models = data
 
-    fun sort() {
+    fun sort(keyword: String) {
         models = data.sortedWith(
-            compareBy<StationModel>{ it.name.length }.thenBy { it.name }.thenBy { it.regionName }
+            compareBy<StationModel> { it.name.compareTo(keyword).absoluteValue }.thenBy { it.name }
+                .thenBy { it.name.length }.thenBy { it.regionName }
         )
     }
     fun get(index: Int) = models[index]

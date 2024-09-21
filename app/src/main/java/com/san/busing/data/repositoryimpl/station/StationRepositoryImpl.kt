@@ -32,7 +32,7 @@ class StationRepositoryImpl(
         try {
             val response = stationService.getBusStationList(BuildConfig.API_KEY, keyword)
             val stations = response.body()!!.get()
-            stations.sort()
+            stations.sort(keyword)
             return Result.success(stations)
         } catch (e: ServiceException.ResultException) {
             return Result.success(StationModels.instance())

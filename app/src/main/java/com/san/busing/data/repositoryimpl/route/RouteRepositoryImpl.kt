@@ -43,7 +43,7 @@ class RouteRepositoryImpl(
         try {
             val response = routeService.getBusRouteList(BuildConfig.API_KEY, keyword)
             val routes = response.body()!!.get()
-            routes.sort()
+            routes.sort(keyword)
             return Result.success(routes)
         } catch (e: ServiceException.ResultException) {
             return Result.success(RouteModels.instance())
