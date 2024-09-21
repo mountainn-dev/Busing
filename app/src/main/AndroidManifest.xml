@@ -15,13 +15,13 @@
         android:theme="@style/Theme.Busing"
         tools:targetApi="31">
         <activity
-            android:name=".view.screen.StationDetailActivity"
+            android:name=".view.screen.station.StationDetailActivity"
             android:exported="false" />
         <activity
-            android:name=".view.screen.RouteInfoActivity"
+            android:name=".view.screen.route.RouteInfoActivity"
             android:exported="false" />
         <activity
-            android:name=".view.screen.RouteDetailActivity"
+            android:name=".view.screen.route.RouteDetailActivity"
             android:exported="false" />
         <activity
             android:name=".view.screen.HomeActivity"

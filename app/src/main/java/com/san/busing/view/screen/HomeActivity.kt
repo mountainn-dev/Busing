@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.san.busing.R
 import com.san.busing.databinding.ActivityHomeBinding
+import com.san.busing.view.screen.route.SearchRouteFragment
+import com.san.busing.view.screen.station.SearchStationFragment
 
 class HomeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityHomeBinding
