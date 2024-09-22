@@ -8,6 +8,7 @@ import com.san.busing.data.source.remote.retrofit.ServiceResult
 import com.san.busing.data.source.remote.retrofit.ServiceResult.*
 import okhttp3.Interceptor
 import okhttp3.Response
+import okhttp3.ResponseBody
 import java.io.IOException
 import java.io.InputStream
 
@@ -22,8 +23,15 @@ class ErrorInterceptor : Interceptor {
         val response = chain.proceed(request)
         val body = response.body()
 
+        val bodyCopy = body?.let {
+            val source = it.source()
+            source.request(Long.MAX_VALUE) // Buffer the entire body.
+            val buffer = source.buffer()
+            ResponseBody.create(body.contentType(), body.contentLength(), buffer.clone())
+        }
+
         parseResult(body!!.byteStream())
-        return chain.proceed(request)
+        return response.newBuilder().body(bodyCopy).build()
     }
 
     /**

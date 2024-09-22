@@ -12,7 +12,7 @@ android {
 
     defaultConfig {
         applicationId = "com.san.busing"
-        minSdk = 29
+        minSdk = 31
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -72,6 +72,7 @@ dependencies {
     implementation("com.squareup.okhttp3:logging-interceptor:3.12.1")
     implementation("androidx.room:room-runtime:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion")
+    implementation("androidx.core:core-splashscreen:1.0.1")
     annotationProcessor("androidx.room:room-compiler:$roomVersion")
 
     kapt("com.tickaroo.tikxml:processor:0.8.13")

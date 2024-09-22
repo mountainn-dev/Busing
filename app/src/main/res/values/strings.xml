@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Busing</string>
+    <string name="app_name">버싱</string>
 
     <!-- common -->
     <string name="delete_all">All</string>

@@ -6,7 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import com.san.busing.data.entity.StationRecentSearch
+import com.san.busing.data.entity.station.StationRecentSearch
 
 @Dao
 interface StationRecentSearchDao {
