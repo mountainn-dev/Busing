@@ -41,6 +41,7 @@ class StationDetailViewModelImpl(
     private val busArrivalState = MutableLiveData<UiState>(UiState.Loading)
     override lateinit var viaRoutes: RouteModels
     override val nextStations = Stack<StationModel>()
+    private val tmpNextStations = Stack<StationModel>()
     override val busArrivals = Stack<BusArrivalModel>()
 
     override val resetTimer: LiveData<Int>
@@ -87,7 +88,7 @@ class StationDetailViewModelImpl(
         if (result is Success) {
             viaRoutes = result.data
             viaRouteState.postValue(UiState.Success)
-            loadRouteDirectionAndBusArrival()
+            loadNextStationAndBusArrival()
         } else {
             error = (result as Error).message()
             if (result.isTimeOut()) viaRouteState.postValue(UiState.Timeout)
@@ -95,19 +96,21 @@ class StationDetailViewModelImpl(
         }
     }
 
-    private fun loadRouteDirectionAndBusArrival() {
+    private fun loadNextStationAndBusArrival() {
         busLoadingJob?.cancel()
-        nextStations.clear()
+        tmpNextStations.clear()
         busArrivals.clear()
 
         busLoadingJob = viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 viaRoutes.get().flatMap {
                     listOf(
-                        async { loadNextStation(it.id, (it as Stoppable).stationSequence) },
+                        async { loadNextStationTemp(it.id, (it as Stoppable).stationSequence) },
                         async { loadBusArrival(it.id, (it as Stoppable).stationSequence) }
                     )
                 }.awaitAll().let {
+                    nextStations.clear()
+                    nextStations.addAll(tmpNextStations)
                     nextStationState.postValue(UiState.Success)
                     busArrivalState.postValue(UiState.Success)
                 }
@@ -115,13 +118,13 @@ class StationDetailViewModelImpl(
         }
     }
 
-    private suspend fun loadNextStation(routeId: Id, stationSeq: Int) {
+    private suspend fun loadNextStationTemp(routeId: Id, stationSeq: Int) {
         val result = routeRepository.getRouteStations(routeId)
 
         if (result is Success) {
             val nextStation = result.data.getOrFirst(stationSeq)
             (nextStation as Passable).setVehicleId(routeId)
-            nextStations.push(nextStation)
+            tmpNextStations.push(nextStation)
         } else {
             error = (result as Error).message()
             if (result.isTimeOut()) nextStationState.postValue(UiState.Timeout)
