@@ -44,7 +44,7 @@ data class StationModels(
     fun sort(keyword: String) {
         models = data.sortedWith(
             compareBy<StationModel> { it.name.compareTo(keyword).absoluteValue }.thenBy { it.name }
-                .thenBy { it.name.length }.thenBy { it.regionName }
+                .thenBy { it.regionName }
         )
     }
     fun get(index: Int) = models[index]

@@ -39,18 +39,8 @@ class StationSearchResultAdapter(
         val binding = ItemStationSearchResultBinding.inflate(
             LayoutInflater.from(parent.context), parent, false
         )
-        initAnimEffect(binding)
 
         return StationSearchResultViewHolder(binding)
-    }
-
-    private fun initAnimEffect(binding: ItemStationSearchResultBinding) {
-        initEllipsizeMarqueeEffect(binding)
-    }
-
-    private fun initEllipsizeMarqueeEffect(binding: ItemStationSearchResultBinding) {
-        binding.txtStationName.setHorizontallyScrolling(true)
-        binding.txtStationName.isSelected = true
     }
 
     override fun getItemCount() = items.count()

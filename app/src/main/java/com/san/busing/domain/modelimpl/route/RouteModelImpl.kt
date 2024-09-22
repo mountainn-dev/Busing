@@ -33,7 +33,7 @@ data class RouteModels(
     fun sort(keyword: String) {
         models = data.sortedWith(
             compareBy<RouteModel> { it.name.compareTo(keyword).absoluteValue }.thenBy { it.name }
-                .thenBy { it.name.length }.thenBy { it.regionName }
+                .thenBy { it.regionName }
         )
     }
     fun get() = models

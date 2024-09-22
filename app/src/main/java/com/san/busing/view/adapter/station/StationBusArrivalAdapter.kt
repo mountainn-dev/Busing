@@ -136,6 +136,6 @@ class StationBusArrivalAdapter(
 
     companion object {
         private const val REMAIN_BUS_ARRIVAL_TIME = "%d분"
-        private const val REMAIN_BUS_ARRIVAL_LOCATION = "%d번째 전"
+        private const val REMAIN_BUS_ARRIVAL_LOCATION = "[%d번째 전]"
     }
 }

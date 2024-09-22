@@ -2,6 +2,11 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.Busing" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="android:colorBackground">@color/white</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/ic_busing_inset</item>
+        <item name="android:statusBarColor">@color/dark_grey</item>
+        <item name="android:windowSplashScreenBackground">@color/dark_blue</item>
+        <item name="android:windowSplashScreenIconBackgroundColor">@color/dark_blue</item>
+        <item name="android:windowSplashScreenAnimationDuration">1000</item>
     </style>
 
     <style name="Theme.Busing" parent="Base.Theme.Busing" />

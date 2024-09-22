@@ -129,8 +129,7 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:text="@string/route_no_result"
-            android:textColor="@color/grey"
-            android:visibility="gone"/>
+            android:textColor="@color/grey"/>
 
         <LinearLayout
             android:id="@+id/llTimeout"
