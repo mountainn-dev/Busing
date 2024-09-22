@@ -10,7 +10,7 @@
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_busing"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_busing"
+        android:roundIcon="@mipmap/ic_busing_rounded"
         android:supportsRtl="true"
         android:theme="@style/Theme.Busing" >
         <activity
