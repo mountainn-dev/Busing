@@ -21,6 +21,6 @@ class Error <T> (private val error: Exception) : Result<T>() {
         else error.message ?: error.toString()
 
     fun isCritical() =
-        error is UnknownHostException || error is ServiceException.ServerException || error is ServiceException.EssentialParameterException
+        error is UnknownHostException || error is ServiceException.SystemException
     fun isTimeOut() = error is SocketTimeoutException
 }
