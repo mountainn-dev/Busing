@@ -100,7 +100,8 @@ class RouteDetailActivity : AppCompatActivity() {
         when (it) {
             UiState.Success -> {
                 loadRouteInfo()
-                loadRouteStation(routeType, activity)
+                if (viewModel.routeStations.isEmpty()) noViaStationView()
+                else loadRouteStation(routeType, activity)
             }
             UiState.Loading -> {
                 unloadRouteInfo()
@@ -122,6 +123,10 @@ class RouteDetailActivity : AppCompatActivity() {
         binding.txtRouteEndStation.text = viewModel.routeInfo.endStationName
         binding.btnScrollToStartStation.text = viewModel.routeInfo.startStationName
         binding.btnScrollToEndStation.text = viewModel.routeInfo.endStationName
+    }
+
+    private fun noViaStationView() {
+        toggleView(binding.txtNoViaStations)
     }
 
     private fun loadRouteStation(routeType: RouteType, activity: Activity) {
@@ -280,11 +285,14 @@ class RouteDetailActivity : AppCompatActivity() {
     }
 
     private fun toggleView(view: View) {
-        binding.pgbBusRouteStation.visibility = if (view == binding.pgbBusRouteStation) View.VISIBLE else View.GONE
-        binding.rvBusRouteStationList.visibility = if (view == binding.rvBusRouteStationList) View.VISIBLE else View.GONE
-        binding.llTimeout.visibility = if (view == binding.llTimeout) View.VISIBLE else View.GONE
-        binding.llServiceError.visibility = if (view == binding.llServiceError) View.VISIBLE else View.GONE
+        binding.pgbBusRouteStation.visibility = visibleWhenTrue(view == binding.pgbBusRouteStation)
+        binding.rvBusRouteStationList.visibility = visibleWhenTrue(view == binding.rvBusRouteStationList)
+        binding.txtNoViaStations.visibility = visibleWhenTrue(view == binding.txtNoViaStations)
+        binding.llTimeout.visibility = visibleWhenTrue(view == binding.llTimeout)
+        binding.llServiceError.visibility = visibleWhenTrue(view == binding.llServiceError)
     }
+
+    private fun visibleWhenTrue(state: Boolean) = if (state) View.VISIBLE else View.GONE
 
     companion object {
         private const val ROUTE_BUS_COUNT = "%d대"

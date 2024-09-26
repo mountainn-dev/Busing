@@ -133,6 +133,16 @@
             android:indeterminate="true"
             android:visibility="gone"/>
 
+        <TextView
+            android:id="@+id/txtNoViaRoutes"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="@dimen/padding_bottom_loading_indicator"
+            android:gravity="center"
+            android:text="@string/no_via_routes"
+            android:textColor="@color/grey"
+            android:visibility="gone"/>
+
         <LinearLayout
             android:id="@+id/llTimeout"
             android:layout_width="match_parent"

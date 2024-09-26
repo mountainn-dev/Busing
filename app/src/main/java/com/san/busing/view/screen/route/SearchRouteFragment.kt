@@ -240,10 +240,12 @@ class SearchRouteFragment : Fragment() {
     }
 
     private fun toggleView(view: View) {
-        binding.llTimeout.visibility = if (view == binding.llTimeout) View.VISIBLE else View.GONE
-        binding.rvSearchResult.visibility = if (view == binding.rvSearchResult) View.VISIBLE else View.GONE
-        binding.pgbSearchRoute.visibility = if (view == binding.pgbSearchRoute) View.VISIBLE else View.GONE
-        binding.txtNoResult.visibility = if (view == binding.txtNoResult) View.VISIBLE else View.GONE
-        binding.llServiceError.visibility = if (view == binding.llServiceError) View.VISIBLE else View.GONE
+        binding.pgbSearchRoute.visibility = visibleWhenTrue(view == binding.pgbSearchRoute)
+        binding.rvSearchResult.visibility = visibleWhenTrue(view == binding.rvSearchResult)
+        binding.txtNoResult.visibility = visibleWhenTrue(view == binding.txtNoResult)
+        binding.llTimeout.visibility = visibleWhenTrue(view == binding.llTimeout)
+        binding.llServiceError.visibility = visibleWhenTrue(view == binding.llServiceError)
     }
+
+    private fun visibleWhenTrue(state: Boolean) = if (state) View.VISIBLE else View.GONE
 }
