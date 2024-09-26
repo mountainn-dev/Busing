@@ -124,6 +124,8 @@ class StationBusArrivalAdapter(
     }
 
     private fun initEllipsizeMarqueeEffect(binding: ItemStationBusArrivalBinding) {
+        binding.txtRouteName.setHorizontallyScrolling(true)
+        binding.txtRouteName.isSelected = true
         binding.txtNextStationName.setHorizontallyScrolling(true)
         binding.txtNextStationName.isSelected = true
     }
