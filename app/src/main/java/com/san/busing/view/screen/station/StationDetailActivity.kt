@@ -190,6 +190,7 @@ class StationDetailActivity : AppCompatActivity() {
         setBtnBackListener()
         setBtnBookMarkListener(activity)
         setBtnRequestListener()
+        setFabScrollUpListener()
         setFabRefreshListener()
     }
 
@@ -212,6 +213,13 @@ class StationDetailActivity : AppCompatActivity() {
     private fun setBtnRequestListener() {
         binding.btnTimeoutRequest.setOnClickListener { viewModel.load() }
         binding.btnServiceErrorRequest.setOnClickListener { viewModel.load() }
+    }
+
+    private fun setFabScrollUpListener() {
+        binding.fabScrollUp.setOnClickListener {
+            binding.rvStationViaRouteList.scrollToPosition(Const.ZERO)
+            binding.abStationDetail.setExpanded(true)
+        }
     }
 
     private fun setFabRefreshListener() {
