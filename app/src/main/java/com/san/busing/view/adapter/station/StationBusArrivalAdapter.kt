@@ -8,6 +8,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.san.busing.databinding.ItemStationBusArrivalBinding
 import com.san.busing.domain.model.Passable
+import com.san.busing.domain.model.Stoppable
 import com.san.busing.domain.model.station.StationModel
 import com.san.busing.domain.modelimpl.route.RouteModels
 import com.san.busing.domain.modelimpl.station.BusArrivalModel
@@ -42,7 +43,10 @@ class StationBusArrivalAdapter(
         }
 
         private fun loadNextStation(position: Int) {
-            val nextStationName = nextStations.find { routeItems.get(position).isSame((it as Passable).vehicleId) }?.name
+            val nextStationName = nextStations.find {
+                routeItems.get(position).isSame((it as Passable).vehicleId)
+                        && (routeItems.get(position) as Stoppable).stationSequence == it.stationSequence
+            }?.name
 
             if (nextStationName != null) loadNextStation(nextStationName)
             else unloadNextStation()
@@ -57,7 +61,10 @@ class StationBusArrivalAdapter(
         }
 
         private fun loadBusArrival(position: Int) {
-            val busArrival = busArrivals.find { routeItems.get(position).isSame(it.id) }
+            val busArrival = busArrivals.find {
+                routeItems.get(position).isSame(it.id)
+                        && (routeItems.get(position) as Stoppable).stationSequence == it.sequenceNumber
+            }
 
             if (busArrival != null) loadBusArrival(busArrival)
             else unloadBusArrival()

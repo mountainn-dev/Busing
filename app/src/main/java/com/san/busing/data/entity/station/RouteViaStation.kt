@@ -30,7 +30,7 @@ data class RouteViaStation(
         name,
         regionName(regionName)
     ).also {
-        it.setStationSequence(stationSeq)
+        it.setStationSequence(stationSeq-1)
         it.setIsTurnaround(isTurnaround(turnYn))
     }
 
