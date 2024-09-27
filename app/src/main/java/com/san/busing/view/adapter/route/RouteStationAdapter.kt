@@ -49,7 +49,6 @@ class RouteStationAdapter(
 
         private fun loadBusInfo(item: BusModel) {
             binding.llBusInfo.visibility = View.VISIBLE
-            binding.lineBusInfo.visibility = View.VISIBLE
             binding.imgBus.visibility = View.VISIBLE
             binding.txtPlateNumber.text = item.plateNumber
             binding.txtRemainSeat.text = remainSeatText(item.remainSeat)
@@ -61,7 +60,6 @@ class RouteStationAdapter(
 
         private fun unloadBusInfo() {
             binding.llBusInfo.visibility = View.GONE
-            binding.lineBusInfo.visibility = View.GONE
             binding.imgBus.visibility = View.GONE
         }
 
