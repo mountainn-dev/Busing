@@ -123,10 +123,10 @@ class StationDetailViewModelImpl(
         val result = routeRepository.getRouteStations(routeId)
 
         if (result is Success) {
-            val nextStation = result.data.getOrFirst(stationSeq)
-            (nextStation as Passable).setVehicleId(routeId)
-            Log.d("stationSeq", "${stationSeq}, ${nextStation.stationSequence}")
-            tmpNextStations.push(nextStation)
+            result.data.getOrNull(stationSeq).let {
+                (it as Passable).setVehicleId(routeId)
+                tmpNextStations.push(it)
+            }
         } else {
             error = (result as Error).message()
             if (result.isTimeOut()) nextStationState.postValue(UiState.Timeout)
