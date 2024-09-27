@@ -36,6 +36,8 @@ class StationRepositoryImpl(
             return Result.success(stations)
         } catch (e: ServiceException.ResultException) {
             return Result.success(StationModels.instance())
+        } catch (e: ServiceException.EssentialParameterException) {
+            return Result.success(StationModels.instance())
         } catch (e: ServiceException.OptionalParameterException) {
             return Result.success(StationModels.instance())
         } catch (e: Exception) {

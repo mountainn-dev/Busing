@@ -59,7 +59,7 @@ data class StationModels(
 
         return null
     }
-    fun getOrFirst(seqNum: Int) = if (seqNum !in data.indices) data.get(0) else data.get(seqNum)
+    fun getOrFirst(seqNum: Int) = if (seqNum !in data.indices) data[0] else data[seqNum]
 
     companion object {
         fun instance() = StationModels(listOf())
