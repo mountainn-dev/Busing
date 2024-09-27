@@ -50,18 +50,20 @@ data class StationModels(
     fun get(index: Int) = models[index]
     fun count() = models.size
     fun isEmpty() = models.isEmpty()
-    fun turnaroundSequence(): Int? {
+    fun turnaroundSequence(): Int {
         for (sta in data) {
             val station = sta as Passable
 
             if (station.isTurnaround) return station.stationSequence
         }
 
-        return null
+        return DEFAULT_TURNAROUND_INDEX
     }
     fun getOrNull(seqNum: Int) = if (seqNum !in data.indices) null else data[seqNum]
 
     companion object {
+        private const val DEFAULT_TURNAROUND_INDEX = 1
+
         fun instance() = StationModels(listOf())
     }
 }
