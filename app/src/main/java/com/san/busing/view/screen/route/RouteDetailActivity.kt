@@ -3,6 +3,7 @@ package com.san.busing.view.screen.route
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -100,7 +101,8 @@ class RouteDetailActivity : AppCompatActivity() {
         when (it) {
             UiState.Success -> {
                 loadRouteInfo()
-                loadRouteStation(routeType, activity)
+                if (viewModel.routeStations.isEmpty()) noViaStationView()
+                else loadRouteStation(routeType, activity)
             }
             UiState.Loading -> {
                 unloadRouteInfo()
@@ -122,6 +124,10 @@ class RouteDetailActivity : AppCompatActivity() {
         binding.txtRouteEndStation.text = viewModel.routeInfo.endStationName
         binding.btnScrollToStartStation.text = viewModel.routeInfo.startStationName
         binding.btnScrollToEndStation.text = viewModel.routeInfo.endStationName
+    }
+
+    private fun noViaStationView() {
+        toggleView(binding.txtNoViaStations)
     }
 
     private fun loadRouteStation(routeType: RouteType, activity: Activity) {
@@ -158,16 +164,14 @@ class RouteDetailActivity : AppCompatActivity() {
     }
 
     private fun setBtnScrollToEndStation() {
-        val idx = turnaroundIndex()
+        val idx = viewModel.routeStations.turnaroundSequence()
 
         binding.btnScrollToEndStation.setOnClickListener {
-            if (binding.abRouteDetail.isLifted)
-                binding.rvBusRouteStationList.smoothScrollToPosition(idx + POSITION_VALUE_WHEN_LIFTED)
-            else binding.rvBusRouteStationList.smoothScrollToPosition(idx + POSITION_VALUE_WHEN_NOT_LIFTED)
+            if (binding.abRouteDetail.isLifted) (binding.rvBusRouteStationList.layoutManager as LinearLayoutManager)
+                .scrollToPositionWithOffset(idx, 0)
+            else binding.rvBusRouteStationList.scrollToPosition(idx + POSITION_VALUE_WHEN_NOT_LIFTED)
         }
     }
-
-    private fun turnaroundIndex() = viewModel.routeStations.turnaroundSequence() ?: DEFAULT_TURNAROUND_INDEX
 
     private fun unloadRouteInfo() {
         binding.txtRouteStartStation.text = Const.EMPTY_TEXT
@@ -254,7 +258,7 @@ class RouteDetailActivity : AppCompatActivity() {
 
     private fun setBtnScrollToStartStationListener() {
         binding.btnScrollToStartStation.setOnClickListener {
-            binding.rvBusRouteStationList.smoothScrollToPosition(Const.ZERO)
+            binding.rvBusRouteStationList.scrollToPosition(Const.ZERO)
         }
     }
 
@@ -280,17 +284,18 @@ class RouteDetailActivity : AppCompatActivity() {
     }
 
     private fun toggleView(view: View) {
-        binding.pgbBusRouteStation.visibility = if (view == binding.pgbBusRouteStation) View.VISIBLE else View.GONE
-        binding.rvBusRouteStationList.visibility = if (view == binding.rvBusRouteStationList) View.VISIBLE else View.GONE
-        binding.llTimeout.visibility = if (view == binding.llTimeout) View.VISIBLE else View.GONE
-        binding.llServiceError.visibility = if (view == binding.llServiceError) View.VISIBLE else View.GONE
+        binding.pgbBusRouteStation.visibility = visibleWhenTrue(view == binding.pgbBusRouteStation)
+        binding.rvBusRouteStationList.visibility = visibleWhenTrue(view == binding.rvBusRouteStationList)
+        binding.txtNoViaStations.visibility = visibleWhenTrue(view == binding.txtNoViaStations)
+        binding.llTimeout.visibility = visibleWhenTrue(view == binding.llTimeout)
+        binding.llServiceError.visibility = visibleWhenTrue(view == binding.llServiceError)
     }
+
+    private fun visibleWhenTrue(state: Boolean) = if (state) View.VISIBLE else View.GONE
 
     companion object {
         private const val ROUTE_BUS_COUNT = "%d대"
-        private const val POSITION_VALUE_WHEN_LIFTED = - 1
-        private const val POSITION_VALUE_WHEN_NOT_LIFTED = + 4
-        private const val DEFAULT_TURNAROUND_INDEX = 1
+        private const val POSITION_VALUE_WHEN_NOT_LIFTED = 5
 
         private const val BOOKMARK_REGISTER_MESSAGE = "즐겨찾기가 등록되었습니다."
         private const val BOOKMARK_UNREGISTER_MESSAGE = "즐겨찾기가 해제되었습니다."

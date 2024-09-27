@@ -2,6 +2,7 @@ package com.san.busing.view.viewmodelimpl.station
 
 import android.app.Activity
 import android.os.CountDownTimer
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
@@ -122,9 +123,10 @@ class StationDetailViewModelImpl(
         val result = routeRepository.getRouteStations(routeId)
 
         if (result is Success) {
-            val nextStation = result.data.getOrFirst(stationSeq)
-            (nextStation as Passable).setVehicleId(routeId)
-            tmpNextStations.push(nextStation)
+            result.data.getOrNull(stationSeq).let {
+                (it as Passable).setVehicleId(routeId)
+                tmpNextStations.push(it)
+            }
         } else {
             error = (result as Error).message()
             if (result.isTimeOut()) nextStationState.postValue(UiState.Timeout)

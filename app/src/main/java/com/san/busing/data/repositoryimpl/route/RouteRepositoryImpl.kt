@@ -47,6 +47,8 @@ class RouteRepositoryImpl(
             return Result.success(routes)
         } catch (e: ServiceException.ResultException) {
             return Result.success(RouteModels.instance())
+        } catch (e: ServiceException.EssentialParameterException) {
+            return Result.success(RouteModels.instance())
         } catch (e: ServiceException.OptionalParameterException) {
             return Result.success(RouteModels.instance())
         } catch (e: Exception) {

@@ -106,7 +106,8 @@ class StationDetailActivity : AppCompatActivity() {
     private fun stateObserver(activity: Activity) = Observer<UiState> {
         when (it) {
             UiState.Success -> {
-                loadStationViaRoutes(activity)
+                if (viewModel.viaRoutes.isEmpty()) noViaRouteView()
+                else loadStationViaRoutes(activity)
             }
             UiState.Loading -> {
                 loadingView()
@@ -118,6 +119,10 @@ class StationDetailActivity : AppCompatActivity() {
                 errorView(activity)
             }
         }
+    }
+
+    private fun noViaRouteView() {
+        toggleView(binding.txtNoViaRoutes)
     }
 
     private fun loadStationViaRoutes(activity: Activity) {
@@ -190,6 +195,7 @@ class StationDetailActivity : AppCompatActivity() {
         setBtnBackListener()
         setBtnBookMarkListener(activity)
         setBtnRequestListener()
+        setFabScrollUpListener()
         setFabRefreshListener()
     }
 
@@ -214,16 +220,26 @@ class StationDetailActivity : AppCompatActivity() {
         binding.btnServiceErrorRequest.setOnClickListener { viewModel.load() }
     }
 
+    private fun setFabScrollUpListener() {
+        binding.fabScrollUp.setOnClickListener {
+            binding.rvStationViaRouteList.scrollToPosition(Const.ZERO)
+            binding.abStationDetail.setExpanded(true)
+        }
+    }
+
     private fun setFabRefreshListener() {
         binding.fabRefresh.setOnClickListener { viewModel.loadWithTimer() }
     }
 
     private fun toggleView(view: View) {
-        binding.pgbStationDetail.visibility = if (view == binding.pgbStationDetail) View.VISIBLE else View.GONE
-        binding.rvStationViaRouteList.visibility = if (view == binding.rvStationViaRouteList) View.VISIBLE else View.GONE
-        binding.llTimeout.visibility = if (view == binding.llTimeout) View.VISIBLE else View.GONE
-        binding.llServiceError.visibility = if (view == binding.llServiceError) View.VISIBLE else View.GONE
+        binding.pgbStationDetail.visibility = visibleWhenTrue(view == binding.pgbStationDetail)
+        binding.rvStationViaRouteList.visibility = visibleWhenTrue(view == binding.rvStationViaRouteList)
+        binding.txtNoViaRoutes.visibility = visibleWhenTrue(view == binding.txtNoViaRoutes)
+        binding.llTimeout.visibility = visibleWhenTrue(view == binding.llTimeout)
+        binding.llServiceError.visibility = visibleWhenTrue(view == binding.llServiceError)
     }
+
+    private fun visibleWhenTrue(state: Boolean) = if (state) View.VISIBLE else View.GONE
 
     override fun onResume() {
         super.onResume()

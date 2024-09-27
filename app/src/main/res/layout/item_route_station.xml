@@ -18,7 +18,7 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:gravity="end|center_vertical"
+            android:gravity="end|top"
             android:orientation="horizontal"
             android:layout_weight="0.15">
 
@@ -34,25 +34,17 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAlignment="center"
-                    android:textSize="@dimen/text_size_bus_info"/>
+                    android:textSize="@dimen/text_extremely_small"/>
 
                 <TextView
                     android:id="@+id/txtRemainSeat"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAlignment="center"
-                    android:textSize="@dimen/text_size_bus_info"
+                    android:textSize="@dimen/text_extremely_small"
                     android:textColor="@color/blue"/>
 
             </LinearLayout>
-
-            <com.google.android.material.divider.MaterialDivider
-                android:id="@+id/lineBusInfo"
-                android:layout_width="8dp"
-                android:layout_height="@dimen/line_default"
-                android:layout_marginStart="@dimen/margin_padding_small"
-                android:visibility="gone"
-                app:dividerColor="@color/grey"/>
 
         </LinearLayout>
 
@@ -78,7 +70,7 @@
                 android:id="@+id/imgBus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal|bottom"
+                android:layout_gravity="center_horizontal|top"
                 android:visibility="gone"/>
 
         </FrameLayout>
@@ -99,7 +91,7 @@
                 android:id="@+id/txtRouteStationNumber"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/text_size_station_number"
+                android:textSize="@dimen/text_small"
                 android:textColor="@color/grey"/>
 
         </LinearLayout>

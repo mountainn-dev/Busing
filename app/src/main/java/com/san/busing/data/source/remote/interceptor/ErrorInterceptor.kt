@@ -9,7 +9,6 @@ import com.san.busing.data.source.remote.retrofit.ServiceResult.*
 import okhttp3.Interceptor
 import okhttp3.Response
 import okhttp3.ResponseBody
-import java.io.IOException
 import java.io.InputStream
 
 /**
@@ -48,26 +47,27 @@ class ErrorInterceptor : Interceptor {
             serviceResult = getServiceResultBy(resultCode)
         } catch (e: NoSuchElementException) {
             Log.e(ExceptionMessage.TAG_ERROR_INTERCEPTOR_EXCEPTION, e.toString())
-            throw ServiceException.ServerException(ExceptionMessage.NO_SERVICE_RESULT_EXCEPTION)
+            throw ServiceException.SystemException(ExceptionMessage.NO_SERVICE_RESULT_EXCEPTION)
         } catch (e: Exception) {
             Log.e(ExceptionMessage.TAG_ERROR_INTERCEPTOR_EXCEPTION, e.toString())
-            throw ServiceException.ServerException(ExceptionMessage.SERVICE_FAIL_EXCEPTION)
+            throw ServiceException.SystemException(ExceptionMessage.SERVICE_FAIL_EXCEPTION)
         }
 
         when (serviceResult) {
             SUCCESS -> {}
 
             // Server Exception
-            SYSTEM_ERROR, SERVICE_NOT_READY, OVER_REQUEST_LIMIT -> throw ServiceException.ServerException(
+            SYSTEM_ERROR, NO_SERVICE_KEY, WRONG_SERVICE_KEY, UNAUTHORIZED_SERVICE_KEY,
+            OVER_REQUEST_LIMIT, SERVICE_NOT_READY -> throw ServiceException.SystemException(
                 ExceptionMessage.SERVICE_FAIL_EXCEPTION
-            )
-            // Essential Parameter Exception
-            WRONG_POSITION_REQUEST -> throw ServiceException.EssentialParameterException(
-                ExceptionMessage.NO_ESSENTIAL_PARAMETER_EXCEPTION
             )
             // Result Exception
             NO_RESULT, NO_RESULT_BUS_ARRIVAL -> throw ServiceException.ResultException(
                 ExceptionMessage.NO_RESULT_EXCEPTION
+            )
+            // Essential Parameter Exception
+            NO_ESSENTIAL_PARAMETER, WRONG_ESSENTIAL_PARAMETER -> throw ServiceException.EssentialParameterException(
+                ExceptionMessage.NO_ESSENTIAL_PARAMETER_EXCEPTION
             )
             // Optional Parameter Exception
             else -> throw ServiceException.OptionalParameterException(ExceptionMessage.SERVICE_FAIL_EXCEPTION)

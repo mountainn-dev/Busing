@@ -30,7 +30,7 @@ data class Bus(
         Id(routeId),
         Utils.getPlateType(plateType),
         plateNumber(plateNo),
-        stationSeq,
+        stationSeq+1,   // 실제 버스 위치 = stationSeq + 1
         isLowPlate(lowPlate),
         remainSeat(remainSeatCnt),
     )

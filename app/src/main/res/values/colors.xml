@@ -17,7 +17,6 @@
     <color name="light_deep_blue">#5C6BC0</color>
     <color name="dark_blue">#14213d</color>
     <color name="light_yellow">#FFFF8D</color>
-
     <color name="text_sub">#666666</color>
     <color name="text_sub_title_1">@color/light_blue</color>
 </resources>

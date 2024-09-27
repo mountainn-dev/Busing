@@ -9,15 +9,15 @@
     android:background="@drawable/bg_rectangle_downside_grey_bordered">
 
     <LinearLayout
+        android:id="@+id/llRouteInfo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/margin_padding_small"
         android:orientation="vertical"
         app:layout_constrainedWidth="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/llBusArrival"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/llBusArrival"
         app:layout_constraintHorizontal_bias="0">
 
         <TextView
@@ -25,12 +25,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_size_detail_title"
+            android:ellipsize="marquee"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:maxLines="1"
             tools:text="routeName" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/txtNextStationTag"
@@ -39,26 +41,27 @@
                 android:text="@string/next_station_tag"
                 android:textSize="@dimen/text_small"
                 android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constrainedWidth="true"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/txtNextStationName"/>
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/txtNextStationName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_padding_smallest"
-                android:textSize="@dimen/text_small"
-                android:maxLines="1"
                 android:ellipsize="marquee"
                 android:marqueeRepeatLimit="marquee_forever"
-                app:layout_constraintStart_toEndOf="@+id/txtNextStationTag"
-                app:layout_constraintTop_toTopOf="parent"
+                android:maxLines="1"
+                android:paddingHorizontal="@dimen/margin_padding_extremely_small"
+                android:textSize="@dimen/text_small"
+                app:layout_constrainedWidth="true"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0"
-                tools:text="nextStationName"/>
+                app:layout_constraintStart_toEndOf="@+id/txtNextStationTag"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="nextStationName" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -70,6 +73,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:gravity="end"
+        app:layout_constrainedWidth="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent">
@@ -113,8 +117,7 @@
 
         <FrameLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_padding_extremely_small">
+            android:layout_height="wrap_content">
 
             <LinearLayout
                 android:id="@+id/llArrivalSecond"

@@ -133,6 +133,16 @@
             android:indeterminate="true"
             android:visibility="gone"/>
 
+        <TextView
+            android:id="@+id/txtNoViaRoutes"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="@dimen/padding_bottom_loading_indicator"
+            android:gravity="center"
+            android:text="@string/no_via_routes"
+            android:textColor="@color/grey"
+            android:visibility="gone"/>
+
         <LinearLayout
             android:id="@+id/llTimeout"
             android:layout_width="match_parent"
@@ -191,6 +201,16 @@
         android:layout_gravity="end|bottom"
         android:layout_margin="@dimen/margin_padding_large"
         android:orientation="vertical">
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fabScrollUp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_up_arrow"
+            app:shapeAppearance="@style/fab_rounded"
+            app:backgroundTint="@color/dark_grey"
+            app:tint="@color/white"
+            app:elevation="0dp" />
 
         <FrameLayout
             android:layout_width="wrap_content"
