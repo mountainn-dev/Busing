@@ -15,6 +15,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.san.busing.BuildConfig
 import com.san.busing.R
 import com.san.busing.data.repositoryimpl.route.RouteRepositoryImpl
+import com.san.busing.data.source.local.provider.RoomDBProvider
+import com.san.busing.data.source.remote.retrofit.provider.RetrofitProvider
 import com.san.busing.data.source.remote.retrofit.route.BusLocationService
 import com.san.busing.data.source.remote.retrofit.route.RouteService
 import com.san.busing.databinding.ActivityRouteDetailBinding
@@ -43,9 +45,9 @@ class RouteDetailActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         val busRouteRepository = RouteRepositoryImpl(
-            Utils.getRetrofit(BuildConfig.ROUTES_URL).create(RouteService::class.java),
-            Utils.getRetrofit(BuildConfig.LOCATION_URL).create(BusLocationService::class.java),
-            this.applicationContext
+            RetrofitProvider.getRouteService(),
+            RetrofitProvider.getBusLocationService(),
+            RoomDBProvider.get(applicationContext)
         )
         val route = intent.getSerializableExtra(Const.TAG_ROUTE) as RouteModel
         viewModel = ViewModelProvider(

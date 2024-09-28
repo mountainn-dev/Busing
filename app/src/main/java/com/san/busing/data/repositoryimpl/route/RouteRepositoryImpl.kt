@@ -23,11 +23,8 @@ import com.san.busing.domain.modelimpl.station.StationModels
 class RouteRepositoryImpl(
     private val routeService: RouteService,
     private val busLocationService: BusLocationService,
-    private val context: Context
+    private val db: RecentSearchDatabase
 ) : RouteRepository {
-    private val db = Room.databaseBuilder(
-        this.context, RecentSearchDatabase::class.java, "recentSearch"
-    ).build()
 
     override suspend fun getRouteInfo(id: Id): Result<RouteInfoModel> {
         try {

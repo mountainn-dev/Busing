@@ -12,17 +12,15 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.san.busing.BuildConfig
 import com.san.busing.data.repositoryimpl.route.RouteRepositoryImpl
-import com.san.busing.data.source.remote.retrofit.route.BusLocationService
-import com.san.busing.data.source.remote.retrofit.route.RouteService
+import com.san.busing.data.source.local.provider.RoomDBProvider
+import com.san.busing.data.source.remote.retrofit.provider.RetrofitProvider
 import com.san.busing.databinding.FragmentSearchRouteBinding
 import com.san.busing.domain.model.route.RouteModel
 import com.san.busing.domain.modelimpl.route.RouteModels
 import com.san.busing.domain.modelimpl.route.RouteRecentSearchModels
 import com.san.busing.domain.state.UiState
 import com.san.busing.domain.utils.Const
-import com.san.busing.domain.utils.Utils
 import com.san.busing.view.adapter.route.RouteRecentSearchAdapter
 import com.san.busing.view.adapter.route.RouteSearchResultAdapter
 import com.san.busing.view.listener.ItemClickEventListener
@@ -46,9 +44,9 @@ class SearchRouteFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         val repository = RouteRepositoryImpl(
-            Utils.getRetrofit(BuildConfig.ROUTES_URL).create(RouteService::class.java),
-            Utils.getRetrofit(BuildConfig.LOCATION_URL).create(BusLocationService::class.java),
-            requireActivity().applicationContext
+            RetrofitProvider.getRouteService(),
+            RetrofitProvider.getBusLocationService(),
+            RoomDBProvider.get(requireActivity().applicationContext)
         )
         viewModel = ViewModelProvider(requireActivity(), SearchRouteViewModelFactory(repository)).get(
             SearchRouteViewModelImpl::class.java
@@ -184,6 +182,7 @@ class SearchRouteFragment : Fragment() {
 
     private fun initListener(context: Activity) {
         setEdRouteListener()
+        setChkKeywordNightRoute()
         setBtnDeleteSearchKeywordListener(context)
         setBtnDeleteAllRecentSearchListener(context)
         setRvBusRouteScrollListener(context)
@@ -192,14 +191,40 @@ class SearchRouteFragment : Fragment() {
 
     private fun setEdRouteListener() {
         binding.edRoute.doAfterTextChanged { text ->
-            viewModel.search(text.toString())
+            val keyword = text.toString()
+
+            if (isNightRoute(keyword) && !binding.chkKeywordNightRoute.isChecked)
+                binding.chkKeywordNightRoute.isChecked = true
+            if (isNotNightRoute(keyword) && binding.chkKeywordNightRoute.isChecked)
+                binding.chkKeywordNightRoute.isChecked = false
+
+            viewModel.search(keyword)
         }
     }
+    
+    private fun setChkKeywordNightRoute() {
+        binding.chkKeywordNightRoute.setOnCheckedChangeListener { _, checked ->
+            val keyword = binding.edRoute.text.toString()
+
+            if (checked && isNotNightRoute(keyword)) binding.edRoute.setText(NIGHT_ROUTE_TAG + keyword)
+            if (!checked && isNightRoute(keyword)) binding.edRoute.setText(keyword.removeRange(0..0))
+
+            viewModel.search(binding.edRoute.text.toString())
+        }
+    }
+
+    private fun isNightRoute(keyword: String) =
+        keyword.isNotEmpty() && (keyword.first().toString() == NIGHT_ROUTE_TAG || keyword.first()
+            .toString() == NIGHT_ROUTE_TAG.lowercase())
+    private fun isNotNightRoute(keyword: String) =
+        keyword.isEmpty() || (keyword.first().toString() != NIGHT_ROUTE_TAG && keyword.first()
+            .toString() != NIGHT_ROUTE_TAG.lowercase())
 
     private fun setBtnDeleteSearchKeywordListener(context: Activity) {
         binding.btnDeleteSearchKeyword.setOnClickListener {
             viewModel.clearKeyword()
             binding.edRoute.setText(viewModel.keyword)
+            binding.chkKeywordNightRoute.isChecked = false
             showSoftInput(binding.edRoute, context)
         }
     }
@@ -248,4 +273,8 @@ class SearchRouteFragment : Fragment() {
     }
 
     private fun visibleWhenTrue(state: Boolean) = if (state) View.VISIBLE else View.GONE
+
+    companion object {
+        private const val NIGHT_ROUTE_TAG = "N"
+    }
 }

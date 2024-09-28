@@ -62,6 +62,10 @@ class SearchRouteViewModelImpl(
         }
     }
 
+    override fun clearKeyword() {
+        this.keyword = Const.EMPTY_TEXT
+    }
+
     override fun deleteRecentSearch(itemIdx: Int) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
@@ -99,10 +103,6 @@ class SearchRouteViewModelImpl(
         val result = repository.deleteAllRecentSearch()
 
         if (result is Error) error = result.message()
-    }
-
-    override fun clearKeyword() {
-        this.keyword = Const.EMPTY_TEXT
     }
 
     override fun restore() {

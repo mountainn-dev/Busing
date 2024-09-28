@@ -22,12 +22,8 @@ import com.san.busing.domain.modelimpl.station.StationRecentSearchModels
 class StationRepositoryImpl(
     private val stationService: StationService,
     private val busArrivalService: BusArrivalService,
-    private val context: Context
+    private val db: RecentSearchDatabase
 ) : StationRepository {
-    private val db = Room.databaseBuilder(
-        this.context, RecentSearchDatabase::class.java, "recentSearch"
-    ).build()
-
     override suspend fun getStations(keyword: String): Result<StationModels> {
         try {
             val response = stationService.getBusStationList(BuildConfig.API_KEY, keyword)

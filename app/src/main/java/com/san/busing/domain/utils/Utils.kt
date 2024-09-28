@@ -1,7 +1,10 @@
 package com.san.busing.domain.utils
 
+import android.content.Context
+import androidx.room.Room
 import com.san.busing.R
 import com.san.busing.data.exception.ExceptionMessage
+import com.san.busing.data.source.local.database.RecentSearchDatabase
 import com.san.busing.data.source.remote.interceptor.ErrorInterceptor
 import com.san.busing.domain.enums.PlateType.*
 import com.san.busing.domain.enums.RouteType
@@ -14,21 +17,6 @@ import retrofit2.Retrofit
 import java.util.concurrent.TimeUnit
 
 object Utils {
-    fun getRetrofit(baseUrl: String) = Retrofit.Builder()
-        .baseUrl(baseUrl)
-        .addConverterFactory(TikXmlConverterFactory.create(getXmlParse()))
-        .client(getClient())
-        .build()
-
-    private fun getClient() = OkHttpClient().newBuilder()
-        .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
-        .addInterceptor(ErrorInterceptor())
-        .connectTimeout(5, TimeUnit.SECONDS)
-        .readTimeout(5, TimeUnit.SECONDS)
-        .writeTimeout(5, TimeUnit.SECONDS)
-        .build()
-
-    private fun getXmlParse() = TikXml.Builder().exceptionOnUnreadXml(false).build()
     fun getRouteType(routeTypeCd: Int) = when(routeTypeCd) {
         AIRPORT_NORMAL.code -> AIRPORT_NORMAL
         AIRPORT_LIMO.code -> AIRPORT_LIMO
