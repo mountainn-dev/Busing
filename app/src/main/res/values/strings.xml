@@ -12,6 +12,7 @@
     <!-- Route -->
     <string name="tab_name_route">버스</string>
     <string name="route_input_hint">버스 번호 검색</string>
+    <string name="night_route">심야</string>
     <string name="route_no_recent_search">최근 조회한 노선이 없습니다.</string>
 
         <!-- Detail -->
