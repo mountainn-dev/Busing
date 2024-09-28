@@ -14,6 +14,8 @@ import com.san.busing.BuildConfig
 import com.san.busing.R
 import com.san.busing.data.repositoryimpl.route.RouteRepositoryImpl
 import com.san.busing.data.repositoryimpl.station.StationRepositoryImpl
+import com.san.busing.data.source.local.provider.RoomDBProvider
+import com.san.busing.data.source.remote.retrofit.provider.RetrofitProvider
 import com.san.busing.data.source.remote.retrofit.route.BusLocationService
 import com.san.busing.data.source.remote.retrofit.route.RouteService
 import com.san.busing.data.source.remote.retrofit.station.BusArrivalService
@@ -43,14 +45,14 @@ class StationDetailActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         val stationRepository = StationRepositoryImpl(
-            Utils.getRetrofit(BuildConfig.STATION_URL).create(StationService::class.java),
-            Utils.getRetrofit(BuildConfig.ARRIVAL_URL).create(BusArrivalService::class.java),
-            this.applicationContext
+            RetrofitProvider.getStationService(),
+            RetrofitProvider.getBusArrivalService(),
+            RoomDBProvider.get(applicationContext)
         )
         val routeRepository = RouteRepositoryImpl(
-            Utils.getRetrofit(BuildConfig.ROUTES_URL).create(RouteService::class.java),
-            Utils.getRetrofit(BuildConfig.LOCATION_URL).create(BusLocationService::class.java),
-            this.applicationContext
+            RetrofitProvider.getRouteService(),
+            RetrofitProvider.getBusLocationService(),
+            RoomDBProvider.get(applicationContext)
         )
         val station = intent.getSerializableExtra(Const.TAG_STATION) as StationModel
         viewModel = ViewModelProvider(
