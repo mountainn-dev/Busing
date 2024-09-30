@@ -10,8 +10,9 @@ import com.san.busing.domain.state.UiState
 interface RouteDetailViewModel {
     val state: LiveData<UiState>
     val routeInfo: RouteInfoModel
-    val routeStations: StationModels
-    val routeBuses: BusModels
+    val viaStations: StationModels
+    val buses: BusModels
+    val keywordMatchingStationIndex: LiveData<Int>
     val resetTimer: LiveData<Int>
     val bookMark: LiveData<Boolean>
     var error: String
@@ -20,4 +21,7 @@ interface RouteDetailViewModel {
     fun loadWithTimer()
     fun updateRecentSearch(activity: Activity)
     fun toggleBookMark()
+    fun find(keyword: String)
+    fun moveUpMatchingStation()
+    fun moveDownMatchingStation()
 }

@@ -36,7 +36,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:padding="@dimen/margin_padding_default"
-                android:hint="@string/route_input_hint"
+                android:hint="@string/hint_search_route"
                 android:textSize="@dimen/text_default"
                 android:textColorHint="@color/grey"
                 android:background="@drawable/bg_rectangle_white_rounded"

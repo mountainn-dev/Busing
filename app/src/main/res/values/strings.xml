@@ -11,7 +11,7 @@
 
     <!-- Route -->
     <string name="tab_name_route">버스</string>
-    <string name="route_input_hint">버스 번호 검색</string>
+    <string name="hint_search_route">버스 번호 검색</string>
     <string name="night_route">심야</string>
     <string name="route_no_recent_search">최근 조회한 노선이 없습니다.</string>
 
@@ -20,6 +20,7 @@
         <string name="btn_info">정보</string>
         <string name="start_tag_route_bus_count">현재</string>
         <string name="end_tag_route_bus_count">운행중</string>
+        <string name="hint_search_via_station">정류장 이름 검색</string>
 
             <!-- Info -->
             <string name="route_info_content_title_1">운행 구간</string>
@@ -31,7 +32,7 @@
 
     <!-- Station -->
     <string name="tab_name_station">정류장</string>
-    <string name="station_input_hint">정류장 이름, 번호 검색</string>
+    <string name="hint_search_station">정류장 이름, 번호 검색</string>
     <string name="station_no_recent_search">최근 조회한 정류장이 없습니다.</string>
 
         <!-- Detail -->

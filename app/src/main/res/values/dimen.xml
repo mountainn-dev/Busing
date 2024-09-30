@@ -13,7 +13,7 @@
     <dimen name="line_thick">4dp</dimen>
     <dimen name="radius_default">8dp</dimen>
     <dimen name="radius_small_rounded">24dp</dimen>
-    <dimen name="radius_extremely_small_rounded">2dp</dimen>
+    <dimen name="radius_extremely_small_rounded">4dp</dimen>
     <dimen name="radius_btn_info">32dp</dimen>
 
     <dimen name="text_large">16sp</dimen>
