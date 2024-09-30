@@ -39,6 +39,7 @@ class RouteDetailViewModelImpl(
     override lateinit var routeInfo: RouteInfoModel
     override lateinit var viaStations: StationModels
     override lateinit var buses: BusModels
+    override var keyword = Const.EMPTY_TEXT
     override val keywordMatchingStationIndex: LiveData<Int>
         get() = matchingStationIndex
     private val matchingStationIndex = MutableLiveData(Const.ZERO)
@@ -222,9 +223,18 @@ class RouteDetailViewModelImpl(
     override fun find(keyword: String) {
         if (!::viaStations.isInitialized) return
 
+        this.keyword = keyword
         matchingStationIndexes = viaStations.findAll(keyword)
         if (indexPointer in matchingStationIndexes.indices)
             matchingStationIndex.postValue(matchingStationIndexes[indexPointer])
+    }
+
+    override fun clearKeyword() {
+        if (!::viaStations.isInitialized) return
+
+        keyword = Const.EMPTY_TEXT
+        matchingStationIndexes = listOf()
+        matchingStationIndex.postValue(Const.ZERO)
     }
 
     override fun moveUpMatchingStation() {

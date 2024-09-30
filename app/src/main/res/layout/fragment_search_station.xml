@@ -30,7 +30,7 @@
                 android:layout_marginStart="@dimen/margin_padding_default"
                 android:src="@drawable/ic_search"/>
 
-            <EditText
+            <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/edStation"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -39,7 +39,7 @@
                 android:hint="@string/hint_search_station"
                 android:textSize="@dimen/text_default"
                 android:textColorHint="@color/grey"
-                android:background="@drawable/bg_rectangle_white_rounded"
+                android:background="@null"
                 android:inputType="text" />
 
             <ImageButton

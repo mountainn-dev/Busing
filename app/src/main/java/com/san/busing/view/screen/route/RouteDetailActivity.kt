@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -228,6 +229,7 @@ class RouteDetailActivity : AppCompatActivity() {
         setBtnRouteInfoListener(activity)
         setBtnBookMarkListener(activity)
         setEdViaStationListener()
+        setBtnDeleteKeywordListener(activity)
         setBtnMoveMatchingStationListener()
         setBtnScrollToStartStationListener()
         setBtnRequestListener()
@@ -269,9 +271,22 @@ class RouteDetailActivity : AppCompatActivity() {
 
     private fun setEdViaStationListener() {
         binding.edViaStation.doAfterTextChanged {
-            val keyword = it.toString()
+            viewModel.find(it.toString())
+        }
+    }
 
-            viewModel.find(keyword)
+    private fun setBtnDeleteKeywordListener(activity: Activity) {
+        binding.btnDeleteKeyword.setOnClickListener {
+            viewModel.clearKeyword()
+            binding.edViaStation.setText(viewModel.keyword)
+            showSoftInput(binding.edViaStation, activity)
+        }
+    }
+
+    private fun showSoftInput(view: View, activity: Activity) {
+        if (view.requestFocus()) {
+            val imm = activity.getSystemService(InputMethodManager::class.java)
+            imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
         }
     }
 

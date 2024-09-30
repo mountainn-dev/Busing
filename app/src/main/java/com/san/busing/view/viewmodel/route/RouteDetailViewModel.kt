@@ -12,6 +12,7 @@ interface RouteDetailViewModel {
     val routeInfo: RouteInfoModel
     val viaStations: StationModels
     val buses: BusModels
+    var keyword: String
     val keywordMatchingStationIndex: LiveData<Int>
     val resetTimer: LiveData<Int>
     val bookMark: LiveData<Boolean>
@@ -22,6 +23,7 @@ interface RouteDetailViewModel {
     fun updateRecentSearch(activity: Activity)
     fun toggleBookMark()
     fun find(keyword: String)
+    fun clearKeyword()
     fun moveUpMatchingStation()
     fun moveDownMatchingStation()
 }
