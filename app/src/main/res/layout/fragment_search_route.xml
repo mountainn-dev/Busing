@@ -30,16 +30,16 @@
                 android:layout_marginStart="@dimen/margin_padding_default"
                 android:src="@drawable/ic_search"/>
 
-            <EditText
+            <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/edRoute"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:padding="@dimen/margin_padding_default"
-                android:hint="@string/route_input_hint"
+                android:hint="@string/hint_search_route"
                 android:textSize="@dimen/text_default"
                 android:textColorHint="@color/grey"
-                android:background="@drawable/bg_rectangle_white_rounded"
+                android:background="@null"
                 android:inputType="text" />
 
             <androidx.appcompat.widget.AppCompatCheckBox

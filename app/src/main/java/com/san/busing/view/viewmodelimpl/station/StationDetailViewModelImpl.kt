@@ -109,7 +109,7 @@ class StationDetailViewModelImpl(
                         async { loadNextStationTemp(it.id, (it as Stoppable).stationSequence) },
                         async { loadBusArrival(it.id, (it as Stoppable).stationSequence) }
                     )
-                }.awaitAll().let {
+                }.awaitAll().run {
                     nextStations.clear()
                     nextStations.addAll(tmpNextStations)
                     nextStationState.postValue(UiState.Success)
@@ -123,7 +123,7 @@ class StationDetailViewModelImpl(
         val result = routeRepository.getRouteStations(routeId)
 
         if (result is Success) {
-            result.data.getOrNull(stationSeq).let {
+            result.data.getOrNull(stationSeq)?.let {
                 (it as Passable).setVehicleId(routeId)
                 tmpNextStations.push(it)
             }

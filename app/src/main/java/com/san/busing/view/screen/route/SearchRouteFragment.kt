@@ -190,8 +190,8 @@ class SearchRouteFragment : Fragment() {
     }
 
     private fun setEdRouteListener() {
-        binding.edRoute.doAfterTextChanged { text ->
-            val keyword = text.toString()
+        binding.edRoute.doAfterTextChanged {
+            val keyword = it.toString()
 
             if (isNightRoute(keyword) && !binding.chkKeywordNightRoute.isChecked)
                 binding.chkKeywordNightRoute.isChecked = true
@@ -216,6 +216,7 @@ class SearchRouteFragment : Fragment() {
     private fun isNightRoute(keyword: String) =
         keyword.isNotEmpty() && (keyword.first().toString() == NIGHT_ROUTE_TAG || keyword.first()
             .toString() == NIGHT_ROUTE_TAG.lowercase())
+
     private fun isNotNightRoute(keyword: String) =
         keyword.isEmpty() || (keyword.first().toString() != NIGHT_ROUTE_TAG && keyword.first()
             .toString() != NIGHT_ROUTE_TAG.lowercase())

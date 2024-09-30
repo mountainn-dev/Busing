@@ -2,6 +2,7 @@ package com.san.busing.view.viewmodelimpl.route
 
 import android.app.Activity
 import android.os.CountDownTimer
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
@@ -16,6 +17,7 @@ import com.san.busing.domain.modelimpl.route.RouteInfoModel
 import com.san.busing.domain.modelimpl.route.RouteRecentSearchModel
 import com.san.busing.domain.modelimpl.station.StationModels
 import com.san.busing.domain.state.UiState
+import com.san.busing.domain.utils.Const
 import com.san.busing.view.viewmodel.route.RouteDetailViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -35,8 +37,15 @@ class RouteDetailViewModelImpl(
     private val routeStationState = MutableLiveData<UiState>(UiState.Loading)
     private val routeBusState = MutableLiveData<UiState>(UiState.Loading)
     override lateinit var routeInfo: RouteInfoModel
-    override lateinit var routeStations: StationModels
-    override lateinit var routeBuses: BusModels
+    override lateinit var viaStations: StationModels
+    override lateinit var buses: BusModels
+    override var keyword = Const.EMPTY_TEXT
+    override val keywordMatchingStationIndex: LiveData<Int>
+        get() = matchingStationIndex
+    private val matchingStationIndex = MutableLiveData(Const.ZERO)
+    private var matchingStationIndexes = listOf<Int>()
+    private var indexPointer = Const.ZERO
+
 
     override val resetTimer: LiveData<Int>
         get() = remainTime
@@ -96,7 +105,7 @@ class RouteDetailViewModelImpl(
         val result = routeRepository.getRouteStations(route.id)
 
         if (result is Success) {
-            routeStations = result.data
+            viaStations = result.data
             routeStationState.postValue(UiState.Success)
         } else {
             error = (result as Error).message()
@@ -109,7 +118,7 @@ class RouteDetailViewModelImpl(
         val result = routeRepository.getBusLocations(route.id)
 
         if (result is Success) {
-            routeBuses = result.data
+            buses = result.data
             routeBusState.postValue(UiState.Success)
         } else {
             error = (result as Error).message()
@@ -209,6 +218,35 @@ class RouteDetailViewModelImpl(
 
     private fun loadBookMarkContent() {
         isBookMark.postValue(recentSearch.bookMark)
+    }
+
+    override fun find(keyword: String) {
+        if (!::viaStations.isInitialized) return
+
+        this.keyword = keyword
+        matchingStationIndexes = viaStations.findAll(keyword)
+        if (indexPointer in matchingStationIndexes.indices)
+            matchingStationIndex.postValue(matchingStationIndexes[indexPointer])
+    }
+
+    override fun clearKeyword() {
+        if (!::viaStations.isInitialized) return
+
+        keyword = Const.EMPTY_TEXT
+        matchingStationIndexes = listOf()
+        matchingStationIndex.postValue(Const.ZERO)
+    }
+
+    override fun moveUpMatchingStation() {
+        if ((indexPointer - 1) !in matchingStationIndexes.indices) return
+
+        matchingStationIndex.postValue(matchingStationIndexes[--indexPointer])
+    }
+
+    override fun moveDownMatchingStation() {
+        if ((indexPointer + 1) !in matchingStationIndexes.indices) return
+
+        matchingStationIndex.postValue(matchingStationIndexes[++indexPointer])
     }
 
     /**

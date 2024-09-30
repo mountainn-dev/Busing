@@ -24,12 +24,13 @@
         <activity
             android:name=".view.screen.route.RouteDetailActivity"
             android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan"
             android:exported="false" />
         <activity
             android:name=".view.screen.HomeActivity"
             android:screenOrientation="portrait"
-            android:exported="true"
-            android:windowSoftInputMode="adjustPan" >
+            android:windowSoftInputMode="adjustPan"
+            android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

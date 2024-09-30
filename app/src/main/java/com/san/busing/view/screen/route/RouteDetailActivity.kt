@@ -3,22 +3,20 @@ package com.san.busing.view.screen.route
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.san.busing.BuildConfig
 import com.san.busing.R
 import com.san.busing.data.repositoryimpl.route.RouteRepositoryImpl
 import com.san.busing.data.source.local.provider.RoomDBProvider
 import com.san.busing.data.source.remote.retrofit.provider.RetrofitProvider
-import com.san.busing.data.source.remote.retrofit.route.BusLocationService
-import com.san.busing.data.source.remote.retrofit.route.RouteService
 import com.san.busing.databinding.ActivityRouteDetailBinding
 import com.san.busing.domain.enums.RouteType
 import com.san.busing.domain.model.route.RouteModel
@@ -29,6 +27,7 @@ import com.san.busing.domain.utils.Const
 import com.san.busing.domain.utils.Utils
 import com.san.busing.view.adapter.route.RouteStationAdapter
 import com.san.busing.view.listener.ItemClickEventListener
+import com.san.busing.view.listener.RecyclerViewScrollListener
 import com.san.busing.view.screen.station.StationDetailActivity
 import com.san.busing.view.viewmodel.route.RouteDetailViewModel
 import com.san.busing.view.viewmodelfactory.route.RouteDetailViewModelFactory
@@ -103,8 +102,8 @@ class RouteDetailActivity : AppCompatActivity() {
         when (it) {
             UiState.Success -> {
                 loadRouteInfo()
-                if (viewModel.routeStations.isEmpty()) noViaStationView()
-                else loadRouteStation(routeType, activity)
+                if (viewModel.viaStations.isEmpty()) noViaStationView()
+                else loadViaStation(routeType, activity)
             }
             UiState.Loading -> {
                 unloadRouteInfo()
@@ -132,16 +131,20 @@ class RouteDetailActivity : AppCompatActivity() {
         toggleView(binding.txtNoViaStations)
     }
 
-    private fun loadRouteStation(routeType: RouteType, activity: Activity) {
+    private fun loadViaStation(routeType: RouteType, activity: Activity) {
         val scrollState = binding.rvBusRouteStationList.layoutManager?.onSaveInstanceState()
         binding.rvBusRouteStationList.adapter = RouteStationAdapter(
             routeType,
-            viewModel.routeStations,
-            viewModel.routeBuses,
-            routeStationClickEventListener(viewModel.routeStations, activity)
+            viewModel.viaStations,
+            viewModel.buses,
+            routeStationClickEventListener(viewModel.viaStations, activity)
         )
         binding.rvBusRouteStationList.layoutManager = LinearLayoutManager(activity)
-        binding.txtRouteBusCount.text = String.format(ROUTE_BUS_COUNT, viewModel.routeBuses.count())
+        viewModel.keywordMatchingStationIndex.observe(
+            activity as LifecycleOwner,
+            keywordMatchingStationIndexObserver()
+        )
+        binding.txtRouteBusCount.text = String.format(ROUTE_BUS_COUNT, viewModel.buses.count())
         binding.rvBusRouteStationList.layoutManager?.onRestoreInstanceState(scrollState)
         toggleView(binding.rvBusRouteStationList)
         setBtnScrollToEndStation()
@@ -166,12 +169,11 @@ class RouteDetailActivity : AppCompatActivity() {
     }
 
     private fun setBtnScrollToEndStation() {
-        val idx = viewModel.routeStations.turnaroundSequence()
+        val idx = viewModel.viaStations.turnaroundSequence()
 
         binding.btnScrollToEndStation.setOnClickListener {
-            if (binding.abRouteDetail.isLifted) (binding.rvBusRouteStationList.layoutManager as LinearLayoutManager)
+            (binding.rvBusRouteStationList.layoutManager as LinearLayoutManager)
                 .scrollToPositionWithOffset(idx, 0)
-            else binding.rvBusRouteStationList.scrollToPosition(idx + POSITION_VALUE_WHEN_NOT_LIFTED)
         }
     }
 
@@ -217,14 +219,23 @@ class RouteDetailActivity : AppCompatActivity() {
         else binding.btnBookMark.setImageResource(R.drawable.ic_off_book_mark)
     }
 
+    private fun keywordMatchingStationIndexObserver() = Observer<Int> {
+        (binding.rvBusRouteStationList.layoutManager as LinearLayoutManager)
+            .scrollToPositionWithOffset(it, 0)
+    }
+
     private fun initListener(activity: Activity) {
         setBtnBackListener()
         setBtnRouteInfoListener(activity)
         setBtnBookMarkListener(activity)
+        setEdViaStationListener()
+        setBtnDeleteKeywordListener(activity)
+        setBtnMoveMatchingStationListener()
         setBtnScrollToStartStationListener()
         setBtnRequestListener()
         setFabScrollUpListener()
         setFabRefreshListener()
+        setRvViaStationScrollListener(activity)
     }
 
     private fun setBtnBackListener() {
@@ -258,6 +269,32 @@ class RouteDetailActivity : AppCompatActivity() {
         }
     }
 
+    private fun setEdViaStationListener() {
+        binding.edViaStation.doAfterTextChanged {
+            viewModel.find(it.toString())
+        }
+    }
+
+    private fun setBtnDeleteKeywordListener(activity: Activity) {
+        binding.btnDeleteKeyword.setOnClickListener {
+            viewModel.clearKeyword()
+            binding.edViaStation.setText(viewModel.keyword)
+            showSoftInput(binding.edViaStation, activity)
+        }
+    }
+
+    private fun showSoftInput(view: View, activity: Activity) {
+        if (view.requestFocus()) {
+            val imm = activity.getSystemService(InputMethodManager::class.java)
+            imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
+        }
+    }
+
+    private fun setBtnMoveMatchingStationListener() {
+        binding.btnMoveUpMatchingStation.setOnClickListener { viewModel.moveUpMatchingStation() }
+        binding.btnMoveDownMatchingStation.setOnClickListener { viewModel.moveDownMatchingStation() }
+    }
+
     private fun setBtnScrollToStartStationListener() {
         binding.btnScrollToStartStation.setOnClickListener {
             binding.rvBusRouteStationList.scrollToPosition(Const.ZERO)
@@ -280,6 +317,10 @@ class RouteDetailActivity : AppCompatActivity() {
         binding.fabRefresh.setOnClickListener { viewModel.loadWithTimer() }
     }
 
+    private fun setRvViaStationScrollListener(activity: Activity) {
+        binding.rvBusRouteStationList.addOnScrollListener(RecyclerViewScrollListener(activity))
+    }
+
     override fun onResume() {
         viewModel.load()
         super.onResume()
@@ -297,8 +338,6 @@ class RouteDetailActivity : AppCompatActivity() {
 
     companion object {
         private const val ROUTE_BUS_COUNT = "%d대"
-        private const val POSITION_VALUE_WHEN_NOT_LIFTED = 5
-
         private const val BOOKMARK_REGISTER_MESSAGE = "즐겨찾기가 등록되었습니다."
         private const val BOOKMARK_UNREGISTER_MESSAGE = "즐겨찾기가 해제되었습니다."
     }

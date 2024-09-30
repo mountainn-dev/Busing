@@ -48,8 +48,12 @@ data class StationModels(
         )
     }
     fun get(index: Int) = models[index]
+    fun getOrNull(seqNum: Int) = if (seqNum !in data.indices) null else data[seqNum]
     fun count() = models.size
     fun isEmpty() = models.isEmpty()
+    fun findAll(keyword: String) = models.mapIndexedNotNull { index, stationModel ->
+        if (stationModel.name.contains(keyword)) index else null
+    }
     fun turnaroundSequence(): Int {
         for (sta in data) {
             val station = sta as Passable
@@ -59,7 +63,6 @@ data class StationModels(
 
         return DEFAULT_TURNAROUND_INDEX
     }
-    fun getOrNull(seqNum: Int) = if (seqNum !in data.indices) null else data[seqNum]
 
     companion object {
         private const val DEFAULT_TURNAROUND_INDEX = 1
