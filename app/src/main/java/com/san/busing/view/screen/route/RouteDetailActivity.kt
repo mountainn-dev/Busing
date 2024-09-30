@@ -169,9 +169,8 @@ class RouteDetailActivity : AppCompatActivity() {
         val idx = viewModel.routeStations.turnaroundSequence()
 
         binding.btnScrollToEndStation.setOnClickListener {
-            if (binding.abRouteDetail.isLifted) (binding.rvBusRouteStationList.layoutManager as LinearLayoutManager)
+            (binding.rvBusRouteStationList.layoutManager as LinearLayoutManager)
                 .scrollToPositionWithOffset(idx, 0)
-            else binding.rvBusRouteStationList.scrollToPosition(idx + POSITION_VALUE_WHEN_NOT_LIFTED)
         }
     }
 
@@ -297,8 +296,6 @@ class RouteDetailActivity : AppCompatActivity() {
 
     companion object {
         private const val ROUTE_BUS_COUNT = "%d대"
-        private const val POSITION_VALUE_WHEN_NOT_LIFTED = 5
-
         private const val BOOKMARK_REGISTER_MESSAGE = "즐겨찾기가 등록되었습니다."
         private const val BOOKMARK_UNREGISTER_MESSAGE = "즐겨찾기가 해제되었습니다."
     }
