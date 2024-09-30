@@ -221,7 +221,7 @@ class RouteDetailViewModelImpl(
     }
 
     override fun find(keyword: String) {
-        if (!::viaStations.isInitialized) return
+        if (!::viaStations.isInitialized || keyword == Const.EMPTY_TEXT) return
 
         this.keyword = keyword
         matchingStationIndexes = viaStations.findAll(keyword)
