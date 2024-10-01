@@ -66,36 +66,56 @@ class StationBusArrivalAdapter(
                         && (routeItems.get(position) as Stoppable).stationSequence == it.sequenceNumber
             }
 
-            if (busArrival != null) loadBusArrival(busArrival)
-            else unloadBusArrival()
+            if (busArrival != null) {
+                if (!busArrival.arrivalFlag.isStop()) loadBusArrival(busArrival)
+                else loadBusArrivalFlag(busArrival)
+            } else unloadBusArrival()
         }
 
         private fun loadBusArrival(busArrival: BusArrivalModel) {
-            if (busArrival.predictTimeFirst == Const.ZERO) unloadBusArrivalFirst()
-            else {
-                binding.txtPredictTimeFirst.text = busArrivalPredictTimeMessage(busArrival.predictTimeFirst)
-                binding.txtLocationFirst.text = busArrivalLocationMessage(busArrival.locationFirst)
-            }
-            if (busArrival.predictTimeSecond == Const.ZERO) unloadBusArrivalSecond()
-            else {
-                binding.txtPredictTimeSecond.text = busArrivalPredictTimeMessage(busArrival.predictTimeSecond)
-                binding.txtLocationSecond.text = busArrivalLocationMessage(busArrival.locationSecond)
-            }
+            if (busArrival.predictTimeFirst == Const.ZERO) toggleBusArrivalFirst(binding.txtNoArrivalFirst)
+            else loadBusArrivalFirst(busArrival)
+            if (busArrival.predictTimeSecond == Const.ZERO) toggleBusArrivalSecond(binding.txtNoArrivalSecond)
+            else loadBusArrivalSecond(busArrival)
+        }
+
+        private fun loadBusArrivalFirst(busArrival: BusArrivalModel) {
+            binding.txtPredictTimeFirst.text = busArrivalPredictTimeMessage(busArrival.predictTimeFirst)
+            binding.txtLocationFirst.text = busArrivalLocationMessage(busArrival.locationFirst)
+
+            toggleBusArrivalFirst(binding.llArrivalFirst)
+        }
+
+        private fun loadBusArrivalSecond(busArrival: BusArrivalModel) {
+            binding.txtPredictTimeSecond.text = busArrivalPredictTimeMessage(busArrival.predictTimeSecond)
+            binding.txtLocationSecond.text = busArrivalLocationMessage(busArrival.locationSecond)
+
+            toggleBusArrivalSecond(binding.llArrivalSecond)
+        }
+
+        private fun loadBusArrivalFlag(busArrival: BusArrivalModel) {
+            binding.txtBusArrivalFlagFirst.text = busArrival.arrivalFlag.flagName
+            binding.txtBusArrivalFlagSecond.text = busArrival.arrivalFlag.flagName
+
+            toggleBusArrivalFirst(binding.txtBusArrivalFlagFirst)
+            toggleBusArrivalSecond(binding.txtBusArrivalFlagSecond)
         }
 
         private fun unloadBusArrival() {
-            unloadBusArrivalFirst()
-            unloadBusArrivalSecond()
+            toggleBusArrivalFirst(binding.txtNoArrivalFirst)
+            toggleBusArrivalSecond(binding.txtNoArrivalSecond)
         }
 
-        private fun unloadBusArrivalFirst() {
-            binding.llArrivalFirst.visibility = View.GONE
-            binding.txtNoArrivalFirst.visibility = View.VISIBLE
+        private fun toggleBusArrivalFirst(view: View) {
+            binding.llArrivalFirst.visibility = visibleWhenTrue(view == binding.llArrivalFirst)
+            binding.txtBusArrivalFlagFirst.visibility = visibleWhenTrue(view == binding.txtBusArrivalFlagFirst)
+            binding.txtNoArrivalFirst.visibility = visibleWhenTrue(view == binding.txtNoArrivalFirst)
         }
 
-        private fun unloadBusArrivalSecond() {
-            binding.llArrivalSecond.visibility = View.GONE
-            binding.txtNoArrivalSecond.visibility = View.VISIBLE
+        private fun toggleBusArrivalSecond(view: View) {
+            binding.llArrivalSecond.visibility = visibleWhenTrue(view == binding.llArrivalSecond)
+            binding.txtBusArrivalFlagSecond.visibility = visibleWhenTrue(view == binding.txtBusArrivalFlagSecond)
+            binding.txtNoArrivalSecond.visibility = visibleWhenTrue(view == binding.txtNoArrivalSecond)
         }
 
         private fun setContentColor(position: Int) {
@@ -113,6 +133,7 @@ class StationBusArrivalAdapter(
             }
         }
 
+        private fun visibleWhenTrue(state: Boolean) = if (state) View.VISIBLE else View.GONE
         private fun busArrivalPredictTimeMessage(time: Int) = String.format(REMAIN_BUS_ARRIVAL_TIME, time)
         private fun busArrivalLocationMessage(location: Int) = String.format(REMAIN_BUS_ARRIVAL_LOCATION, location)
     }

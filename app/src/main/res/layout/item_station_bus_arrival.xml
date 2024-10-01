@@ -113,6 +113,14 @@
                 android:textColor="@color/text_sub"
                 android:visibility="gone"/>
 
+            <TextView
+                android:id="@+id/txtBusArrivalFlagFirst"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_sub"
+                android:textStyle="bold"
+                android:visibility="gone"/>
+
         </FrameLayout>
 
         <FrameLayout
@@ -148,6 +156,14 @@
                 android:layout_height="wrap_content"
                 android:text="@string/no_arrival"
                 android:textColor="@color/text_sub"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/txtBusArrivalFlagSecond"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_sub"
+                android:textStyle="bold"
                 android:visibility="gone"/>
 
         </FrameLayout>

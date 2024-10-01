@@ -30,6 +30,10 @@ data class RouteModels(
 ) {
     private var models = data
 
+    fun sort() {
+        models = data.sortedWith(compareBy<RouteModel> { it.name }.thenBy { it.regionName })
+    }
+
     fun sort(keyword: String) {
         models = data.sortedWith(
             compareBy<RouteModel> { it.name.compareTo(keyword).absoluteValue }.thenBy { it.name }

@@ -11,6 +11,8 @@ enum class ArrivalFlag(val flagName: String) {
     STOP("운행 종료"),
     WAIT("회차지 대기");
 
+    fun isStop() = flagName == STOP.flagName
+
     companion object {
         fun find(code: String) = valueOf(code)
     }

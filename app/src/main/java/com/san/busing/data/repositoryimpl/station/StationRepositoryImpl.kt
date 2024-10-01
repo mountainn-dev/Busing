@@ -27,8 +27,7 @@ class StationRepositoryImpl(
     override suspend fun getStations(keyword: String): Result<StationModels> {
         try {
             val response = stationService.getBusStationList(BuildConfig.API_KEY, keyword)
-            val stations = response.body()!!.get()
-            stations.sort(keyword)
+            val stations = response.body()!!.get().also { it.sort(keyword) }
             return Result.success(stations)
         } catch (e: ServiceException.ResultException) {
             return Result.success(StationModels.instance())
@@ -45,7 +44,8 @@ class StationRepositoryImpl(
     override suspend fun getStationViaRoutes(id: Id): Result<RouteModels> {
         try {
             val response = stationService.getBusStationViaRouteList(BuildConfig.API_KEY, id.get())
-            return Result.success(response.body()!!.get())
+            val routes = response.body()!!.get().also { it.sort() }
+            return Result.success(routes)
         } catch (e: ServiceException.ResultException) {
             return Result.success(RouteModels.instance())
         } catch (e: ServiceException.OptionalParameterException) {
