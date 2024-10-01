@@ -31,8 +31,9 @@
 <h2 align="left">기능</h2>
 
 - __노선 조회__<br>
-노선 이름을 이용한 노선 검색 및 노선 정보 조회
+노선 이름을 이용한 노선 검색 및 노선 정보 조회 (심야 버스 검색 Version 1.2)
 실시간 버스 위치 정보 조회(정류장 단위)
+노선 경유 정류장 빠른 검색 기능(Version 1.3)
 최근 검색 기록 제공<br>
 ![busing_record_search_route](https://github.com/user-attachments/assets/46c54cab-a1f4-4cac-ad58-5b458d768e1f)  ![busing_record_route_detail](https://github.com/user-attachments/assets/805a668c-26a2-4264-a662-bd0e37edf8d3)
 
@@ -90,3 +91,7 @@ Data - Domain - View(Presentation) 3 Layer<br>
 - __1.2__<br>
 노선 검색 시 심야 버스 체크 기능 추가<br>
 기타 버그 수정<br><br>
+- __1.3__<br>
+노선 상세 화면 경유 정류장 빠른 검색 기능 추가<br>
+정류장 버스 도착 정보 운행 상태 정보 제공<br>
+기타 버그 수정 및 사용자 편의성 개선<br><br>
