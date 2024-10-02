@@ -32,4 +32,13 @@
         android:textSize="@dimen/text_large"
         android:clickable="true"/>
 
+    <TextView
+        android:id="@+id/txtAppVersion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_padding_small"
+        android:background="@drawable/bg_rectangle_downside_grey_bordered"
+        android:padding="@dimen/margin_padding_large"
+        android:textSize="@dimen/text_large" />
+
 </LinearLayout>

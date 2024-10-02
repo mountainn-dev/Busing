@@ -22,6 +22,7 @@ class SettingFragment : Fragment() {
         binding = FragmentSettingBinding.inflate(layoutInflater)
 
         initListener()
+        loadVersionInfo()
 
         return binding.root
     }
@@ -38,5 +39,13 @@ class SettingFragment : Fragment() {
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(BuildConfig.PRIVATE_INFO_TERM_URL))
 
         startActivity(intent)
+    }
+
+    private fun loadVersionInfo() {
+        binding.txtAppVersion.text = String.format(APP_VERSION, BuildConfig.VERSION_NAME)
+    }
+
+    companion object {
+        private const val APP_VERSION = "%s Version"
     }
 }

@@ -95,3 +95,5 @@ Data - Domain - View(Presentation) 3 Layer<br>
 노선 상세 화면 경유 정류장 빠른 검색 기능 추가<br>
 정류장 버스 도착 정보 운행 상태 정보 제공<br>
 기타 버그 수정 및 사용자 편의성 개선<br><br>
+- __1.4__<br>
+설정 화면 추가<br><br>
