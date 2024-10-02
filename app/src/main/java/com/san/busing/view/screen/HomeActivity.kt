@@ -6,6 +6,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.san.busing.R
+import com.san.busing.SettingFragment
 import com.san.busing.databinding.ActivityHomeBinding
 import com.san.busing.view.screen.route.SearchRouteFragment
 import com.san.busing.view.screen.station.SearchStationFragment
@@ -35,6 +36,7 @@ class HomeActivity : AppCompatActivity() {
             when (it.itemId) {
                 R.id.navRoute -> replaceTo(SearchRouteFragment())
                 R.id.navStation -> replaceTo(SearchStationFragment())
+                R.id.navSetting -> replaceTo(SettingFragment())
             }
 
             return@setOnItemSelectedListener true
