@@ -55,9 +55,10 @@
 
                 <TextView
                     android:id="@+id/txtStartStation"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     app:layout_constrainedWidth="true"
+                    android:gravity="center"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -81,9 +82,10 @@
 
                 <TextView
                     android:id="@+id/txtEndStation"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margin_padding_extremely_small"
+                    android:gravity="center"
                     app:layout_constrainedWidth="true"
                     app:layout_constraintStart_toEndOf="@id/imgRange"
                     app:layout_constraintTop_toTopOf="parent"
