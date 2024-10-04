@@ -14,8 +14,8 @@ android {
         applicationId = "com.san.busing"
         minSdk = 31
         targetSdk = 34
-        versionCode = 4
-        versionName = "1.3"
+        versionCode = 6
+        versionName = "1.5"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -26,6 +26,7 @@ android {
         buildConfigField("String", "LOCATION_URL", getApiKey("location.api.url"))
         buildConfigField("String", "ARRIVAL_URL", getApiKey("arrival.api.url"))
         buildConfigField("String", "ROUTES_URL", getApiKey("routes.api.url"))
+        buildConfigField("String", "PRIVATE_INFO_TERM_URL", getApiKey("privateinfoterm.url"))
     }
 
     buildTypes {

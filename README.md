@@ -7,7 +7,7 @@
 <img alt="Layout" src="https://img.shields.io/badge/Layout-XML-orange"/></a>
 <a href="https://gbis.go.kr/gbis2014/publicService.action?cmd=openApiInfo"><img alt="OpenAPI" src="https://img.shields.io/badge/OpenAPI-경기도교통정보센터-blue"/></a>
   <a href="https://github.com/mountainn-dev"><img alt="Profile" src="https://img.shields.io/badge/Github-mountainn--dev-blue?logo=github"/></a>
-<a href=""><img alt="Download" src="https://img.shields.io/badge/Download-blue?logo=Android"/></a>
+<a href="https://play.google.com/store/apps/details?id=com.san.busing"><img alt="Download" src="https://img.shields.io/badge/Download-blue?logo=Android"/></a>
 </p>
 
 ![busing_graphic](https://github.com/user-attachments/assets/3fad6daa-2b51-494c-ac64-f8630045abea)
@@ -49,8 +49,8 @@
 
 <h2 align="left">아키텍쳐</h2>
 
-- __클린 아키텍쳐 (3 Layer) 를 기반으로 구성__<br>
-가장 직관적이면서 프로젝트 유지보수에 용이<br>
+- __구글 앱 아키텍쳐 (3 Layer) 를 기반으로 구성__<br>
+직관적이고 명확하여 프로젝트 유지보수에 용이<br>
 Data - Domain - View(Presentation) 3 Layer<br>
 <br>__Data Layer__
 ![스크린샷 2024-09-24 시간: 21 48 36](https://github.com/user-attachments/assets/48b8c45b-30c3-4fdd-970b-975e564f54e2)<br>
@@ -94,4 +94,8 @@ Data - Domain - View(Presentation) 3 Layer<br>
 - __1.3__<br>
 노선 상세 화면 경유 정류장 빠른 검색 기능 추가<br>
 정류장 버스 도착 정보 운행 상태 정보 제공<br>
+기타 버그 수정 및 사용자 편의성 개선<br><br>
+- __1.4__<br>
+설정 화면 추가<br><br>
+- __1.5__<br>
 기타 버그 수정 및 사용자 편의성 개선<br><br>

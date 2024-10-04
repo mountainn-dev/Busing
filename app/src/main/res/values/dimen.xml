@@ -16,6 +16,7 @@
     <dimen name="radius_extremely_small_rounded">4dp</dimen>
     <dimen name="radius_btn_info">32dp</dimen>
 
+    <dimen name="text_extremely_large">20sp</dimen>
     <dimen name="text_large">16sp</dimen>
     <dimen name="text_default">14sp</dimen>
     <dimen name="text_small">12sp</dimen>
@@ -47,4 +48,7 @@
 
                     <!-- Info -->
                     <dimen name="icon_size_range">20dp</dimen>
+
+    <!-- Setting -->
+    <dimen name="height_item_setting">80dp</dimen>
 </resources>

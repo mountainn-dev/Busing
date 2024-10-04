@@ -8,4 +8,8 @@
         android:id="@+id/navStation"
         android:icon="@drawable/ic_bus_stop"
         android:title="@string/tab_name_station"/>
+    <item
+        android:id="@+id/navSetting"
+        android:icon="@drawable/ic_setting"
+        android:title="@string/tab_name_setting"/>
 </menu>

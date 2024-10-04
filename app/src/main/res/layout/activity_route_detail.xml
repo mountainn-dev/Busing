@@ -67,6 +67,8 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.3"
+                        android:maxLines="2"
+                        android:ellipsize="end"
                         android:textAlignment="center"
                         android:textColor="@color/white"
                         tools:text="endStation"/>
@@ -197,6 +199,8 @@
                 android:layout_marginVertical="@dimen/margin_padding_extremely_small"
                 android:layout_marginStart="@dimen/margin_padding_extremely_small"
                 android:layout_marginEnd="@dimen/margin_padding_smallest"
+                android:maxLines="2"
+                android:ellipsize="end"
                 android:padding="@dimen/margin_padding_extremely_small"
                 android:gravity="center"
                 android:clickable="true"
@@ -211,6 +215,8 @@
                 android:layout_marginVertical="@dimen/margin_padding_extremely_small"
                 android:layout_marginStart="@dimen/margin_padding_smallest"
                 android:layout_marginEnd="@dimen/margin_padding_extremely_small"
+                android:maxLines="2"
+                android:ellipsize="end"
                 android:padding="@dimen/margin_padding_extremely_small"
                 android:gravity="center"
                 android:clickable="true"
@@ -242,10 +248,12 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:maxLines="1"
                     android:padding="@dimen/margin_padding_default"
                     android:textSize="@dimen/text_default"
                     android:hint="@string/hint_search_via_station"
                     android:textColorHint="@color/grey"
+                    android:inputType="text"
                     android:background="@null"/>
 
                 <ImageButton
