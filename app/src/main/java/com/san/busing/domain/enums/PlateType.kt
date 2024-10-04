@@ -12,5 +12,5 @@ enum class PlateType(val code: Int, val typeName: String, val tag: String) {
     COMPACT(1, "소형승합차", Const.TAG_COMPACT),
     MID_SIZE(2, "중형승합차", Const.TAG_MID_SIZE),
     FULL_SIZE(3, "대형승합차", Const.TAG_FULL_SIZE),
-    DOUBLE_DECKER(4, "2층버스", Const.TAG_DOUBLE_DECKER)
+    DOUBLE_DECKER(4, "2층버스", Const.TAG_DOUBLE_DECKER),
 }

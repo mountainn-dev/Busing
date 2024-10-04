@@ -2,7 +2,6 @@ package com.san.busing.view.viewmodelimpl.station
 
 import android.app.Activity
 import android.os.CountDownTimer
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
@@ -14,8 +13,8 @@ import com.san.busing.data.repository.route.RouteRepository
 import com.san.busing.data.repository.station.StationRepository
 import com.san.busing.data.vo.Id
 import com.san.busing.domain.model.Passable
-import com.san.busing.domain.model.station.StationModel
 import com.san.busing.domain.model.Stoppable
+import com.san.busing.domain.model.station.StationModel
 import com.san.busing.domain.modelimpl.route.RouteModels
 import com.san.busing.domain.modelimpl.station.BusArrivalModel
 import com.san.busing.domain.modelimpl.station.StationRecentSearchModel
@@ -32,7 +31,7 @@ import java.util.Stack
 class StationDetailViewModelImpl(
     private val stationRepository: StationRepository,
     private val routeRepository: RouteRepository,
-    private val station: StationModel
+    private val station: StationModel,
 ) : StationDetailViewModel, ViewModel() {
     override val state: LiveData<UiState>
         get() = uiState
@@ -49,15 +48,17 @@ class StationDetailViewModelImpl(
         get() = remainTime
     private val remainTime = MutableLiveData<Int>()
     private var isLoadable = false
-    private val timer = object: CountDownTimer(REMAIN_TOTAL_MILLIS, TIMER_INTERVAL_MILLIS) {
-        override fun onTick(time: Long) {
-            if (!isLoadable) isLoadable = true
-            remainTime.postValue((time/ TIMER_INTERVAL_MILLIS).toInt())
+    private val timer =
+        object : CountDownTimer(REMAIN_TOTAL_MILLIS, TIMER_INTERVAL_MILLIS) {
+            override fun onTick(time: Long) {
+                if (!isLoadable) isLoadable = true
+                remainTime.postValue((time / TIMER_INTERVAL_MILLIS).toInt())
+            }
+
+            override fun onFinish() {
+                isLoadable = false
+            }
         }
-        override fun onFinish() {
-            isLoadable = false
-        }
-    }
 
     override val bookMark: LiveData<Boolean>
         get() = isBookMark
@@ -76,11 +77,12 @@ class StationDetailViewModelImpl(
     override fun load() {
         viaRouteLoadingJob?.cancel()
 
-        viaRouteLoadingJob = viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                loadViaRoutes()
+        viaRouteLoadingJob =
+            viewModelScope.launch {
+                withContext(Dispatchers.IO) {
+                    loadViaRoutes()
+                }
             }
-        }
     }
 
     private suspend fun loadViaRoutes() {
@@ -102,24 +104,28 @@ class StationDetailViewModelImpl(
         tmpNextStations.clear()
         busArrivals.clear()
 
-        busLoadingJob = viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                viaRoutes.get().flatMap {
-                    listOf(
-                        async { loadNextStationTemp(it.id, (it as Stoppable).stationSequence) },
-                        async { loadBusArrival(it.id, (it as Stoppable).stationSequence) }
-                    )
-                }.awaitAll().run {
-                    nextStations.clear()
-                    nextStations.addAll(tmpNextStations)
-                    nextStationState.postValue(UiState.Success)
-                    busArrivalState.postValue(UiState.Success)
+        busLoadingJob =
+            viewModelScope.launch {
+                withContext(Dispatchers.IO) {
+                    viaRoutes.get().flatMap {
+                        listOf(
+                            async { loadNextStationTemp(it.id, (it as Stoppable).stationSequence) },
+                            async { loadBusArrival(it.id, (it as Stoppable).stationSequence) },
+                        )
+                    }.awaitAll().run {
+                        nextStations.clear()
+                        nextStations.addAll(tmpNextStations)
+                        nextStationState.postValue(UiState.Success)
+                        busArrivalState.postValue(UiState.Success)
+                    }
                 }
             }
-        }
     }
 
-    private suspend fun loadNextStationTemp(routeId: Id, stationSeq: Int) {
+    private suspend fun loadNextStationTemp(
+        routeId: Id,
+        stationSeq: Int,
+    ) {
         val result = routeRepository.getRouteStations(routeId)
 
         if (result is Success) {
@@ -133,7 +139,10 @@ class StationDetailViewModelImpl(
         }
     }
 
-    private suspend fun loadBusArrival(routeId: Id, stationSeq: Int) {
+    private suspend fun loadBusArrival(
+        routeId: Id,
+        stationSeq: Int,
+    ) {
         val result = stationRepository.getBusArrival(station.id, routeId, stationSeq)
 
         if (result is Success) {
@@ -151,9 +160,7 @@ class StationDetailViewModelImpl(
         }
     }
 
-    override fun updateRecentSearch(
-        activity: Activity
-    ) {
+    override fun updateRecentSearch(activity: Activity) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 loadRecentSearch(activity)
@@ -169,17 +176,18 @@ class StationDetailViewModelImpl(
 
         if (result is Success) {
             val model = result.data
-            recentSearch = StationRecentSearchModel(
-                model.id, model.mobileNo, model.name, model.regionName,
-                if (model.bookMark) model.index else nextRecentSearchIndex(activity),
-                model.bookMark
-            )
-        }
-        else {
-            recentSearch = StationRecentSearchModel(
-                station.id, station.mobileNo, station.name, station.regionName,
-                nextRecentSearchIndex(activity), false
-            )
+            recentSearch =
+                StationRecentSearchModel(
+                    model.id, model.mobileNo, model.name, model.regionName,
+                    if (model.bookMark) model.index else nextRecentSearchIndex(activity),
+                    model.bookMark,
+                )
+        } else {
+            recentSearch =
+                StationRecentSearchModel(
+                    station.id, station.mobileNo, station.name, station.regionName,
+                    nextRecentSearchIndex(activity), false,
+                )
             isBookMark.postValue(false)
             error = (result as Error).message()
         }
@@ -198,7 +206,10 @@ class StationDetailViewModelImpl(
         return (result as Success).data
     }
 
-    private fun updateRecentSearchIndex(activity: Activity, newIdx: Long) {
+    private fun updateRecentSearchIndex(
+        activity: Activity,
+        newIdx: Long,
+    ) {
         val result = stationRepository.updateRecentSearchIndex(activity, newIdx)
 
         if (result is Error) error = result.message()
@@ -227,10 +238,11 @@ class StationDetailViewModelImpl(
     }
 
     private fun changeBookMarkStatus() {
-        recentSearch = StationRecentSearchModel(
-            recentSearch.id, recentSearch.mobileNo, recentSearch.name, recentSearch.regionName,
-            recentSearch.index, !recentSearch.bookMark
-        )
+        recentSearch =
+            StationRecentSearchModel(
+                recentSearch.id, recentSearch.mobileNo, recentSearch.name, recentSearch.regionName,
+                recentSearch.index, !recentSearch.bookMark,
+            )
     }
 
     private fun loadBookMarkContent() {
@@ -241,30 +253,43 @@ class StationDetailViewModelImpl(
         parent: MediatorLiveData<UiState>,
         child1: MutableLiveData<UiState>,
         child2: MutableLiveData<UiState>,
-        child3: MutableLiveData<UiState>
+        child3: MutableLiveData<UiState>,
     ) {
-        parent.addSource(child1) { parent.value =  state(it, child2.value!!, child3.value!!) }
-        parent.addSource(child2) { parent.value =  state(it, child1.value!!, child3.value!!) }
-        parent.addSource(child3) { parent.value =  state(it, child1.value!!, child2.value!!) }
+        parent.addSource(child1) { parent.value = state(it, child2.value!!, child3.value!!) }
+        parent.addSource(child2) { parent.value = state(it, child1.value!!, child3.value!!) }
+        parent.addSource(child3) { parent.value = state(it, child1.value!!, child2.value!!) }
     }
 
     private fun state(
-        state1: UiState, state2: UiState, state3: UiState,
-    ) = if (isCritical(state1, state2, state3)) UiState.Error
-    else if (isTimeout(state1, state2, state3)) UiState.Timeout
-    else if (isLoading(state1, state2, state3)) UiState.Loading
-    else UiState.Success
+        state1: UiState,
+        state2: UiState,
+        state3: UiState,
+    ) = if (isCritical(state1, state2, state3)) {
+        UiState.Error
+    } else if (isTimeout(state1, state2, state3)) {
+        UiState.Timeout
+    } else if (isLoading(state1, state2, state3)) {
+        UiState.Loading
+    } else {
+        UiState.Success
+    }
 
     private fun isLoading(
-        state1: UiState, state2: UiState, state3: UiState
+        state1: UiState,
+        state2: UiState,
+        state3: UiState,
     ) = state1 is UiState.Loading || state2 is UiState.Loading || state3 is UiState.Loading
 
     private fun isTimeout(
-        state1: UiState, state2: UiState, state3: UiState,
+        state1: UiState,
+        state2: UiState,
+        state3: UiState,
     ) = state1 is UiState.Timeout || state2 is UiState.Timeout || state3 is UiState.Timeout
 
     private fun isCritical(
-        state1: UiState, state2: UiState, state3: UiState
+        state1: UiState,
+        state2: UiState,
+        state3: UiState,
     ) = state1 is UiState.Error || state2 is UiState.Error || state3 is UiState.Error
 
     companion object {

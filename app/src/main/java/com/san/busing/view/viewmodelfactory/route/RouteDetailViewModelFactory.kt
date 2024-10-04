@@ -8,7 +8,7 @@ import com.san.busing.view.viewmodelimpl.route.RouteDetailViewModelImpl
 
 class RouteDetailViewModelFactory(
     private val routeRepository: RouteRepository,
-    private val route: RouteModel
+    private val route: RouteModel,
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(RouteDetailViewModelImpl::class.java)) {

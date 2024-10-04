@@ -9,10 +9,10 @@ import com.san.busing.view.listener.ItemClickEventListener
 
 class StationSearchResultAdapter(
     private val items: StationModels,
-    private val itemClickEventListener: ItemClickEventListener
+    private val itemClickEventListener: ItemClickEventListener,
 ) : RecyclerView.Adapter<StationSearchResultAdapter.StationSearchResultViewHolder>() {
     inner class StationSearchResultViewHolder(
-        private val binding: ItemStationSearchResultBinding
+        private val binding: ItemStationSearchResultBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(position: Int) {
             loadContent(position)
@@ -36,16 +36,22 @@ class StationSearchResultAdapter(
         parent: ViewGroup,
         viewType: Int,
     ): StationSearchResultViewHolder {
-        val binding = ItemStationSearchResultBinding.inflate(
-            LayoutInflater.from(parent.context), parent, false
-        )
+        val binding =
+            ItemStationSearchResultBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false,
+            )
 
         return StationSearchResultViewHolder(binding)
     }
 
     override fun getItemCount() = items.count()
 
-    override fun onBindViewHolder(holder: StationSearchResultViewHolder, position: Int) {
+    override fun onBindViewHolder(
+        holder: StationSearchResultViewHolder,
+        position: Int,
+    ) {
         holder.bind(position)
     }
 }

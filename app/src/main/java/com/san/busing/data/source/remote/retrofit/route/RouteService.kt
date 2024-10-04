@@ -11,18 +11,18 @@ interface RouteService {
     @GET("getBusRouteList")
     suspend fun getBusRouteList(
         @Query("serviceKey") key: String,
-        @Query("keyword") keyword: String
+        @Query("keyword") keyword: String,
     ): Response<Routes>
 
     @GET("getBusRouteInfoItem")
     suspend fun getBusRouteInfoItem(
         @Query("serviceKey") key: String,
-        @Query("routeId") id: Int
+        @Query("routeId") id: Int,
     ): Response<RouteInfoItem>
 
     @GET("getBusRouteStationList")
     suspend fun getBusStationList(
         @Query("serviceKey") key: String,
-        @Query("routeId") id: Int
+        @Query("routeId") id: Int,
     ): Response<RouteViaStations>
 }

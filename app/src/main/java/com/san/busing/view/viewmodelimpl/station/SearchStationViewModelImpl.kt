@@ -20,7 +20,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class SearchStationViewModelImpl(
-    private val repository: StationRepository
+    private val repository: StationRepository,
 ) : SearchStationViewModel, ViewModel() {
     override val state: LiveData<UiState>
         get() = viewModelState
@@ -41,11 +41,12 @@ class SearchStationViewModelImpl(
         searchingJob?.cancel()
         this.keyword = keyword
 
-        searchingJob = viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                searchStations()
+        searchingJob =
+            viewModelScope.launch {
+                withContext(Dispatchers.IO) {
+                    searchStations()
+                }
             }
-        }
     }
 
     private suspend fun searchStations() {
@@ -81,8 +82,9 @@ class SearchStationViewModelImpl(
         val result = repository.getAllRecentSearch()
 
         if (result is Success) {
-            if (result.data.isEmpty()) recentSearchContentLoaded.postValue(false)
-            else {
+            if (result.data.isEmpty()) {
+                recentSearchContentLoaded.postValue(false)
+            } else {
                 stationRecentSearches = result.data
                 recentSearchContentLoaded.postValue(true)
             }
@@ -94,7 +96,7 @@ class SearchStationViewModelImpl(
 
     override fun deleteAllRecentSearches(activity: Activity) {
         if (dataState(recentSearchContentLoaded)) {
-            resetRecentSearchIndex(activity)   // 최근 검색 인덱스 초기화
+            resetRecentSearchIndex(activity) // 최근 검색 인덱스 초기화
             viewModelScope.launch {
                 withContext(Dispatchers.IO) {
                     deleteAllRecentSearch()

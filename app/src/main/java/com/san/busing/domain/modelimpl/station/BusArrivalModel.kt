@@ -22,15 +22,16 @@ class BusArrivalModel(
     val remainSeatFirst: Int,
     val remainSeatSecond: Int,
     val sequenceNumber: Int,
-    val arrivalFlag: ArrivalFlag
+    val arrivalFlag: ArrivalFlag,
 )
 
 data class BusArrivalModels(
-    private val data: List<BusArrivalModel>
+    private val data: List<BusArrivalModel>,
 ) {
     private val models = data
 
     fun get(index: Int) = models[index]
+
     fun count() = models.size
 
     companion object {

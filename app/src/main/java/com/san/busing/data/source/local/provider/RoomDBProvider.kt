@@ -11,6 +11,8 @@ object RoomDBProvider {
         if (!::db.isInitialized) {
             db = Room.databaseBuilder(context, RecentSearchDatabase::class.java, "recentSearch").build()
             return db
-        } else return db
+        } else {
+            return db
+        }
     }
 }

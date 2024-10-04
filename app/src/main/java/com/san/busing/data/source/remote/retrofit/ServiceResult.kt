@@ -21,5 +21,5 @@ enum class ServiceResult(val code: Int, val message: String) {
     NO_RESULT_BUS_ARRIVAL(23, "버스 도착 정보가 존재하지 않습니다."),
     WRONG_START_STATION_ID(31, "존재하지 않는 출발 정류소 아이디(ID)/번호입니다."),
     WRONG_ARRIVAL_STATION_ID(32, "존재하지 않는 도착 정류소 아이디(ID)/번호입니다."),
-    SERVICE_NOT_READY(99, "API 서비스 준비중입니다.")
+    SERVICE_NOT_READY(99, "API 서비스 준비중입니다."),
 }

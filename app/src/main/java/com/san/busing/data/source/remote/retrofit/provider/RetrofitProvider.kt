@@ -24,7 +24,10 @@ object RetrofitProvider {
             .client(client).build().create(BusArrivalService::class.java)
 
     fun getRouteService(): RouteService = routeService
+
     fun getStationService(): StationService = stationService
+
     fun getBusLocationService(): BusLocationService = busLocationService
+
     fun getBusArrivalService(): BusArrivalService = busArrivalService
 }

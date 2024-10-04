@@ -15,8 +15,12 @@ interface SearchStationViewModel {
     var error: String
 
     fun search(keyword: String)
+
     fun deleteRecentSearch(itemIdx: Int)
+
     fun deleteAllRecentSearches(activity: Activity)
+
     fun clearKeyword()
+
     fun restore()
 }

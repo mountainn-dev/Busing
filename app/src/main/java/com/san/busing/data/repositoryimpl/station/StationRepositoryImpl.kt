@@ -3,7 +3,6 @@ package com.san.busing.data.repositoryimpl.station
 import android.app.Activity
 import android.content.Context
 import android.util.Log
-import androidx.room.Room
 import com.san.busing.BuildConfig
 import com.san.busing.data.Result
 import com.san.busing.data.exception.ExceptionMessage
@@ -22,7 +21,7 @@ import com.san.busing.domain.modelimpl.station.StationRecentSearchModels
 class StationRepositoryImpl(
     private val stationService: StationService,
     private val busArrivalService: BusArrivalService,
-    private val db: RecentSearchDatabase
+    private val db: RecentSearchDatabase,
 ) : StationRepository {
     override suspend fun getStations(keyword: String): Result<StationModels> {
         try {
@@ -65,12 +64,16 @@ class StationRepositoryImpl(
     override suspend fun getBusArrival(
         stationId: Id,
         routeId: Id,
-        stationSeq: Int
+        stationSeq: Int,
     ): Result<BusArrivalModel> {
         try {
-            val response = busArrivalService.getBusArrivalItem(
-                BuildConfig.API_KEY, stationId.get(), routeId.get(), stationSeq
-            )
+            val response =
+                busArrivalService.getBusArrivalItem(
+                    BuildConfig.API_KEY,
+                    stationId.get(),
+                    routeId.get(),
+                    stationSeq,
+                )
             return Result.success(response.body()!!.get())
         } catch (e: Exception) {
             Log.e(ExceptionMessage.TAG_BUS_ARRIVAL_EXCEPTION, e.toString())
@@ -92,7 +95,10 @@ class StationRepositoryImpl(
 
     override suspend fun getAllRecentSearch(): Result<StationRecentSearchModels> {
         try {
-            val recentSearchModels = db.stationRecentSearchDao().getAllStationRecentSearches().map { it.toStationRecentSearchModel() }
+            val recentSearchModels =
+                db.stationRecentSearchDao().getAllStationRecentSearches().map {
+                    it.toStationRecentSearchModel()
+                }
             return Result.success(StationRecentSearchModels(recentSearchModels))
         } catch (e: Exception) {
             Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.toString())
@@ -103,7 +109,8 @@ class StationRepositoryImpl(
     override suspend fun insertRecentSearch(recentSearchModel: StationRecentSearchModel): Result<Boolean> {
         try {
             db.stationRecentSearchDao().insert(
-                recentSearchModel.toStationRecentSearchEntity())
+                recentSearchModel.toStationRecentSearchEntity(),
+            )
             return Result.success(true)
         } catch (e: Exception) {
             Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.toString())
@@ -114,7 +121,8 @@ class StationRepositoryImpl(
     override suspend fun updateRecentSearch(recentSearchModel: StationRecentSearchModel): Result<Boolean> {
         try {
             db.stationRecentSearchDao().update(
-                recentSearchModel.toStationRecentSearchEntity())
+                recentSearchModel.toStationRecentSearchEntity(),
+            )
             return Result.success(true)
         } catch (e: Exception) {
             Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.toString())
@@ -125,7 +133,8 @@ class StationRepositoryImpl(
     override suspend fun deleteRecentSearch(recentSearchModel: StationRecentSearchModel): Result<Boolean> {
         try {
             db.stationRecentSearchDao().delete(
-                recentSearchModel.toStationRecentSearchEntity())
+                recentSearchModel.toStationRecentSearchEntity(),
+            )
             return Result.success(true)
         } catch (e: Exception) {
             Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.toString())
@@ -144,20 +153,25 @@ class StationRepositoryImpl(
     }
 
     override fun getRecentSearchIndex(activity: Activity): Result<Long> {
-        val preference = activity.getSharedPreferences(
-            BuildConfig.APPLICATION_ID,
-            Context.MODE_PRIVATE
-        )
+        val preference =
+            activity.getSharedPreferences(
+                BuildConfig.APPLICATION_ID,
+                Context.MODE_PRIVATE,
+            )
         return Result.success(
-            preference.getLong(BuildConfig.STATION_PREFERENCE_KEY, DEFAULT_INDEX)
+            preference.getLong(BuildConfig.STATION_PREFERENCE_KEY, DEFAULT_INDEX),
         )
     }
 
-    override fun updateRecentSearchIndex(activity: Activity, newIdx: Long): Result<Boolean> {
-        val preference = activity.getSharedPreferences(
-            BuildConfig.APPLICATION_ID,
-            Context.MODE_PRIVATE
-        )
+    override fun updateRecentSearchIndex(
+        activity: Activity,
+        newIdx: Long,
+    ): Result<Boolean> {
+        val preference =
+            activity.getSharedPreferences(
+                BuildConfig.APPLICATION_ID,
+                Context.MODE_PRIVATE,
+            )
         try {
             preference.edit().putLong(BuildConfig.STATION_PREFERENCE_KEY, newIdx).apply()
             return Result.success(true)

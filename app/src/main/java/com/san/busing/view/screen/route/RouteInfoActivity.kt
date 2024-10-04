@@ -51,8 +51,11 @@ class RouteInfoActivity : AppCompatActivity() {
 
     private fun loadRouteInterval(routeInfo: RouteInfoModel) {
         val intervalMessage =
-            if (routeInfo.maxPeekAlloc == Const.ZERO) NO_INTERVAL_DATA_MESSAGE
-            else String.format(MAX_INTERVAL_MESSAGE, routeInfo.maxPeekAlloc)
+            if (routeInfo.maxPeekAlloc == Const.ZERO) {
+                NO_INTERVAL_DATA_MESSAGE
+            } else {
+                String.format(MAX_INTERVAL_MESSAGE, routeInfo.maxPeekAlloc)
+            }
         binding.txtInterval.text = intervalMessage
     }
 

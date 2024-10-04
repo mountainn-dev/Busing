@@ -17,22 +17,24 @@ data class Route(
     @PropertyElement(name = "routeName") val name: String,
     @PropertyElement val regionName: String?,
 ) {
-    fun toRouteModel() = RouteModelImpl(
-        Id(id),
-        Utils.getRouteType(typeCd),
-        name,
-        regionName(regionName)
-    )
+    fun toRouteModel() =
+        RouteModelImpl(
+            Id(id),
+            Utils.getRouteType(typeCd),
+            name,
+            regionName(regionName),
+        )
 
-    private fun regionName(name: String?) = when(name != null) {
-        true -> name
-        false -> Const.EMPTY_TEXT
-    }
+    private fun regionName(name: String?) =
+        when (name != null) {
+            true -> name
+            false -> Const.EMPTY_TEXT
+        }
 }
 
 @Xml
 data class Routes(
-    @Path("msgBody") @Element val routes: List<Route>
+    @Path("msgBody") @Element val routes: List<Route>,
 ) {
     fun get(): RouteModels {
         return RouteModels(routes.map { it.toRouteModel() })

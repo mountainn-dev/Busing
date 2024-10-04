@@ -15,15 +15,16 @@ data class BusModel(
     val plateNumber: String,
     val sequenceNumber: Int,
     val isLowPlate: Boolean,
-    val remainSeat: Int
+    val remainSeat: Int,
 )
 
 data class BusModels(
-    private val data: List<BusModel>
+    private val data: List<BusModel>,
 ) {
     private val models = data.sortedBy { it.sequenceNumber }
 
     fun get(index: Int) = models[index]
+
     fun getOrNullBySeq(sequenceNumber: Int): BusModel? {
         for (bus in models) {
             if (bus.sequenceNumber == sequenceNumber) return bus
@@ -31,7 +32,9 @@ data class BusModels(
 
         return null
     }
+
     fun count() = models.size
+
     fun indices() = models.indices
 
     companion object {

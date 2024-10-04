@@ -13,10 +13,10 @@ import com.san.busing.view.listener.ItemClickEventListener
 class RouteSearchResultAdapter(
     private val items: RouteModels,
     private val itemClickEventListener: ItemClickEventListener,
-    private val activity: Activity
+    private val activity: Activity,
 ) : RecyclerView.Adapter<RouteSearchResultAdapter.RouteSearchResultViewHolder>() {
     inner class RouteSearchResultViewHolder(
-        private val binding: ItemRouteSearchResultBinding
+        private val binding: ItemRouteSearchResultBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(position: Int) {
             loadContent(position)
@@ -31,9 +31,11 @@ class RouteSearchResultAdapter(
         }
 
         private fun setContentColor(position: Int) {
-            val color = ContextCompat.getColor(
-                activity, Utils.getColorByRouteType(items.get(position).type)
-            )
+            val color =
+                ContextCompat.getColor(
+                    activity,
+                    Utils.getColorByRouteType(items.get(position).type),
+                )
 
             binding.txtRouteName.setTextColor(color)
             binding.txtRouteTypeTag.setTextColor(color)
@@ -47,17 +49,24 @@ class RouteSearchResultAdapter(
     }
 
     override fun onCreateViewHolder(
-        parent: ViewGroup, viewType: Int
+        parent: ViewGroup,
+        viewType: Int,
     ): RouteSearchResultViewHolder {
-        val binding = ItemRouteSearchResultBinding.inflate(
-            LayoutInflater.from(parent.context), parent, false
-        )
+        val binding =
+            ItemRouteSearchResultBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false,
+            )
         return RouteSearchResultViewHolder(binding)
     }
 
     override fun getItemCount() = items.count()
 
-    override fun onBindViewHolder(holder: RouteSearchResultViewHolder, position: Int) {
+    override fun onBindViewHolder(
+        holder: RouteSearchResultViewHolder,
+        position: Int,
+    ) {
         holder.bind(position)
     }
 }

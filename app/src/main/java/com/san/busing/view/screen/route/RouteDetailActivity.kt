@@ -43,17 +43,20 @@ class RouteDetailActivity : AppCompatActivity() {
         binding = ActivityRouteDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val busRouteRepository = RouteRepositoryImpl(
-            RetrofitProvider.getRouteService(),
-            RetrofitProvider.getBusLocationService(),
-            RoomDBProvider.get(applicationContext)
-        )
-        val route = intent.getSerializableExtra(Const.TAG_ROUTE) as RouteModel
-        viewModel = ViewModelProvider(
-            this, RouteDetailViewModelFactory(
-                busRouteRepository, route
+        val busRouteRepository =
+            RouteRepositoryImpl(
+                RetrofitProvider.getRouteService(),
+                RetrofitProvider.getBusLocationService(),
+                RoomDBProvider.get(applicationContext),
             )
-        ).get(RouteDetailViewModelImpl::class.java)
+        val route = intent.getSerializableExtra(Const.TAG_ROUTE) as RouteModel
+        viewModel =
+            ViewModelProvider(
+                this,
+                RouteDetailViewModelFactory(
+                    busRouteRepository, route,
+                ),
+            ).get(RouteDetailViewModelImpl::class.java)
 
         viewModel.updateRecentSearch(this)
         initToolbar(route, this)
@@ -61,7 +64,10 @@ class RouteDetailActivity : AppCompatActivity() {
         initListener(this)
     }
 
-    private fun initToolbar(route: RouteModel, activity: Activity) {
+    private fun initToolbar(
+        route: RouteModel,
+        activity: Activity,
+    ) {
         setTitle(route.name)
         setBgColor(route.type, activity)
         startEllipsizeMarqueeEffect()
@@ -72,7 +78,10 @@ class RouteDetailActivity : AppCompatActivity() {
         binding.txtRouteName.text = routeName
     }
 
-    private fun setBgColor(type: RouteType, activity: Activity) {
+    private fun setBgColor(
+        type: RouteType,
+        activity: Activity,
+    ) {
         val color = ContextCompat.getColor(activity, Utils.getLightColorByRouteType(type))
         binding.ctbRouteDetail.setContentScrimColor(color)
         binding.ctbRouteDetail.setBackgroundColor(color)
@@ -83,27 +92,36 @@ class RouteDetailActivity : AppCompatActivity() {
         binding.txtTitle.isSelected = true
     }
 
-    private fun initObserver(route: RouteModel, activity: Activity) {
+    private fun initObserver(
+        route: RouteModel,
+        activity: Activity,
+    ) {
         viewModel.state.observe(
             activity as LifecycleOwner,
-            uiStateObserver(route.type, activity)
+            uiStateObserver(route.type, activity),
         )
         viewModel.resetTimer.observe(
             activity as LifecycleOwner,
-            resetTimerObserver()
+            resetTimerObserver(),
         )
         viewModel.bookMark.observe(
             activity as LifecycleOwner,
-            bookMarkObserver()
+            bookMarkObserver(),
         )
     }
 
-    private fun uiStateObserver(routeType: RouteType, activity: Activity) = Observer<UiState> {
+    private fun uiStateObserver(
+        routeType: RouteType,
+        activity: Activity,
+    ) = Observer<UiState> {
         when (it) {
             UiState.Success -> {
                 loadRouteInfo()
-                if (viewModel.viaStations.isEmpty()) noViaStationView()
-                else loadViaStation(routeType, activity)
+                if (viewModel.viaStations.isEmpty()) {
+                    noViaStationView()
+                } else {
+                    loadViaStation(routeType, activity)
+                }
             }
             UiState.Loading -> {
                 unloadRouteInfo()
@@ -131,18 +149,22 @@ class RouteDetailActivity : AppCompatActivity() {
         toggleView(binding.txtNoViaStations)
     }
 
-    private fun loadViaStation(routeType: RouteType, activity: Activity) {
+    private fun loadViaStation(
+        routeType: RouteType,
+        activity: Activity,
+    ) {
         val scrollState = binding.rvBusRouteStationList.layoutManager?.onSaveInstanceState()
-        binding.rvBusRouteStationList.adapter = RouteStationAdapter(
-            routeType,
-            viewModel.viaStations,
-            viewModel.buses,
-            routeStationClickEventListener(viewModel.viaStations, activity)
-        )
+        binding.rvBusRouteStationList.adapter =
+            RouteStationAdapter(
+                routeType,
+                viewModel.viaStations,
+                viewModel.buses,
+                routeStationClickEventListener(viewModel.viaStations, activity),
+            )
         binding.rvBusRouteStationList.layoutManager = LinearLayoutManager(activity)
         viewModel.keywordMatchingStationIndex.observe(
             activity as LifecycleOwner,
-            keywordMatchingStationIndexObserver()
+            keywordMatchingStationIndexObserver(),
         )
         binding.txtRouteBusCount.text = String.format(ROUTE_BUS_COUNT, viewModel.buses.count())
         binding.rvBusRouteStationList.layoutManager?.onRestoreInstanceState(scrollState)
@@ -152,8 +174,8 @@ class RouteDetailActivity : AppCompatActivity() {
 
     private fun routeStationClickEventListener(
         items: StationModels,
-        activity: Activity
-    ) = object: ItemClickEventListener {
+        activity: Activity,
+    ) = object : ItemClickEventListener {
         override fun onItemClickListener(position: Int) {
             sendUserToStationDetailScreen(items.get(position), activity)
         }
@@ -161,7 +183,10 @@ class RouteDetailActivity : AppCompatActivity() {
         override fun onDeleteButtonClickListener(position: Int) {}
     }
 
-    private fun sendUserToStationDetailScreen(item: StationModel, activity: Activity) {
+    private fun sendUserToStationDetailScreen(
+        item: StationModel,
+        activity: Activity,
+    ) {
         val intent = Intent(activity, StationDetailActivity::class.java)
         intent.putExtra(Const.TAG_STATION, item)
 
@@ -199,30 +224,36 @@ class RouteDetailActivity : AppCompatActivity() {
         if (toast.previousFinished()) toast.show()
     }
 
-    private fun resetTimerObserver() = Observer<Int> {
-        if (it == Const.ZERO) {
-            binding.fabRefresh.setImageResource(R.drawable.ic_refresh)
-            binding.fabRefresh.isClickable = true
-            binding.fabTime.visibility = View.GONE
-        } else {
-            if (binding.fabTime.visibility == View.GONE) {
-                binding.fabTime.visibility = View.VISIBLE
-                binding.fabRefresh.isClickable = false
-                binding.fabRefresh.setImageResource(android.R.color.transparent)
+    private fun resetTimerObserver() =
+        Observer<Int> {
+            if (it == Const.ZERO) {
+                binding.fabRefresh.setImageResource(R.drawable.ic_refresh)
+                binding.fabRefresh.isClickable = true
+                binding.fabTime.visibility = View.GONE
+            } else {
+                if (binding.fabTime.visibility == View.GONE) {
+                    binding.fabTime.visibility = View.VISIBLE
+                    binding.fabRefresh.isClickable = false
+                    binding.fabRefresh.setImageResource(android.R.color.transparent)
+                }
+                binding.fabTime.text = it.toString()
             }
-            binding.fabTime.text = it.toString()
         }
-    }
 
-    private fun bookMarkObserver() = Observer<Boolean> {
-        if (it) binding.btnBookMark.setImageResource(R.drawable.ic_on_book_mark)
-        else binding.btnBookMark.setImageResource(R.drawable.ic_off_book_mark)
-    }
+    private fun bookMarkObserver() =
+        Observer<Boolean> {
+            if (it) {
+                binding.btnBookMark.setImageResource(R.drawable.ic_on_book_mark)
+            } else {
+                binding.btnBookMark.setImageResource(R.drawable.ic_off_book_mark)
+            }
+        }
 
-    private fun keywordMatchingStationIndexObserver() = Observer<Int> {
-        (binding.rvBusRouteStationList.layoutManager as LinearLayoutManager)
-            .scrollToPositionWithOffset(it, 0)
-    }
+    private fun keywordMatchingStationIndexObserver() =
+        Observer<Int> {
+            (binding.rvBusRouteStationList.layoutManager as LinearLayoutManager)
+                .scrollToPositionWithOffset(it, 0)
+        }
 
     private fun initListener(activity: Activity) {
         setBtnBackListener()
@@ -259,12 +290,15 @@ class RouteDetailActivity : AppCompatActivity() {
 
     private fun setBtnBookMarkListener(activity: Activity) {
         binding.btnBookMark.setOnClickListener {
-            if (viewModel.bookMark.value!!) Toast.makeText(
-                activity,
-                BOOKMARK_UNREGISTER_MESSAGE,
-                Toast.LENGTH_SHORT
-            ).show()
-            else Toast.makeText(activity, BOOKMARK_REGISTER_MESSAGE, Toast.LENGTH_SHORT).show()
+            if (viewModel.bookMark.value!!) {
+                Toast.makeText(
+                    activity,
+                    BOOKMARK_UNREGISTER_MESSAGE,
+                    Toast.LENGTH_SHORT,
+                ).show()
+            } else {
+                Toast.makeText(activity, BOOKMARK_REGISTER_MESSAGE, Toast.LENGTH_SHORT).show()
+            }
             viewModel.toggleBookMark()
         }
     }
@@ -283,7 +317,10 @@ class RouteDetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun showSoftInput(view: View, activity: Activity) {
+    private fun showSoftInput(
+        view: View,
+        activity: Activity,
+    ) {
         if (view.requestFocus()) {
             val imm = activity.getSystemService(InputMethodManager::class.java)
             imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)

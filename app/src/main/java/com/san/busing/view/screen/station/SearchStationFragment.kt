@@ -13,19 +13,15 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.san.busing.BuildConfig
 import com.san.busing.data.repositoryimpl.station.StationRepositoryImpl
 import com.san.busing.data.source.local.provider.RoomDBProvider
 import com.san.busing.data.source.remote.retrofit.provider.RetrofitProvider
-import com.san.busing.data.source.remote.retrofit.station.BusArrivalService
-import com.san.busing.data.source.remote.retrofit.station.StationService
 import com.san.busing.databinding.FragmentSearchStationBinding
 import com.san.busing.domain.model.station.StationModel
 import com.san.busing.domain.modelimpl.station.StationModels
 import com.san.busing.domain.modelimpl.station.StationRecentSearchModels
 import com.san.busing.domain.state.UiState
 import com.san.busing.domain.utils.Const
-import com.san.busing.domain.utils.Utils
 import com.san.busing.view.adapter.station.StationRecentSearchAdapter
 import com.san.busing.view.adapter.station.StationSearchResultAdapter
 import com.san.busing.view.listener.ItemClickEventListener
@@ -42,19 +38,22 @@ class SearchStationFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val repository = StationRepositoryImpl(
-            RetrofitProvider.getStationService(),
-            RetrofitProvider.getBusArrivalService(),
-            RoomDBProvider.get(requireActivity().applicationContext)
-        )
-        viewModel = ViewModelProvider(requireActivity(), SearchStationViewModelFactory(repository)).get(
-            SearchStationViewModelImpl::class.java
-        )
+        val repository =
+            StationRepositoryImpl(
+                RetrofitProvider.getStationService(),
+                RetrofitProvider.getBusArrivalService(),
+                RoomDBProvider.get(requireActivity().applicationContext),
+            )
+        viewModel =
+            ViewModelProvider(requireActivity(), SearchStationViewModelFactory(repository)).get(
+                SearchStationViewModelImpl::class.java,
+            )
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
     ): View {
         binding = FragmentSearchStationBinding.inflate(layoutInflater)
 
@@ -67,48 +66,53 @@ class SearchStationFragment : Fragment() {
     private fun initObserver(activity: Activity) {
         viewModel.state.observe(
             activity as LifecycleOwner,
-            stateObserver(activity)
+            stateObserver(activity),
         )
         viewModel.recentSearchContentReady.observe(
             viewLifecycleOwner,
-            recentSearchContentReadyObserver(activity)
+            recentSearchContentReadyObserver(activity),
         )
     }
 
-    private fun stateObserver(activity: Activity) = Observer<UiState> {
-        when (it) {
-            UiState.Success -> {
-                if (viewModel.stations.isEmpty()) noSearchResultView()
-                else loadSearchResult(activity)
-            }
-            UiState.Loading -> {
-                loadingView()
-            }
-            UiState.Timeout -> {
-                timeoutView()
-            }
-            UiState.Error -> {
-                errorView(activity)
+    private fun stateObserver(activity: Activity) =
+        Observer<UiState> {
+            when (it) {
+                UiState.Success -> {
+                    if (viewModel.stations.isEmpty()) {
+                        noSearchResultView()
+                    } else {
+                        loadSearchResult(activity)
+                    }
+                }
+                UiState.Loading -> {
+                    loadingView()
+                }
+                UiState.Timeout -> {
+                    timeoutView()
+                }
+                UiState.Error -> {
+                    errorView(activity)
+                }
             }
         }
-    }
 
     private fun noSearchResultView() {
         toggleView(binding.txtNoResult)
     }
 
     private fun loadSearchResult(activity: Activity) {
-        binding.rvSearchResult.adapter = StationSearchResultAdapter(
-            viewModel.stations,
-            searchResultItemClickEventListener(viewModel.stations, activity),
-        )
+        binding.rvSearchResult.adapter =
+            StationSearchResultAdapter(
+                viewModel.stations,
+                searchResultItemClickEventListener(viewModel.stations, activity),
+            )
         binding.rvSearchResult.layoutManager = LinearLayoutManager(context)
         toggleView(binding.rvSearchResult)
     }
 
     private fun searchResultItemClickEventListener(
         items: StationModels,
-        activity: Activity
+        activity: Activity,
     ) = object : ItemClickEventListener {
         override fun onItemClickListener(position: Int) {
             sendUserToStationDetailScreen(activity, items.get(position))
@@ -117,7 +121,10 @@ class SearchStationFragment : Fragment() {
         override fun onDeleteButtonClickListener(position: Int) {}
     }
 
-    private fun sendUserToStationDetailScreen(activity: Activity, station: StationModel) {
+    private fun sendUserToStationDetailScreen(
+        activity: Activity,
+        station: StationModel,
+    ) {
         val intent = Intent(activity, StationDetailActivity::class.java)
         intent.putExtra(Const.TAG_STATION, station)
 
@@ -138,20 +145,26 @@ class SearchStationFragment : Fragment() {
         if (toast.previousFinished()) toast.show()
     }
 
-    private fun recentSearchContentReadyObserver(activity: Activity) = Observer<Boolean> {
-        if (it) { whenRecentSearchReady(activity) }
-        else { whenRecentSearchNotReady() }
-    }
+    private fun recentSearchContentReadyObserver(activity: Activity) =
+        Observer<Boolean> {
+            if (it) {
+                whenRecentSearchReady(activity)
+            } else {
+                whenRecentSearchNotReady()
+            }
+        }
 
     private fun whenRecentSearchReady(activity: Activity) {
-        binding.rvRecentSearch.adapter = StationRecentSearchAdapter(
-            viewModel.stationRecentSearches,
-            recentSearchItemClickEventListener(viewModel.stationRecentSearches, activity),
-            activity
-        )
-        binding.rvRecentSearch.layoutManager = LinearLayoutManager(
-            activity, LinearLayoutManager.HORIZONTAL, false
-        )
+        binding.rvRecentSearch.adapter =
+            StationRecentSearchAdapter(
+                viewModel.stationRecentSearches,
+                recentSearchItemClickEventListener(viewModel.stationRecentSearches, activity),
+                activity,
+            )
+        binding.rvRecentSearch.layoutManager =
+            LinearLayoutManager(
+                activity, LinearLayoutManager.HORIZONTAL, false,
+            )
         binding.rvRecentSearch.visibility = View.VISIBLE
     }
 
@@ -161,7 +174,7 @@ class SearchStationFragment : Fragment() {
 
     private fun recentSearchItemClickEventListener(
         items: StationRecentSearchModels,
-        activity: Activity
+        activity: Activity,
     ) = object : ItemClickEventListener {
         override fun onItemClickListener(position: Int) {
             sendUserToStationDetailScreen(activity, items.get(position))
@@ -200,7 +213,10 @@ class SearchStationFragment : Fragment() {
         }
     }
 
-    private fun showSoftInput(view: View, activity: Activity) {
+    private fun showSoftInput(
+        view: View,
+        activity: Activity,
+    ) {
         if (view.requestFocus()) {
             val imm = activity.getSystemService(InputMethodManager::class.java)
             imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)

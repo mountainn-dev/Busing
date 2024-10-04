@@ -55,30 +55,37 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun initFinishWaitingToast() {
-        finishWaitingToast = Toast.makeText(this, FINISH_WAITING_MESSAGE, Toast.LENGTH_SHORT).also {
-            it.addCallback(object: Toast.Callback() {
-                override fun onToastShown() {
-                    backClicked = true
-                    super.onToastShown()
-                }
+        finishWaitingToast =
+            Toast.makeText(this, FINISH_WAITING_MESSAGE, Toast.LENGTH_SHORT).also {
+                it.addCallback(
+                    object : Toast.Callback() {
+                        override fun onToastShown() {
+                            backClicked = true
+                            super.onToastShown()
+                        }
 
-                override fun onToastHidden() {
-                    backClicked = false
-                    super.onToastHidden()
-                }
-            })
-        }
+                        override fun onToastHidden() {
+                            backClicked = false
+                            super.onToastHidden()
+                        }
+                    },
+                )
+            }
     }
 
-    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+    override fun onKeyDown(
+        keyCode: Int,
+        event: KeyEvent?,
+    ): Boolean {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             if (!onMainFragment) {
                 replaceTo(SearchRouteFragment())
                 binding.btmNav.selectedItemId = R.id.navRoute
                 return true
             } else {
-                if (backClicked) finish()
-                else {
+                if (backClicked) {
+                    finish()
+                } else {
                     finishWaitingToast.show()
                     return true
                 }

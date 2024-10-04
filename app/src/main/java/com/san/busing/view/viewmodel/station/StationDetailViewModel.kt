@@ -17,7 +17,10 @@ interface StationDetailViewModel {
     var error: String
 
     fun load()
+
     fun loadWithTimer()
+
     fun updateRecentSearch(activity: Activity)
+
     fun toggleBookMark()
 }

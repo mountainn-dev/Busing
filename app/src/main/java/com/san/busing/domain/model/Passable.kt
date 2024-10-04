@@ -14,6 +14,8 @@ interface Passable {
     val isTurnaround: Boolean
 
     fun setVehicleId(id: Id)
+
     fun setStationSequence(seqNum: Int)
+
     fun setIsTurnaround(turnYn: Boolean)
 }

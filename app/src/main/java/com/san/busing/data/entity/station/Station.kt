@@ -16,22 +16,25 @@ data class Station(
     @PropertyElement(name = "stationName") val name: String,
     @PropertyElement val regionName: String?,
 ) {
-    fun toStationModel() = StationModelImpl(
-        Id(id),
-        mobileNo(mobileNo),
-        name,
-        regionName(regionName)
-    )
+    fun toStationModel() =
+        StationModelImpl(
+            Id(id),
+            mobileNo(mobileNo),
+            name,
+            regionName(regionName),
+        )
 
-    private fun mobileNo(mobileNo: String?) = when(mobileNo.isNullOrBlank()) {
-        true -> NO_MOBILE_NUMBER
-        false -> mobileNo
-    }
+    private fun mobileNo(mobileNo: String?) =
+        when (mobileNo.isNullOrBlank()) {
+            true -> NO_MOBILE_NUMBER
+            false -> mobileNo
+        }
 
-    private fun regionName(name: String?) = when(name != null) {
-        true -> name
-        false -> Const.EMPTY_TEXT
-    }
+    private fun regionName(name: String?) =
+        when (name != null) {
+            true -> name
+            false -> Const.EMPTY_TEXT
+        }
 
     companion object {
         private const val NO_MOBILE_NUMBER = "00000"
@@ -40,7 +43,7 @@ data class Station(
 
 @Xml
 data class Stations(
-    @Path("msgBody") @Element val stations: List<Station>
+    @Path("msgBody") @Element val stations: List<Station>,
 ) {
     fun get(): StationModels {
         return StationModels(stations.map { it.toStationModel() })

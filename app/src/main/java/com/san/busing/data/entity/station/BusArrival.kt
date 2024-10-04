@@ -15,7 +15,7 @@ import com.tickaroo.tikxml.annotation.Xml
  * 정류장 버스 도착 정보를 담는 클래스
  * 정류장 상세 화면의 버스 도착 정보 컨텐츠를 구성한다.
  */
-@Xml(name="busArrivalItem")
+@Xml(name = "busArrivalItem")
 data class BusArrival(
     @PropertyElement val stationId: Int,
     @PropertyElement val routeId: Int,
@@ -30,34 +30,36 @@ data class BusArrival(
     @PropertyElement(name = "remainSeatCnt1") val remainSeatCntFirst: Int,
     @PropertyElement(name = "remainSeatCnt2") val remainSeatCntSecond: Int,
     @PropertyElement(name = "staOrder") val stationSeq: Int,
-    @PropertyElement val flag: String
+    @PropertyElement val flag: String,
 ) {
-    fun toBusArrivalModel() = BusArrivalModel(
-        Id(routeId),
-        locationFirst,
-        locationSecond,
-        predictTimeFirst,
-        predictTimeSecond,
-        isLowPlate(lowPlateFirst),
-        isLowPlate(lowPlateSecond),
-        plateNoFirst,
-        plateNoSecond,
-        remainSeatCntFirst,
-        remainSeatCntSecond,
-        stationSeq,
-        ArrivalFlag.find(flag)
-    )
+    fun toBusArrivalModel() =
+        BusArrivalModel(
+            Id(routeId),
+            locationFirst,
+            locationSecond,
+            predictTimeFirst,
+            predictTimeSecond,
+            isLowPlate(lowPlateFirst),
+            isLowPlate(lowPlateSecond),
+            plateNoFirst,
+            plateNoSecond,
+            remainSeatCntFirst,
+            remainSeatCntSecond,
+            stationSeq,
+            ArrivalFlag.find(flag),
+        )
 
-    private fun isLowPlate(lowPlate: Int) = when(lowPlate) {
-        0 -> false
-        1 -> true
-        else -> throw Exception(ExceptionMessage.WRONG_LOW_PLATE_VALUE_EXCEPTION)
-    }
+    private fun isLowPlate(lowPlate: Int) =
+        when (lowPlate) {
+            0 -> false
+            1 -> true
+            else -> throw Exception(ExceptionMessage.WRONG_LOW_PLATE_VALUE_EXCEPTION)
+        }
 }
 
 @Xml
 data class BusArrivalItem(
-    @Path("msgBody") @Element val item: BusArrival
+    @Path("msgBody") @Element val item: BusArrival,
 ) {
     fun get(): BusArrivalModel {
         return item.toBusArrivalModel()

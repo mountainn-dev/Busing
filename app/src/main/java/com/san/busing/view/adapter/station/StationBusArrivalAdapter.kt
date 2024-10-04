@@ -21,10 +21,10 @@ class StationBusArrivalAdapter(
     private val nextStations: List<StationModel>,
     private val busArrivals: List<BusArrivalModel>,
     private val itemClickEventListener: ItemClickEventListener,
-    private val activity: Activity
-) : RecyclerView.Adapter<StationBusArrivalAdapter.StationBusArrivalViewHolder>(){
+    private val activity: Activity,
+) : RecyclerView.Adapter<StationBusArrivalAdapter.StationBusArrivalViewHolder>() {
     inner class StationBusArrivalViewHolder(
-        private val binding: ItemStationBusArrivalBinding
+        private val binding: ItemStationBusArrivalBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(position: Int) {
             loadContent(position)
@@ -43,13 +43,17 @@ class StationBusArrivalAdapter(
         }
 
         private fun loadNextStation(position: Int) {
-            val nextStationName = nextStations.find {
-                routeItems.get(position).isSame((it as Passable).vehicleId)
-                        && (routeItems.get(position) as Stoppable).stationSequence == it.stationSequence
-            }?.name
+            val nextStationName =
+                nextStations.find {
+                    routeItems.get(position).isSame((it as Passable).vehicleId) &&
+                        (routeItems.get(position) as Stoppable).stationSequence == it.stationSequence
+                }?.name
 
-            if (nextStationName != null) loadNextStation(nextStationName)
-            else unloadNextStation()
+            if (nextStationName != null) {
+                loadNextStation(nextStationName)
+            } else {
+                unloadNextStation()
+            }
         }
 
         private fun loadNextStation(name: String) {
@@ -61,22 +65,34 @@ class StationBusArrivalAdapter(
         }
 
         private fun loadBusArrival(position: Int) {
-            val busArrival = busArrivals.find {
-                routeItems.get(position).isSame(it.id)
-                        && (routeItems.get(position) as Stoppable).stationSequence == it.sequenceNumber
-            }
+            val busArrival =
+                busArrivals.find {
+                    routeItems.get(position).isSame(it.id) &&
+                        (routeItems.get(position) as Stoppable).stationSequence == it.sequenceNumber
+                }
 
             if (busArrival != null) {
-                if (!busArrival.arrivalFlag.isStop()) loadBusArrival(busArrival)
-                else loadBusArrivalFlag(busArrival)
-            } else unloadBusArrival()
+                if (!busArrival.arrivalFlag.isStop()) {
+                    loadBusArrival(busArrival)
+                } else {
+                    loadBusArrivalFlag(busArrival)
+                }
+            } else {
+                unloadBusArrival()
+            }
         }
 
         private fun loadBusArrival(busArrival: BusArrivalModel) {
-            if (busArrival.predictTimeFirst == Const.ZERO) toggleBusArrivalFirst(binding.txtNoArrivalFirst)
-            else loadBusArrivalFirst(busArrival)
-            if (busArrival.predictTimeSecond == Const.ZERO) toggleBusArrivalSecond(binding.txtNoArrivalSecond)
-            else loadBusArrivalSecond(busArrival)
+            if (busArrival.predictTimeFirst == Const.ZERO) {
+                toggleBusArrivalFirst(binding.txtNoArrivalFirst)
+            } else {
+                loadBusArrivalFirst(busArrival)
+            }
+            if (busArrival.predictTimeSecond == Const.ZERO) {
+                toggleBusArrivalSecond(binding.txtNoArrivalSecond)
+            } else {
+                loadBusArrivalSecond(busArrival)
+            }
         }
 
         private fun loadBusArrivalFirst(busArrival: BusArrivalModel) {
@@ -119,10 +135,11 @@ class StationBusArrivalAdapter(
         }
 
         private fun setContentColor(position: Int) {
-            val color = ContextCompat.getColor(
-                activity,
-                Utils.getColorByRouteType(routeItems.get(position).type)
-            )
+            val color =
+                ContextCompat.getColor(
+                    activity,
+                    Utils.getColorByRouteType(routeItems.get(position).type),
+                )
 
             binding.txtRouteName.setTextColor(color)
         }
@@ -134,14 +151,22 @@ class StationBusArrivalAdapter(
         }
 
         private fun visibleWhenTrue(state: Boolean) = if (state) View.VISIBLE else View.GONE
+
         private fun busArrivalPredictTimeMessage(time: Int) = String.format(REMAIN_BUS_ARRIVAL_TIME, time)
+
         private fun busArrivalLocationMessage(location: Int) = String.format(REMAIN_BUS_ARRIVAL_LOCATION, location)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StationBusArrivalViewHolder {
-        val binding = ItemStationBusArrivalBinding.inflate(
-            LayoutInflater.from(parent.context), parent, false
-        )
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int,
+    ): StationBusArrivalViewHolder {
+        val binding =
+            ItemStationBusArrivalBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false,
+            )
         initAnimEffect(binding)
 
         return StationBusArrivalViewHolder((binding))
@@ -160,7 +185,10 @@ class StationBusArrivalAdapter(
 
     override fun getItemCount() = routeItems.count()
 
-    override fun onBindViewHolder(holder: StationBusArrivalViewHolder, position: Int) {
+    override fun onBindViewHolder(
+        holder: StationBusArrivalViewHolder,
+        position: Int,
+    ) {
         holder.bind(position)
     }
 
