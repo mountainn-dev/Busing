@@ -20,14 +20,15 @@ data class StationRecentSearch(
     val name: String,
     val regionName: String,
     val index: Long,
-    val bookMark: Boolean
+    val bookMark: Boolean,
 ) {
-    fun toStationRecentSearchModel() = StationRecentSearchModel(
-        Id(id),
-        mobileNo,
-        name,
-        regionName,
-        index,
-        bookMark
-    )
+    fun toStationRecentSearchModel() =
+        StationRecentSearchModel(
+            Id(id),
+            mobileNo,
+            name,
+            regionName,
+            index,
+            bookMark,
+        )
 }

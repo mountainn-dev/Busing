@@ -14,10 +14,10 @@ import com.san.busing.view.listener.ItemClickEventListener
 class StationRecentSearchAdapter(
     private val items: StationRecentSearchModels,
     private val itemClickEventListener: ItemClickEventListener,
-    private val activity: Activity
+    private val activity: Activity,
 ) : RecyclerView.Adapter<StationRecentSearchAdapter.StationRecentSearchViewHolder>() {
     inner class StationRecentSearchViewHolder(
-        private val binding: ItemStationRecentSearchBinding
+        private val binding: ItemStationRecentSearchBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(position: Int) {
             loadContent(position)
@@ -31,18 +31,21 @@ class StationRecentSearchAdapter(
         }
 
         private fun setBackground(position: Int) {
-            val background = ContextCompat.getDrawable(
-                activity,
-                Utils.getBackgroundByBookMarkStatus(items.get(position).bookMark)
-            )
+            val background =
+                ContextCompat.getDrawable(
+                    activity,
+                    Utils.getBackgroundByBookMarkStatus(items.get(position).bookMark),
+                )
             binding.clStationRecentSearchItem.background = background
         }
 
         private fun setItemClickEventListener(position: Int) {
             binding.clStationRecentSearchItem.setOnClickListener {
-                itemClickEventListener.onItemClickListener(position) }
+                itemClickEventListener.onItemClickListener(position)
+            }
             binding.btnDeleteRecentSearch.setOnClickListener {
-                itemClickEventListener.onDeleteButtonClickListener(position) }
+                itemClickEventListener.onDeleteButtonClickListener(position)
+            }
         }
     }
 
@@ -50,9 +53,12 @@ class StationRecentSearchAdapter(
         parent: ViewGroup,
         viewType: Int,
     ): StationRecentSearchAdapter.StationRecentSearchViewHolder {
-        val binding = ItemStationRecentSearchBinding.inflate(
-            LayoutInflater.from(parent.context), parent, false
-        )
+        val binding =
+            ItemStationRecentSearchBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false,
+            )
 
         return StationRecentSearchViewHolder(binding)
     }

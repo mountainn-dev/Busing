@@ -15,8 +15,12 @@ interface SearchRouteViewModel {
     var error: String
 
     fun search(keyword: String)
+
     fun clearKeyword()
+
     fun deleteRecentSearch(itemIdx: Int)
+
     fun deleteAllRecentSearches(activity: Activity)
+
     fun restore()
 }

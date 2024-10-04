@@ -24,40 +24,44 @@ data class Bus(
     @PropertyElement val lowPlate: Int,
     @PropertyElement val plateNo: String,
     @PropertyElement val plateType: Int,
-    @PropertyElement val remainSeatCnt: Int
+    @PropertyElement val remainSeatCnt: Int,
 ) {
-    fun toBusModel() = BusModel(
-        Id(routeId),
-        Utils.getPlateType(plateType),
-        plateNumber(plateNo),
-        stationSeq+1,   // 실제 버스 위치 = stationSeq + 1
-        isLowPlate(lowPlate),
-        remainSeat(remainSeatCnt),
-    )
+    fun toBusModel() =
+        BusModel(
+            Id(routeId),
+            Utils.getPlateType(plateType),
+            plateNumber(plateNo),
+            // 실제 버스 위치 = stationSeq + 1
+            stationSeq + 1,
+            isLowPlate(lowPlate),
+            remainSeat(remainSeatCnt),
+        )
 
     private fun plateNumber(plateNo: String): String {
         try {
-            return plateNo.substring(plateNo.length-4, plateNo.length)
+            return plateNo.substring(plateNo.length - 4, plateNo.length)
         } catch (e: Exception) {
             throw Exception(ExceptionMessage.WRONG_PLATE_NUMBER_FORMAT_EXCEPTION)
         }
     }
 
-    private fun isLowPlate(lowPlate: Int) = when(lowPlate) {
-        0 -> false
-        1 -> true
-        else -> throw Exception(ExceptionMessage.WRONG_LOW_PLATE_VALUE_EXCEPTION)
-    }
+    private fun isLowPlate(lowPlate: Int) =
+        when (lowPlate) {
+            0 -> false
+            1 -> true
+            else -> throw Exception(ExceptionMessage.WRONG_LOW_PLATE_VALUE_EXCEPTION)
+        }
 
-    private fun remainSeat(remainSeatCnt: Int) = when(remainSeatCnt >= -1) {
-        true -> remainSeatCnt
-        else -> throw Exception(ExceptionMessage.WRONG_REMAIN_SEAT_VALUE_EXCEPTION)
-    }
+    private fun remainSeat(remainSeatCnt: Int) =
+        when (remainSeatCnt >= -1) {
+            true -> remainSeatCnt
+            else -> throw Exception(ExceptionMessage.WRONG_REMAIN_SEAT_VALUE_EXCEPTION)
+        }
 }
 
 @Xml
 data class Buses(
-    @Path("msgBody") @Element val buses: List<Bus>
+    @Path("msgBody") @Element val buses: List<Bus>,
 ) {
     fun get(): BusModels {
         return BusModels(buses.map { it.toBusModel() })

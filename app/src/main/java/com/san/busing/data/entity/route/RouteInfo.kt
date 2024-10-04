@@ -34,28 +34,30 @@ data class RouteInfo(
     @PropertyElement(name = "upLastTime") val startLastTime: String?,
     @PropertyElement(name = "downFirstTime") val endFirstTime: String?,
     @PropertyElement(name = "downLastTime") val endLastTime: String?,
-    @PropertyElement(name = "nPeekAlloc") val maxPeekAlloc: Int?
+    @PropertyElement(name = "nPeekAlloc") val maxPeekAlloc: Int?,
 ) {
-    fun toRouteInfoModel() = RouteInfoModel(
-        Id(id),
-        Utils.getRouteType(typeCd),
-        routeName,
-        regionName(regionName),
-        Id(startStationId),
-        startStationName,
-        Id(endStationId),
-        endStationName,
-        localTime(startFirstTime),
-        localTime(startLastTime),
-        localTime(endFirstTime),
-        localTime(endLastTime),
-        maxPeekAlloc ?: Const.ZERO
-    )
+    fun toRouteInfoModel() =
+        RouteInfoModel(
+            Id(id),
+            Utils.getRouteType(typeCd),
+            routeName,
+            regionName(regionName),
+            Id(startStationId),
+            startStationName,
+            Id(endStationId),
+            endStationName,
+            localTime(startFirstTime),
+            localTime(startLastTime),
+            localTime(endFirstTime),
+            localTime(endLastTime),
+            maxPeekAlloc ?: Const.ZERO,
+        )
 
-    private fun regionName(name: String?) = when(name != null) {
-        true -> name
-        false -> Const.EMPTY_TEXT
-    }
+    private fun regionName(name: String?) =
+        when (name != null) {
+            true -> name
+            false -> Const.EMPTY_TEXT
+        }
 
     private fun localTime(time: String?): LocalTime? {
         if (time == null) return null
@@ -75,7 +77,7 @@ data class RouteInfo(
 // RouteInfo Path 어노테이션 중복 입력을 최소화하기 위한 클래스
 @Xml
 data class RouteInfoItem(
-    @Path("msgBody") @Element val item: RouteInfo
+    @Path("msgBody") @Element val item: RouteInfo,
 ) {
     fun get(): RouteInfoModel {
         return item.toRouteInfoModel()

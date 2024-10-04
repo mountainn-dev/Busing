@@ -11,6 +11,6 @@ interface BusArrivalService {
         @Query("serviceKey") key: String,
         @Query("stationId") stationId: Int,
         @Query("routeId") routeId: Int,
-        @Query("staOrder") stationSequence: Int
+        @Query("staOrder") stationSequence: Int,
     ): Response<BusArrivalItem>
 }

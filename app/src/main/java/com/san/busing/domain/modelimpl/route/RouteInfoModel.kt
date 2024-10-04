@@ -24,7 +24,7 @@ data class RouteInfoModel(
     val startLastTime: LocalTime?,
     val endFirstTime: LocalTime?,
     val endLastTime: LocalTime?,
-    val maxPeekAlloc: Int
+    val maxPeekAlloc: Int,
 ) : RouteModel {
     override fun isSame(id: Id) = this.id == id
 }

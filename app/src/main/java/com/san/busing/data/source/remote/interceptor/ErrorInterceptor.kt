@@ -22,12 +22,13 @@ class ErrorInterceptor : Interceptor {
         val response = chain.proceed(request)
         val body = response.body()
 
-        val bodyCopy = body?.let {
-            val source = it.source()
-            source.request(Long.MAX_VALUE) // Buffer the entire body.
-            val buffer = source.buffer()
-            ResponseBody.create(body.contentType(), body.contentLength(), buffer.clone())
-        }
+        val bodyCopy =
+            body?.let {
+                val source = it.source()
+                source.request(Long.MAX_VALUE) // Buffer the entire body.
+                val buffer = source.buffer()
+                ResponseBody.create(body.contentType(), body.contentLength(), buffer.clone())
+            }
 
         parseResult(body!!.byteStream())
         return response.newBuilder().body(bodyCopy).build()
@@ -58,16 +59,17 @@ class ErrorInterceptor : Interceptor {
 
             // Server Exception
             SYSTEM_ERROR, NO_SERVICE_KEY, WRONG_SERVICE_KEY, UNAUTHORIZED_SERVICE_KEY,
-            OVER_REQUEST_LIMIT, SERVICE_NOT_READY -> throw ServiceException.SystemException(
-                ExceptionMessage.SERVICE_FAIL_EXCEPTION
+            OVER_REQUEST_LIMIT, SERVICE_NOT_READY,
+            -> throw ServiceException.SystemException(
+                ExceptionMessage.SERVICE_FAIL_EXCEPTION,
             )
             // Result Exception
             NO_RESULT, NO_RESULT_BUS_ARRIVAL -> throw ServiceException.ResultException(
-                ExceptionMessage.NO_RESULT_EXCEPTION
+                ExceptionMessage.NO_RESULT_EXCEPTION,
             )
             // Essential Parameter Exception
             NO_ESSENTIAL_PARAMETER, WRONG_ESSENTIAL_PARAMETER -> throw ServiceException.EssentialParameterException(
-                ExceptionMessage.NO_ESSENTIAL_PARAMETER_EXCEPTION
+                ExceptionMessage.NO_ESSENTIAL_PARAMETER_EXCEPTION,
             )
             // Optional Parameter Exception
             else -> throw ServiceException.OptionalParameterException(ExceptionMessage.SERVICE_FAIL_EXCEPTION)

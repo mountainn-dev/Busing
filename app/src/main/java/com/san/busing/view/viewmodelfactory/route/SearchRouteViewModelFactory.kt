@@ -6,7 +6,7 @@ import com.san.busing.data.repository.route.RouteRepository
 import com.san.busing.view.viewmodelimpl.route.SearchRouteViewModelImpl
 
 class SearchRouteViewModelFactory(
-    private val repository: RouteRepository
+    private val repository: RouteRepository,
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(SearchRouteViewModelImpl::class.java)) {

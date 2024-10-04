@@ -20,7 +20,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class SearchRouteViewModelImpl(
-    private val repository: RouteRepository
+    private val repository: RouteRepository,
 ) : SearchRouteViewModel, ViewModel() {
     override val state: LiveData<UiState>
         get() = viewModelState
@@ -41,11 +41,12 @@ class SearchRouteViewModelImpl(
         searchingJob?.cancel()
         this.keyword = keyword
 
-        searchingJob = viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                searchRoutes()
+        searchingJob =
+            viewModelScope.launch {
+                withContext(Dispatchers.IO) {
+                    searchRoutes()
+                }
             }
-        }
     }
 
     private suspend fun searchRoutes() {
@@ -115,8 +116,9 @@ class SearchRouteViewModelImpl(
         val result = repository.getAllRecentSearch()
 
         if (result is Success) {
-            if (result.data.isEmpty()) recentSearchContentLoaded.postValue(false)
-            else {
+            if (result.data.isEmpty()) {
+                recentSearchContentLoaded.postValue(false)
+            } else {
                 routeRecentSearches = result.data
                 recentSearchContentLoaded.postValue(true)
             }

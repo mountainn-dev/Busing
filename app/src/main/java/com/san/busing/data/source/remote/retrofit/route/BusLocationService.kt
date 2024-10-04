@@ -9,6 +9,6 @@ interface BusLocationService {
     @GET("getBusLocationList")
     suspend fun getBusLocationList(
         @Query("serviceKey") key: String,
-        @Query("routeId") id: Int
+        @Query("routeId") id: Int,
     ): Response<Buses>
 }

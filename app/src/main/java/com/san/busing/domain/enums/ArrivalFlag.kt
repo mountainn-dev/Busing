@@ -9,7 +9,8 @@ enum class ArrivalFlag(val flagName: String) {
     RUN("운행중"),
     PASS("운행중"),
     STOP("운행 종료"),
-    WAIT("회차지 대기");
+    WAIT("회차지 대기"),
+    ;
 
     fun isStop() = flagName == STOP.flagName
 

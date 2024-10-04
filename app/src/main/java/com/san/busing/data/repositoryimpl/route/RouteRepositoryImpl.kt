@@ -3,7 +3,6 @@ package com.san.busing.data.repositoryimpl.route
 import android.app.Activity
 import android.content.Context
 import android.util.Log
-import androidx.room.Room
 import com.san.busing.BuildConfig
 import com.san.busing.data.Result
 import com.san.busing.data.exception.ExceptionMessage
@@ -23,9 +22,8 @@ import com.san.busing.domain.modelimpl.station.StationModels
 class RouteRepositoryImpl(
     private val routeService: RouteService,
     private val busLocationService: BusLocationService,
-    private val db: RecentSearchDatabase
+    private val db: RecentSearchDatabase,
 ) : RouteRepository {
-
     override suspend fun getRouteInfo(id: Id): Result<RouteInfoModel> {
         try {
             val response = routeService.getBusRouteInfoItem(BuildConfig.API_KEY, id.get())
@@ -95,7 +93,8 @@ class RouteRepositoryImpl(
 
     override suspend fun getAllRecentSearch(): Result<RouteRecentSearchModels> {
         try {
-            val recentSearchModels = db.routeRecentSearchDao().getAllRouteRecentSearches().map { it.toRouteRecentSearchModel() }
+            val recentSearchModels =
+                db.routeRecentSearchDao().getAllRouteRecentSearches().map { it.toRouteRecentSearchModel() }
             return Result.success(RouteRecentSearchModels(recentSearchModels))
         } catch (e: Exception) {
             Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.toString())
@@ -106,7 +105,8 @@ class RouteRepositoryImpl(
     override suspend fun insertRecentSearch(recentSearchModel: RouteRecentSearchModel): Result<Boolean> {
         try {
             db.routeRecentSearchDao().insert(
-                recentSearchModel.toRouteRecentSearchEntity())
+                recentSearchModel.toRouteRecentSearchEntity(),
+            )
             return Result.success(true)
         } catch (e: Exception) {
             Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.toString())
@@ -117,7 +117,8 @@ class RouteRepositoryImpl(
     override suspend fun updateRecentSearch(recentSearchModel: RouteRecentSearchModel): Result<Boolean> {
         try {
             db.routeRecentSearchDao().update(
-                recentSearchModel.toRouteRecentSearchEntity())
+                recentSearchModel.toRouteRecentSearchEntity(),
+            )
             return Result.success(true)
         } catch (e: Exception) {
             Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.toString())
@@ -128,7 +129,8 @@ class RouteRepositoryImpl(
     override suspend fun deleteRecentSearch(recentSearchModel: RouteRecentSearchModel): Result<Boolean> {
         try {
             db.routeRecentSearchDao().delete(
-                recentSearchModel.toRouteRecentSearchEntity())
+                recentSearchModel.toRouteRecentSearchEntity(),
+            )
             return Result.success(true)
         } catch (e: Exception) {
             Log.e(ExceptionMessage.TAG_ROUTE_RECENT_SEARCH_EXCEPTION, e.toString())
@@ -153,20 +155,25 @@ class RouteRepositoryImpl(
      * preference.getLong() 에서 디폴트값을 설정하기 때문에 별도 예외처리를 진행하지 않는다.
      */
     override fun getRecentSearchIndex(activity: Activity): Result<Long> {
-        val preference = activity.getSharedPreferences(
-            BuildConfig.APPLICATION_ID,
-            Context.MODE_PRIVATE
-        )
+        val preference =
+            activity.getSharedPreferences(
+                BuildConfig.APPLICATION_ID,
+                Context.MODE_PRIVATE,
+            )
         return Result.success(
-            preference.getLong(BuildConfig.ROUTE_PREFERENCE_KEY, DEFAULT_INDEX)
+            preference.getLong(BuildConfig.ROUTE_PREFERENCE_KEY, DEFAULT_INDEX),
         )
     }
 
-    override fun updateRecentSearchIndex(activity: Activity, newIdx: Long): Result<Boolean> {
-        val preference = activity.getSharedPreferences(
-            BuildConfig.APPLICATION_ID,
-            Context.MODE_PRIVATE
-        )
+    override fun updateRecentSearchIndex(
+        activity: Activity,
+        newIdx: Long,
+    ): Result<Boolean> {
+        val preference =
+            activity.getSharedPreferences(
+                BuildConfig.APPLICATION_ID,
+                Context.MODE_PRIVATE,
+            )
         try {
             preference.edit().putLong(BuildConfig.ROUTE_PREFERENCE_KEY, newIdx).apply()
             return Result.success(true)

@@ -10,23 +10,17 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.san.busing.BuildConfig
 import com.san.busing.R
 import com.san.busing.data.repositoryimpl.route.RouteRepositoryImpl
 import com.san.busing.data.repositoryimpl.station.StationRepositoryImpl
 import com.san.busing.data.source.local.provider.RoomDBProvider
 import com.san.busing.data.source.remote.retrofit.provider.RetrofitProvider
-import com.san.busing.data.source.remote.retrofit.route.BusLocationService
-import com.san.busing.data.source.remote.retrofit.route.RouteService
-import com.san.busing.data.source.remote.retrofit.station.BusArrivalService
-import com.san.busing.data.source.remote.retrofit.station.StationService
 import com.san.busing.databinding.ActivityStationDetailBinding
 import com.san.busing.domain.model.route.RouteModel
 import com.san.busing.domain.model.station.StationModel
 import com.san.busing.domain.modelimpl.route.RouteModels
 import com.san.busing.domain.state.UiState
 import com.san.busing.domain.utils.Const
-import com.san.busing.domain.utils.Utils
 import com.san.busing.view.adapter.station.StationBusArrivalAdapter
 import com.san.busing.view.listener.ItemClickEventListener
 import com.san.busing.view.screen.route.RouteDetailActivity
@@ -44,20 +38,23 @@ class StationDetailActivity : AppCompatActivity() {
         binding = ActivityStationDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val stationRepository = StationRepositoryImpl(
-            RetrofitProvider.getStationService(),
-            RetrofitProvider.getBusArrivalService(),
-            RoomDBProvider.get(applicationContext)
-        )
-        val routeRepository = RouteRepositoryImpl(
-            RetrofitProvider.getRouteService(),
-            RetrofitProvider.getBusLocationService(),
-            RoomDBProvider.get(applicationContext)
-        )
+        val stationRepository =
+            StationRepositoryImpl(
+                RetrofitProvider.getStationService(),
+                RetrofitProvider.getBusArrivalService(),
+                RoomDBProvider.get(applicationContext),
+            )
+        val routeRepository =
+            RouteRepositoryImpl(
+                RetrofitProvider.getRouteService(),
+                RetrofitProvider.getBusLocationService(),
+                RoomDBProvider.get(applicationContext),
+            )
         val station = intent.getSerializableExtra(Const.TAG_STATION) as StationModel
-        viewModel = ViewModelProvider(
-            this, StationDetailViewModelFactory(stationRepository, routeRepository, station)
-        ).get(StationDetailViewModelImpl::class.java)
+        viewModel =
+            ViewModelProvider(
+                this, StationDetailViewModelFactory(stationRepository, routeRepository, station),
+            ).get(StationDetailViewModelImpl::class.java)
 
         viewModel.updateRecentSearch(this)
         initAnimEffect()
@@ -93,35 +90,39 @@ class StationDetailActivity : AppCompatActivity() {
     private fun initObserver(activity: Activity) {
         viewModel.state.observe(
             activity as LifecycleOwner,
-            stateObserver(activity)
+            stateObserver(activity),
         )
         viewModel.resetTimer.observe(
             activity as LifecycleOwner,
-            resetTimerObserver()
+            resetTimerObserver(),
         )
         viewModel.bookMark.observe(
             activity as LifecycleOwner,
-            bookMarkObserver()
+            bookMarkObserver(),
         )
     }
 
-    private fun stateObserver(activity: Activity) = Observer<UiState> {
-        when (it) {
-            UiState.Success -> {
-                if (viewModel.viaRoutes.isEmpty()) noViaRouteView()
-                else loadStationViaRoutes(activity)
-            }
-            UiState.Loading -> {
-                loadingView()
-            }
-            UiState.Timeout -> {
-                timeoutView()
-            }
-            UiState.Error -> {
-                errorView(activity)
+    private fun stateObserver(activity: Activity) =
+        Observer<UiState> {
+            when (it) {
+                UiState.Success -> {
+                    if (viewModel.viaRoutes.isEmpty()) {
+                        noViaRouteView()
+                    } else {
+                        loadStationViaRoutes(activity)
+                    }
+                }
+                UiState.Loading -> {
+                    loadingView()
+                }
+                UiState.Timeout -> {
+                    timeoutView()
+                }
+                UiState.Error -> {
+                    errorView(activity)
+                }
             }
         }
-    }
 
     private fun noViaRouteView() {
         toggleView(binding.txtNoViaRoutes)
@@ -129,13 +130,14 @@ class StationDetailActivity : AppCompatActivity() {
 
     private fun loadStationViaRoutes(activity: Activity) {
         val scrollState = binding.rvStationViaRouteList.layoutManager?.onSaveInstanceState()
-        binding.rvStationViaRouteList.adapter = StationBusArrivalAdapter(
-            viewModel.viaRoutes,
-            viewModel.nextStations,
-            viewModel.busArrivals,
-            stationBusArrivalClickEventListener(viewModel.viaRoutes, activity),
-            activity
-        )
+        binding.rvStationViaRouteList.adapter =
+            StationBusArrivalAdapter(
+                viewModel.viaRoutes,
+                viewModel.nextStations,
+                viewModel.busArrivals,
+                stationBusArrivalClickEventListener(viewModel.viaRoutes, activity),
+                activity,
+            )
         binding.rvStationViaRouteList.layoutManager = LinearLayoutManager(activity)
         binding.rvStationViaRouteList.layoutManager?.onRestoreInstanceState(scrollState)
         toggleView(binding.rvStationViaRouteList)
@@ -143,7 +145,7 @@ class StationDetailActivity : AppCompatActivity() {
 
     private fun stationBusArrivalClickEventListener(
         items: RouteModels,
-        activity: Activity
+        activity: Activity,
     ) = object : ItemClickEventListener {
         override fun onItemClickListener(position: Int) {
             sendUserToRouteDetailScreen(items.get(position), activity)
@@ -152,7 +154,10 @@ class StationDetailActivity : AppCompatActivity() {
         override fun onDeleteButtonClickListener(position: Int) {}
     }
 
-    private fun sendUserToRouteDetailScreen(item: RouteModel, activity: Activity) {
+    private fun sendUserToRouteDetailScreen(
+        item: RouteModel,
+        activity: Activity,
+    ) {
         val intent = Intent(activity, RouteDetailActivity::class.java)
         intent.putExtra(Const.TAG_ROUTE, item)
 
@@ -173,25 +178,30 @@ class StationDetailActivity : AppCompatActivity() {
         if (toast.previousFinished()) toast.show()
     }
 
-    private fun resetTimerObserver() = Observer<Int> {
-        if (it == Const.ZERO) {
-            binding.fabRefresh.setImageResource(R.drawable.ic_refresh)
-            binding.fabRefresh.isClickable = true
-            binding.fabTime.visibility = View.GONE
-        } else {
-            if (binding.fabTime.visibility == View.GONE) {
-                binding.fabTime.visibility = View.VISIBLE
-                binding.fabRefresh.isClickable = false
-                binding.fabRefresh.setImageResource(android.R.color.transparent)
+    private fun resetTimerObserver() =
+        Observer<Int> {
+            if (it == Const.ZERO) {
+                binding.fabRefresh.setImageResource(R.drawable.ic_refresh)
+                binding.fabRefresh.isClickable = true
+                binding.fabTime.visibility = View.GONE
+            } else {
+                if (binding.fabTime.visibility == View.GONE) {
+                    binding.fabTime.visibility = View.VISIBLE
+                    binding.fabRefresh.isClickable = false
+                    binding.fabRefresh.setImageResource(android.R.color.transparent)
+                }
+                binding.fabTime.text = it.toString()
             }
-            binding.fabTime.text = it.toString()
         }
-    }
 
-    private fun bookMarkObserver() = Observer<Boolean> {
-        if (it) binding.btnBookMark.setImageResource(R.drawable.ic_on_book_mark)
-        else binding.btnBookMark.setImageResource(R.drawable.ic_off_book_mark)
-    }
+    private fun bookMarkObserver() =
+        Observer<Boolean> {
+            if (it) {
+                binding.btnBookMark.setImageResource(R.drawable.ic_on_book_mark)
+            } else {
+                binding.btnBookMark.setImageResource(R.drawable.ic_off_book_mark)
+            }
+        }
 
     private fun initListener(activity: Activity) {
         setBtnBackListener()
@@ -207,12 +217,15 @@ class StationDetailActivity : AppCompatActivity() {
 
     private fun setBtnBookMarkListener(activity: Activity) {
         binding.btnBookMark.setOnClickListener {
-            if (viewModel.bookMark.value!!) Toast.makeText(
-                activity,
-                BOOKMARK_UNREGISTER_MESSAGE,
-                Toast.LENGTH_SHORT
-            ).show()
-            else Toast.makeText(activity, BOOKMARK_REGISTER_MESSAGE, Toast.LENGTH_SHORT).show()
+            if (viewModel.bookMark.value!!) {
+                Toast.makeText(
+                    activity,
+                    BOOKMARK_UNREGISTER_MESSAGE,
+                    Toast.LENGTH_SHORT,
+                ).show()
+            } else {
+                Toast.makeText(activity, BOOKMARK_REGISTER_MESSAGE, Toast.LENGTH_SHORT).show()
+            }
             viewModel.toggleBookMark()
         }
     }

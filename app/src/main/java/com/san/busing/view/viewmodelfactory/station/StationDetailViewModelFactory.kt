@@ -10,7 +10,7 @@ import com.san.busing.view.viewmodelimpl.station.StationDetailViewModelImpl
 class StationDetailViewModelFactory(
     private val stationRepository: StationRepository,
     private val routeRepository: RouteRepository,
-    private val station: StationModel
+    private val station: StationModel,
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(StationDetailViewModelImpl::class.java)) {

@@ -16,28 +16,33 @@ data class StationRecentSearchModel(
     override val name: String,
     override val regionName: String,
     val index: Long,
-    val bookMark: Boolean
+    val bookMark: Boolean,
 ) : StationModel {
     override fun isSame(id: Id) = this.id == id
 
-    fun toStationRecentSearchEntity() = StationRecentSearch(
-        id.get(),
-        mobileNo,
-        name,
-        regionName,
-        index,
-        bookMark
-    )
+    fun toStationRecentSearchEntity() =
+        StationRecentSearch(
+            id.get(),
+            mobileNo,
+            name,
+            regionName,
+            index,
+            bookMark,
+        )
 }
 
 data class StationRecentSearchModels(
-    private val data: List<StationRecentSearchModel>
+    private val data: List<StationRecentSearchModel>,
 ) {
-    private val models = data.sortedWith(
-        compareByDescending<StationRecentSearchModel> { it.bookMark }.thenByDescending { it.index })
+    private val models =
+        data.sortedWith(
+            compareByDescending<StationRecentSearchModel> { it.bookMark }.thenByDescending { it.index },
+        )
 
     fun get(index: Int) = models[index]
+
     fun count() = models.size
+
     fun isEmpty() = models.isEmpty()
 
     companion object {

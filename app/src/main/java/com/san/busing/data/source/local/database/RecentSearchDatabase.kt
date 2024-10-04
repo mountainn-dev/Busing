@@ -10,9 +10,10 @@ import com.san.busing.data.source.local.dao.StationRecentSearchDao
 @Database(
     version = 1,
     entities = [RouteRecentSearch::class, StationRecentSearch::class],
-    exportSchema = false
+    exportSchema = false,
 )
 abstract class RecentSearchDatabase : RoomDatabase() {
     abstract fun routeRecentSearchDao(): RouteRecentSearchDao
+
     abstract fun stationRecentSearchDao(): StationRecentSearchDao
 }

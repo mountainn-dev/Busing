@@ -43,14 +43,16 @@ class SearchRouteFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val repository = RouteRepositoryImpl(
-            RetrofitProvider.getRouteService(),
-            RetrofitProvider.getBusLocationService(),
-            RoomDBProvider.get(requireActivity().applicationContext)
-        )
-        viewModel = ViewModelProvider(requireActivity(), SearchRouteViewModelFactory(repository)).get(
-            SearchRouteViewModelImpl::class.java
-        )
+        val repository =
+            RouteRepositoryImpl(
+                RetrofitProvider.getRouteService(),
+                RetrofitProvider.getBusLocationService(),
+                RoomDBProvider.get(requireActivity().applicationContext),
+            )
+        viewModel =
+            ViewModelProvider(requireActivity(), SearchRouteViewModelFactory(repository)).get(
+                SearchRouteViewModelImpl::class.java,
+            )
     }
 
     /**
@@ -60,8 +62,9 @@ class SearchRouteFragment : Fragment() {
      * 뷰 관련 작업 실행
      */
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
     ): View {
         binding = FragmentSearchRouteBinding.inflate(layoutInflater)
 
@@ -74,49 +77,54 @@ class SearchRouteFragment : Fragment() {
     private fun initObserver(context: Activity) {
         viewModel.state.observe(
             viewLifecycleOwner,
-            uiStateObserver(context)
+            uiStateObserver(context),
         )
         viewModel.recentSearchContentReady.observe(
             viewLifecycleOwner,
-            recentSearchContentReadyObserver(context)
+            recentSearchContentReadyObserver(context),
         )
     }
 
-    private fun uiStateObserver(activity: Activity) = Observer<UiState> {
-        when (it) {
-            UiState.Success -> {
-                if (viewModel.routes.isEmpty()) noSearchResultView()
-                else loadSearchResult(activity)
-            }
-            UiState.Loading -> {
-                loadingView()
-            }
-            UiState.Timeout -> {
-                timeoutView()
-            }
-            UiState.Error -> {
-                errorView(activity)
+    private fun uiStateObserver(activity: Activity) =
+        Observer<UiState> {
+            when (it) {
+                UiState.Success -> {
+                    if (viewModel.routes.isEmpty()) {
+                        noSearchResultView()
+                    } else {
+                        loadSearchResult(activity)
+                    }
+                }
+                UiState.Loading -> {
+                    loadingView()
+                }
+                UiState.Timeout -> {
+                    timeoutView()
+                }
+                UiState.Error -> {
+                    errorView(activity)
+                }
             }
         }
-    }
 
     private fun noSearchResultView() {
         toggleView(binding.txtNoResult)
     }
 
     private fun loadSearchResult(context: Activity) {
-        binding.rvSearchResult.adapter = RouteSearchResultAdapter(
-            viewModel.routes,
-            searchResultItemClickEventListener(viewModel.routes, context),
-            context
-        )
+        binding.rvSearchResult.adapter =
+            RouteSearchResultAdapter(
+                viewModel.routes,
+                searchResultItemClickEventListener(viewModel.routes, context),
+                context,
+            )
         binding.rvSearchResult.layoutManager = LinearLayoutManager(context)
         toggleView(binding.rvSearchResult)
     }
 
     private fun searchResultItemClickEventListener(
         items: RouteModels,
-        activity: Activity
+        activity: Activity,
     ) = object : ItemClickEventListener {
         override fun onItemClickListener(position: Int) {
             sendUserToRouteDetailScreen(activity, items.get(position))
@@ -125,7 +133,10 @@ class SearchRouteFragment : Fragment() {
         override fun onDeleteButtonClickListener(position: Int) {}
     }
 
-    private fun sendUserToRouteDetailScreen(activity: Activity, route: RouteModel) {
+    private fun sendUserToRouteDetailScreen(
+        activity: Activity,
+        route: RouteModel,
+    ) {
         val intent = Intent(activity, RouteDetailActivity::class.java)
         intent.putExtra(Const.TAG_ROUTE, route)
 
@@ -146,20 +157,26 @@ class SearchRouteFragment : Fragment() {
         if (toast.previousFinished()) toast.show()
     }
 
-    private fun recentSearchContentReadyObserver(context: Activity) = Observer<Boolean> {
-        if (it) { whenRecentSearchReady(context) }
-        else { whenRecentSearchNotReady() }
-    }
+    private fun recentSearchContentReadyObserver(context: Activity) =
+        Observer<Boolean> {
+            if (it) {
+                whenRecentSearchReady(context)
+            } else {
+                whenRecentSearchNotReady()
+            }
+        }
 
     private fun whenRecentSearchReady(context: Activity) {
-        binding.rvRecentSearch.adapter = RouteRecentSearchAdapter(
-            viewModel.routeRecentSearches,
-            recentSearchItemClickEventListener(viewModel.routeRecentSearches, context),
-            context
-        )
-        binding.rvRecentSearch.layoutManager = LinearLayoutManager(
-            activity, LinearLayoutManager.HORIZONTAL, false
-        )
+        binding.rvRecentSearch.adapter =
+            RouteRecentSearchAdapter(
+                viewModel.routeRecentSearches,
+                recentSearchItemClickEventListener(viewModel.routeRecentSearches, context),
+                context,
+            )
+        binding.rvRecentSearch.layoutManager =
+            LinearLayoutManager(
+                activity, LinearLayoutManager.HORIZONTAL, false,
+            )
         binding.rvRecentSearch.visibility = View.VISIBLE
     }
 
@@ -169,7 +186,7 @@ class SearchRouteFragment : Fragment() {
 
     private fun recentSearchItemClickEventListener(
         items: RouteRecentSearchModels,
-        activity: Activity
+        activity: Activity,
     ) = object : ItemClickEventListener {
         override fun onItemClickListener(position: Int) {
             sendUserToRouteDetailScreen(activity, items.get(position))
@@ -193,15 +210,17 @@ class SearchRouteFragment : Fragment() {
         binding.edRoute.doAfterTextChanged {
             val keyword = it.toString()
 
-            if (isNightRoute(keyword) && !binding.chkKeywordNightRoute.isChecked)
+            if (isNightRoute(keyword) && !binding.chkKeywordNightRoute.isChecked) {
                 binding.chkKeywordNightRoute.isChecked = true
-            if (isNotNightRoute(keyword) && binding.chkKeywordNightRoute.isChecked)
+            }
+            if (isNotNightRoute(keyword) && binding.chkKeywordNightRoute.isChecked) {
                 binding.chkKeywordNightRoute.isChecked = false
+            }
 
             viewModel.search(keyword)
         }
     }
-    
+
     private fun setChkKeywordNightRoute() {
         binding.chkKeywordNightRoute.setOnCheckedChangeListener { _, checked ->
             val keyword = binding.edRoute.text.toString()
@@ -214,12 +233,16 @@ class SearchRouteFragment : Fragment() {
     }
 
     private fun isNightRoute(keyword: String) =
-        keyword.isNotEmpty() && (keyword.first().toString() == NIGHT_ROUTE_TAG || keyword.first()
-            .toString() == NIGHT_ROUTE_TAG.lowercase())
+        keyword.isNotEmpty() && (
+            keyword.first().toString() == NIGHT_ROUTE_TAG || keyword.first()
+                .toString() == NIGHT_ROUTE_TAG.lowercase()
+        )
 
     private fun isNotNightRoute(keyword: String) =
-        keyword.isEmpty() || (keyword.first().toString() != NIGHT_ROUTE_TAG && keyword.first()
-            .toString() != NIGHT_ROUTE_TAG.lowercase())
+        keyword.isEmpty() || (
+            keyword.first().toString() != NIGHT_ROUTE_TAG && keyword.first()
+                .toString() != NIGHT_ROUTE_TAG.lowercase()
+        )
 
     private fun setBtnDeleteSearchKeywordListener(context: Activity) {
         binding.btnDeleteSearchKeyword.setOnClickListener {
@@ -230,7 +253,10 @@ class SearchRouteFragment : Fragment() {
         }
     }
 
-    private fun showSoftInput(view: View, context: Activity) {
+    private fun showSoftInput(
+        view: View,
+        context: Activity,
+    ) {
         if (view.requestFocus()) {
             val imm = context.getSystemService(InputMethodManager::class.java)
             imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)

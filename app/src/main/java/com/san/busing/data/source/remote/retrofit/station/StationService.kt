@@ -10,12 +10,12 @@ interface StationService {
     @GET("getBusStationList")
     suspend fun getBusStationList(
         @Query("serviceKey") key: String,
-        @Query("keyword") keyword: String
+        @Query("keyword") keyword: String,
     ): Response<Stations>
 
     @GET("getBusStationViaRouteList")
     suspend fun getBusStationViaRouteList(
         @Query("serviceKey") key: String,
-        @Query("stationId") id: Int
+        @Query("stationId") id: Int,
     ): Response<StationViaRoutes>
 }

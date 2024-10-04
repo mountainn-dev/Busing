@@ -21,24 +21,26 @@ data class StationViaRoute(
     @PropertyElement(name = "routeTypeCd") val typeCd: Int,
     @PropertyElement(name = "routeName") val name: String,
     @PropertyElement val regionName: String?,
-    @PropertyElement(name = "staOrder") val stationSeq: Int
+    @PropertyElement(name = "staOrder") val stationSeq: Int,
 ) {
-    fun toRouteModel() = RouteModelImpl(
-        Id(id),
-        Utils.getRouteType(typeCd),
-        name,
-        regionName(regionName)
-    ).also { it.setStationSequence(stationSeq) }
+    fun toRouteModel() =
+        RouteModelImpl(
+            Id(id),
+            Utils.getRouteType(typeCd),
+            name,
+            regionName(regionName),
+        ).also { it.setStationSequence(stationSeq) }
 
-    private fun regionName(name: String?) = when(name != null) {
-        true -> name
-        false -> Const.EMPTY_TEXT
-    }
+    private fun regionName(name: String?) =
+        when (name != null) {
+            true -> name
+            false -> Const.EMPTY_TEXT
+        }
 }
 
 @Xml
 data class StationViaRoutes(
-    @Path("msgBody") @Element val stationViaRoutes: List<StationViaRoute>
+    @Path("msgBody") @Element val stationViaRoutes: List<StationViaRoute>,
 ) {
     fun get(): RouteModels {
         return RouteModels(stationViaRoutes.map { it.toRouteModel() })

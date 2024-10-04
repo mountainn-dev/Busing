@@ -19,11 +19,18 @@ interface RouteDetailViewModel {
     var error: String
 
     fun load()
+
     fun loadWithTimer()
+
     fun updateRecentSearch(activity: Activity)
+
     fun toggleBookMark()
+
     fun find(keyword: String)
+
     fun clearKeyword()
+
     fun moveUpMatchingStation()
+
     fun moveDownMatchingStation()
 }

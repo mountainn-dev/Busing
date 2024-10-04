@@ -22,7 +22,7 @@ class RouteStationAdapter(
     private val itemClickEventListener: ItemClickEventListener,
 ) : RecyclerView.Adapter<RouteStationAdapter.RouteStationViewHolder>() {
     inner class RouteStationViewHolder(
-        private val binding: ItemRouteStationBinding
+        private val binding: ItemRouteStationBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(position: Int) {
             loadContent(position)
@@ -41,10 +41,13 @@ class RouteStationAdapter(
         }
 
         private fun loadBusInfo(position: Int) {
-            val bus = busItems.getOrNullBySeq(position + 1)   // sequence = index + 1
+            val bus = busItems.getOrNullBySeq(position + 1) // sequence = index + 1
 
-            if (bus != null) loadBusInfo(bus)
-            else unloadBusInfo()
+            if (bus != null) {
+                loadBusInfo(bus)
+            } else {
+                unloadBusInfo()
+            }
         }
 
         private fun loadBusInfo(item: BusModel) {
@@ -55,8 +58,11 @@ class RouteStationAdapter(
         }
 
         private fun remainSeatText(count: Int) =
-            if (count != Const.NO_DATA) String.format(REMAIN_SEAT_COUNT, count)
-            else NO_REMAIN_SEAT_COUNT
+            if (count != Const.NO_DATA) {
+                String.format(REMAIN_SEAT_COUNT, count)
+            } else {
+                NO_REMAIN_SEAT_COUNT
+            }
 
         private fun unloadBusInfo() {
             binding.llBusInfo.visibility = View.GONE
@@ -64,8 +70,11 @@ class RouteStationAdapter(
         }
 
         private fun loadTurnaround(position: Int) {
-            if ((stationItems.get(position) as Passable).isTurnaround) loadTurnaround()
-            else unloadTurnaround()
+            if ((stationItems.get(position) as Passable).isTurnaround) {
+                loadTurnaround()
+            } else {
+                unloadTurnaround()
+            }
         }
 
         private fun loadTurnaround() {
@@ -83,23 +92,35 @@ class RouteStationAdapter(
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RouteStationViewHolder {
-        val binding = ItemRouteStationBinding.inflate(
-            LayoutInflater.from(parent.context), parent, false
-        )
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int,
+    ): RouteStationViewHolder {
+        val binding =
+            ItemRouteStationBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false,
+            )
         setContentColor(binding, routeType)
         return RouteStationViewHolder(binding)
     }
 
-    private fun setContentColor(binding: ItemRouteStationBinding, type: RouteType) {
+    private fun setContentColor(
+        binding: ItemRouteStationBinding,
+        type: RouteType,
+    ) {
         binding.imgBus.setImageResource(
-            Utils.getBusImageResourceByRouteType(type)
+            Utils.getBusImageResourceByRouteType(type),
         )
     }
 
     override fun getItemCount() = stationItems.count()
 
-    override fun onBindViewHolder(holder: RouteStationViewHolder, position: Int) {
+    override fun onBindViewHolder(
+        holder: RouteStationViewHolder,
+        position: Int,
+    ) {
         holder.bind(position)
     }
 

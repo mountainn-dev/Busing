@@ -32,8 +32,11 @@ class XmlParser {
 
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.eventType != XmlPullParser.START_TAG) continue
-            if (parser.name == "msgHeader") return readResultCode(parser)
-            else skip(parser)
+            if (parser.name == "msgHeader") {
+                return readResultCode(parser)
+            } else {
+                skip(parser)
+            }
         }
 
         throw IOException()
@@ -45,8 +48,11 @@ class XmlParser {
 
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.eventType != XmlPullParser.START_TAG) continue
-            if (parser.name == "resultCode") return readText(parser)
-            else skip(parser)
+            if (parser.name == "resultCode") {
+                return readText(parser)
+            } else {
+                skip(parser)
+            }
         }
 
         throw IOException()

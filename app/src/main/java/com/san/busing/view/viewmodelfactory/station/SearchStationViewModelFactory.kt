@@ -6,7 +6,7 @@ import com.san.busing.data.repository.station.StationRepository
 import com.san.busing.view.viewmodelimpl.station.SearchStationViewModelImpl
 
 class SearchStationViewModelFactory(
-    private val repository: StationRepository
+    private val repository: StationRepository,
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(SearchStationViewModelImpl::class.java)) {

@@ -22,14 +22,15 @@ data class RouteRecentSearch(
     val name: String,
     val regionName: String,
     val index: Long,
-    val bookMark: Boolean
+    val bookMark: Boolean,
 ) {
-    fun toRouteRecentSearchModel() = RouteRecentSearchModel(
-        Id(id),
-        Utils.getRouteType(typeCd),
-        name,
-        regionName,
-        index,
-        bookMark
-    )
+    fun toRouteRecentSearchModel() =
+        RouteRecentSearchModel(
+            Id(id),
+            Utils.getRouteType(typeCd),
+            name,
+            regionName,
+            index,
+            bookMark,
+        )
 }

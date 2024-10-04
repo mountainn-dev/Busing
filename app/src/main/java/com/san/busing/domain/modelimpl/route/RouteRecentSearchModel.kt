@@ -17,28 +17,33 @@ data class RouteRecentSearchModel(
     override val name: String,
     override val regionName: String,
     val index: Long,
-    val bookMark: Boolean
+    val bookMark: Boolean,
 ) : RouteModel {
     override fun isSame(id: Id) = this.id == id
 
-    fun toRouteRecentSearchEntity() = RouteRecentSearch(
-        id.get(),
-        type.code,
-        name,
-        regionName,
-        index,
-        bookMark
-    )
+    fun toRouteRecentSearchEntity() =
+        RouteRecentSearch(
+            id.get(),
+            type.code,
+            name,
+            regionName,
+            index,
+            bookMark,
+        )
 }
 
 data class RouteRecentSearchModels(
-    private val data: List<RouteRecentSearchModel>
+    private val data: List<RouteRecentSearchModel>,
 ) {
-    private val models = data.sortedWith(
-        compareByDescending<RouteRecentSearchModel> { it.bookMark }.thenByDescending { it.index })
+    private val models =
+        data.sortedWith(
+            compareByDescending<RouteRecentSearchModel> { it.bookMark }.thenByDescending { it.index },
+        )
 
     fun get(index: Int) = models[index]
+
     fun count() = models.size
+
     fun isEmpty() = models.isEmpty()
 
     companion object {
